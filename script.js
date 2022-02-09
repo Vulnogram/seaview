@@ -85,7 +85,7 @@ function versionStatusTable4(affects) {
                         case "!":
                         case "?":
                         case "=":
-                            vv = '= ' + version.version_value;
+                            vv = version.version_value;
                             break;
                         case "<":
                         case "!<":
@@ -107,7 +107,7 @@ function versionStatusTable4(affects) {
                             vv = ">= " + version.version_value;
                             break;
                         default:
-                            vv = '= ' + version.version_value;
+                            vv = version.version_value;
                     }
                 }
                 if (cat)
@@ -167,7 +167,7 @@ function versionStatusTable5(affected) {
                     if(v.lessThan != undefined || v.lessThanOrEqual != undefined) {
                         table[v.status][pFullName].push('>= '+v.version);
                     } else {
-                        table[v.status][pFullName].push('= ' + v.version);
+                        table[v.status][pFullName].push(v.version);
                     }
                 }
                 var prevStatus = v.status;
