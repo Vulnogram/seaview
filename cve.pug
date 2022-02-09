@@ -1,0 +1,371 @@
+- var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity']
+mixin cvssList(cvssList)
+    if cvssList
+        each cvss, i in cvssList
+            details.popup
+                summary.lbl.rnd.tag.CVSS(class= cvss.baseSeverity ? cvss.baseSeverity : 'gray')
+                    = cvss.baseSeverity
+                    | · 
+                    sup=cvss.baseScore
+                    | ⁄10
+                div.pop.wht.rnd.shd.pad.bor
+                    each x, i in cvss
+                        if !nonSpec.includes(i)
+                            div
+                                b=i
+                                | :  
+                                =x
+                    div
+                        if cvss.version >= "3"
+                            a.vgi-ext(href="https://cvssjs.github.io/#" + cvss.vectorString) Open CVSS Calc
+                        else
+                            a.vgi-ext(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString) Open CVSS Calc
+
+
+
+mixin statusTable(st,v4)
+    table.tbl
+        colgroup
+            col
+            if st.show.platforms 
+                col
+            col.affectedCol
+        thead
+            tr
+                th Product
+                if st.show.platforms 
+                    th Platforms
+                th Affected
+                if st.show.unaffected
+                    th Unaffected
+                if st.show.unknown
+                    th Unknown
+        tbody
+            each p, i in st.cols
+                tr
+                    td=p[0]
+                    if st.show.platforms 
+                        td=p[1]
+                    td
+                        +versionPairs(st.vals.affected[i],v4)
+                    if st.show.unaffected
+                        td
+                            +versionPairs(st.vals.unaffected[i],v4)
+                    if st.show.unknown
+                        td
+                            +versionPairs(st.vals.unknown[i],v4)
+
+mixin creditList(credits)
+    for c in credits
+        p=c.value
+
+
+mixin tagList(tags)
+    if tags
+        a.tag.rnd.NONE EOL
+
+mixin timeList(c)
+    ul
+        each x, i in c.timeline
+            li
+                +renderDate(x.time)
+                |  - 
+                = x.value
+
+mixin refList(references)
+    each r in references
+        div
+            - var u = (new URL(r.url));
+            img(width=16,height=16,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
+            a(href=r.url)=(r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
+            if r.tags && r.tags.length > 0
+                |  (  
+                =r.tags.join(" ")
+                |  ) 
+
+//"https://www.google.com/s2/favicons?sz=32&domain_url=https://abc.com
+mixin container(con)
+    if con.x_ValidationErrors
+        each x in con.x_ValidationErrors
+            p.sec.rnd.pad
+                b.vgi-alert Upconversion Error/Warning: 
+                i=x
+    .cna.pad
+        if cna[con.shortName] && cna[con.shortName].i
+            b
+                img.logo(src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
+        span
+            |  
+            b=cna[con.shortName]? cna[con.shortName].n : con.shortName
+            |  · 
+            +renderDate(con.datePublic)
+            if con.dateUpdated && con.dateUpdated != con.datePublic
+                |  (updated 
+                +renderDate(con.dateUpdated)
+                |)
+        span.right.row
+            +tagList(con.tags)
+            |
+            +cvssList(con.cvssList)
+            a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + con.TITLE+"&body="+con.cveId + ' ' + con.title+"%0A%0Ahttps://www.cve.org/CVERecord?id="+con.cveId)
+            a.sbn.vgi-tweet(title="Share this CVE on Twitter",href="https://twitter.com/intent/tweet?text="+con.cveId+ ' ' + con.title+"&url=https://www.cve.org/CVERecord?id="+con.cveId,target="_blank")
+            a.sbn.vgi-link(href="https://www.cve.org/CVERecord?id="+con.cveId)
+    .desc.pad
+        if con.state == 'REJECTED'
+            b.tag.CRITICAL REJECTED
+            |  ·  
+        b=con.cveId
+        | 
+        if con.title
+            b=con.title
+        | 
+        +spara(con.descriptions)
+        +spara(con.rejectedReasons)
+    if con.configurations
+        .configs.pad
+            b.vgi-cog Required configuration for exposure: 
+            +spara(con.configurations)
+    if con.problemTypes
+        .problem.pad
+            b.vgi-bug Problem: 
+            |  
+            for t in con.problemTypes
+                if t.description
+                    for d in t.description
+                        =d.value
+                if t.descriptions
+                    for d in t.descriptions
+                        =d.description
+                        |  
+                        if d.cweId
+                            a(href="https://cwe.mitre.org/data/definitions/"+d.cweId)
+                                small=d.cweId
+    if con.impacts
+        .impact.pad
+            b.vgi-impact Impact:  
+            |  Code-execution (link) 
+            a(href="https://capec.mitre.org/data/definitions/")
+                small CPAEC-123 
+    if con.exploits
+        .exploits.pad
+            b.vgi-bomb Exploits: 
+            +spara(con.exploits)
+    
+    if con.pvstatus
+        +statusTable(con.pvstatus, con.v4)
+
+    if con.solutions
+        .solution.pad
+            b.vgi-safe Solution: 
+            +spara(con.solutions)
+
+    if con.workarounds
+        .workaround.pad
+            b.vgi-avoid Workaround: 
+            +spara(con.workarounds)
+
+    if con.credits
+        .credits.rnd.bor.pad
+            b.vgi-like Credits:
+            +creditList(con.credits)
+
+    if con.timeline
+        .timeline.pad
+            details(open) 
+                summary
+                    b.vgi-cal Timeline
+                +timeList(con)
+
+    if con.references
+        .references.pad
+            details(open) 
+                summary
+                    b.vgi-ext References
+                +refList(con.references)
+    if con.json
+        pre=JSON.stringify(con.json,1,1)
+
+mixin para(t, hypertext)
+    if t
+        if hypertext
+            p=t
+        else
+            each line in t.split(/\n/)
+                if line
+                    if line.startsWith('  ')
+                        code=line
+                        br
+                    else
+                        p=line
+
+mixin mpara(l, hypertext)
+    if l
+        each d in l
+            if d.value
+                +para(d.value, hypertext)
+
+mixin aggpara(l)
+    if l
+        ul
+            each k, v in l
+                li
+                    b=k.join(', ')
+                    p
+                        +para(v)
+
+mixin spara(l, hypertext)
+    if l
+        each d in l
+            if d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html'
+                p !{d.supportingMedia[0].value}
+            else if d.value
+                +para(d.value)
+
+mixin linklist(l, url)
+    each v, i in l
+        if(i < l.length-2)
+            if(url)
+                a(href=url+v)=v
+            else
+                = v
+            | , 
+        else
+            if(i == l.length - 1 && i > 0)
+                |  and 
+            if(url)
+                a(href=url+v)=v
+            else
+                =v
+
+mixin CVSS(value)
+    = value && value.baseScore >= 0 ? value.baseScore.toFixed(1) : 'n/a'
+    |  
+    if value.version >= "3"
+        | (
+        a(href="https://cvssjs.github.io/#" + value.vectorString)=value.vectorString
+        | )
+    else
+        a(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+value.vectorString)=value.vectorString
+
+mixin renderDate(value)
+    - var v = false;
+    - if (value instanceof Date) { v = value;} else {
+    -   var timestamp = Date.parse(value);
+    -   v = isNaN(timestamp) ? false : new Date(timestamp)
+    - }
+    if v
+        = v.toJSON().substr(0,10)
+
+mixin versionPairs(v, v4)
+    if v4 && v
+        - var n = v.shift();
+        while n != undefined
+            = n
+            if v.length > 0
+                hr
+            - n = v.shift();
+    else
+        if v
+            - n = v.shift();
+            while n != undefined
+                = n
+                if n.startsWith('>')
+                    - n = v.shift()
+                    if n !== undefined
+                        i  to 
+                        = n
+                if v.length > 0
+                    hr
+                - n = v.shift();
+
+mixin cve5(cve)
+    div.pad
+        -
+            var CDM = cve.cveMetadata;
+            var con = cve.containers ? cve.containers.cna : {};
+            //var jsonClone = {};
+            //Object.assign(jsonClone, cve.containers.cna);
+            //delete con.json;
+            //con.json = jsonClone;
+            //delete con.json.x_legacyV4Record;
+            con.x_ValidationErrors = cve.x_ValidationErrors;
+            con.state = CDM.state;
+            con.cveId = CDM.cveId;
+            var PMD = cve.containers.cna.providerMetadata;
+            con.dateUpdated = PMD.dateUpdated;
+            con.shortName = PMD.shortName;
+            var title = con.title;
+            var sourceText = {"INTERNAL":"This issue was found during internal product security testing or research.", "EXTERNAL":"This issue was discovered during an external security research.", "USER":"This issue was seen during production usage.", "UNKNOWN":""};
+            var cveId = CDM.cveId.match("^CVE-[0-9-]+$") ? CDM.cveId : 'CVE-yyyy-nnnn';
+            con.cvssList = [];
+            con.pvstatus = con.affected ? statusFunction(con.affected) : null;
+        if (con.metrics && con.metrics.length > 0)
+            each x, i in con.metrics
+                - var cvss = x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
+                if cvss
+                    - cvss.scenarios = x.scenarios;
+                    - con.cvssList.push(cvss);
+        +container(con)
+
+
+mixin cve4(cve)
+  .pad
+    -
+        var sourceText = {"INTERNAL":"internally", "EXTERNAL":"externally", "USER":"in production use", "UNKNOWN":""};
+        var sourceTitle = {"INTERNAL":"This issue was found during internal security review or testing.", "EXTERNAL":"This issue was found during external security research or testing.", "USER":"A customer encountered this issue while using the product.", "UNKNOWN":""};
+        var con = {v4:true};
+        Object.assign(con, cve);
+        var CDM = cve ? cve.CVE_data_meta : null;
+        if (CDM) {
+            con.shortName = CDM.ASSIGNER;
+            con.cveId = CDM.ID;
+            con.title = CDM.TITLE;
+            con.datePublic = CDM.DATE_PUBLIC
+            con.dateUpdated = CDM.DATE_UPDATED
+        }
+        //con.json = cve;
+        if (con.impact && con.impact.cvss) {
+            con.cvssList = [con.impact.cvss]
+        }
+        con.descriptions = con.description ? con.description.description_data : null;
+        con.configurations = con.configuration ? con.configuration : null;
+        con.exploits = con.exploit ? con.exploit : null;
+        con.pvstatus = con.affects ? statusFunction(con.affects) : null;
+        con.solutions = con.solution ? con.solution : null;
+        con.workarounds = con.work_around ? con.work_around : null;
+        con.credits = con.credit ? con.credit : null;
+        con.problemTypes = con.problemtype ? con.problemtype.problemtype_data : null;
+        con.references = con.references? con.references.reference_data : null;
+    +container(con)
+
+mixin extra
+    a.tag.orange(href="/json/"+cveid,title="Download the information in this advisory in CVE-JSON format") JSON
+    | 
+    a.btn.blue(href="/"+cveid,title="Permanent link to this advisory") 
+        span.ico.link
+    |  
+    a.btn(title="Share this advisory in email",href="mailto:?subject="+cveid+ ' ' + CDM.TITLE+"&body="+cveid + ' ' + CDM.TITLE+"%0A%0Ahttps://security.paloaltonetworks.com/"+cveid)
+        span.ico.eml
+    | 
+    a.btn.blue(title="Share this advisory on Twitter",href="https://twitter.com/intent/tweet?text="+cveid+ ' ' + CDM.TITLE+"&url=https://security.paloaltonetworks.com/"+cveid,target="_blank")
+        span.ico.tweet.wht
+    | 
+    a.btn.blue(title="Share this advisory on LinkedIn",href="https://www.linkedin.com/sharing/share-offsite/?title="+cveid+ ' ' + CDM.TITLE+"&url=https://security.paloaltonetworks.com/"+cveid)
+        span.ico.lin.wht
+    if cve.problemtype && cve.problemtype.problemtype_data
+        h3 Weakness Type
+        each px in cve.problemtype.problemtype_data
+         if px.description
+            each pd in px.description
+                - var cwe = pd.value.match(/CWE-(\d+)/)
+                if cwe
+                    p
+                        a(href="https://cwe.mitre.org/data/definitions/"+cwe[1],target="_blank",title='More at https://cwe.mitre.org/data/definitions/'+cwe[1])
+                            =pd.value
+
+
+block page
+    if renderTemplate == 'cve4'
+        +cve4(d)
+    if renderTemplate == 'cve5'
+        +cve5(d)
