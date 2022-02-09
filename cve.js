@@ -26,7 +26,7 @@ pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E\u003Csummary" + (pug_
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var x = $$obj[i];
 if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + "\u003C\u002Fb\u003E:  " + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
       }
   } else {
@@ -35,7 +35,7 @@ pug_html = pug_html + "\u003Cdiv\u003E\u003Cb\u003E" + (pug_escape(null == (pug_
       $$l++;
       var x = $$obj[i];
 if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + "\u003C\u002Fb\u003E:  " + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
     }
   }
@@ -63,7 +63,7 @@ pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E\u003Csummary" + (pug_
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var x = $$obj[i];
 if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + "\u003C\u002Fb\u003E:  " + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
       }
   } else {
@@ -72,7 +72,7 @@ pug_html = pug_html + "\u003Cdiv\u003E\u003Cb\u003E" + (pug_escape(null == (pug_
       $$l++;
       var x = $$obj[i];
 if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + "\u003C\u002Fb\u003E:  " + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
     }
   }
@@ -188,7 +188,24 @@ pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.valu
 pug_mixins["tagList"] = pug_interp = function(tags){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (tags) {
-pug_html = pug_html + "\u003Ca class=\"tag rnd NONE\"\u003EEOL\u003C\u002Fa\u003E";
+// iterate tags
+;(function(){
+  var $$obj = tags;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index5 = 0, $$l = $$obj.length; pug_index5 < $$l; pug_index5++) {
+        var t = $$obj[pug_index5];
+pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index5 in $$obj) {
+      $$l++;
+      var t = $$obj[pug_index5];
+pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
+    }
+  }
+}).call(this);
+
 }
 };
 pug_mixins["timeList"] = pug_interp = function(c){
@@ -224,8 +241,8 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
 ;(function(){
   var $$obj = references;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index6 = 0, $$l = $$obj.length; pug_index6 < $$l; pug_index6++) {
-        var r = $$obj[pug_index6];
+      for (var pug_index7 = 0, $$l = $$obj.length; pug_index7 < $$l; pug_index7++) {
+        var r = $$obj[pug_index7];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
@@ -236,9 +253,9 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index6 in $$obj) {
+    for (var pug_index7 in $$obj) {
       $$l++;
-      var r = $$obj[pug_index6];
+      var r = $$obj[pug_index7];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
@@ -259,15 +276,15 @@ if (con.x_ValidationErrors) {
 ;(function(){
   var $$obj = con.x_ValidationErrors;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index7 = 0, $$l = $$obj.length; pug_index7 < $$l; pug_index7++) {
-        var x = $$obj[pug_index7];
+      for (var pug_index8 = 0, $$l = $$obj.length; pug_index8 < $$l; pug_index8++) {
+        var x = $$obj[pug_index8];
 pug_html = pug_html + "\u003Cp class=\"sec rnd pad\"\u003E\u003Cb class=\"vgi-alert\"\u003EUpconversion Error\u002FWarning: \u003C\u002Fb\u003E\u003Ci\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fi\u003E\u003C\u002Fp\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index7 in $$obj) {
+    for (var pug_index8 in $$obj) {
       $$l++;
-      var x = $$obj[pug_index7];
+      var x = $$obj[pug_index8];
 pug_html = pug_html + "\u003Cp class=\"sec rnd pad\"\u003E\u003Cb class=\"vgi-alert\"\u003EUpconversion Error\u002FWarning: \u003C\u002Fb\u003E\u003Ci\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fi\u003E\u003C\u002Fp\u003E";
     }
   }
@@ -278,7 +295,7 @@ pug_html = pug_html + "\u003Cdiv class=\"cna pad\"\u003E";
 if (cna[con.shortName] && cna[con.shortName].i) {
 pug_html = pug_html + "\u003Cb\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E\u003C\u002Fb\u003E";
 }
-pug_html = pug_html + "\u003Cspan\u003E \u003Cb\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fb\u003E · ";
+pug_html = pug_html + "\u003Cspan\u003E \u003Cb\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003Cbr\u002F\u003E";
 pug_mixins["renderDate"](con.datePublic);
 if (con.dateUpdated && con.dateUpdated != con.datePublic) {
 pug_html = pug_html + " (updated ";
@@ -286,13 +303,12 @@ pug_mixins["renderDate"](con.dateUpdated);
 pug_html = pug_html + ")";
 }
 pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cspan class=\"right row\"\u003E";
-pug_mixins["tagList"](con.tags);
-pug_html = pug_html + "";
 pug_mixins["cvssList"](con.cvssList);
-pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + con.TITLE+"&body="+con.cveId + ' ' + con.title+"%0A%0Ahttps://www.cve.org/CVERecord?id="+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-tweet\""+" title=\"Share this CVE on Twitter\""+pug_attr("href", "https://twitter.com/intent/tweet?text="+con.cveId+ ' ' + con.title+"&url=https://www.cve.org/CVERecord?id="+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://www.cve.org/CVERecord?id="+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
+pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E\u003Csummary class=\"vgi-out sbn\"\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"rnd pad pop wht bor shd\"\u003E\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + con.TITLE+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.github.io/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Cbr\u002F\u003E\u003Ca" + (" class=\"sbn vgi-tweet\""+" title=\"Share this CVE on Twitter\""+pug_attr("href", "https://twitter.com/intent/tweet?text="+con.cveId+ (con.title ? ' ' + con.title:'')+"&url=https://vulnogram.github.io/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003Cbr\u002F\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.github.io/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
 if (con.state == 'REJECTED') {
 pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E ·  ";
 }
+pug_mixins["tagList"](con.tags);
 pug_html = pug_html + "\u003Cb\u003E" + (pug_escape(null == (pug_interp = con.cveId) ? "" : pug_interp)) + "\u003C\u002Fb\u003E ";
 if (con.title) {
 pug_html = pug_html + "\u003Cb\u003E" + (pug_escape(null == (pug_interp = con.title) ? "" : pug_interp)) + "\u003C\u002Fb\u003E";
@@ -312,75 +328,23 @@ pug_html = pug_html + "\u003Cdiv class=\"problem pad\"\u003E\u003Cb class=\"vgi-
 ;(function(){
   var $$obj = con.problemTypes;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index8 = 0, $$l = $$obj.length; pug_index8 < $$l; pug_index8++) {
-        var t = $$obj[pug_index8];
+      for (var pug_index9 = 0, $$l = $$obj.length; pug_index9 < $$l; pug_index9++) {
+        var t = $$obj[pug_index9];
 if (t.description) {
 // iterate t.description
 ;(function(){
   var $$obj = t.description;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index9 = 0, $$l = $$obj.length; pug_index9 < $$l; pug_index9++) {
-        var d = $$obj[pug_index9];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
-      }
-  } else {
-    var $$l = 0;
-    for (var pug_index9 in $$obj) {
-      $$l++;
-      var d = $$obj[pug_index9];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
-    }
-  }
-}).call(this);
-
-}
-if (t.descriptions) {
-// iterate t.descriptions
-;(function(){
-  var $$obj = t.descriptions;
-  if ('number' == typeof $$obj.length) {
       for (var pug_index10 = 0, $$l = $$obj.length; pug_index10 < $$l; pug_index10++) {
         var d = $$obj[pug_index10];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
-if (d.cweId) {
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E";
-}
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
       }
   } else {
     var $$l = 0;
     for (var pug_index10 in $$obj) {
       $$l++;
       var d = $$obj[pug_index10];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
-if (d.cweId) {
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E";
-}
-    }
-  }
-}).call(this);
-
-}
-      }
-  } else {
-    var $$l = 0;
-    for (var pug_index8 in $$obj) {
-      $$l++;
-      var t = $$obj[pug_index8];
-if (t.description) {
-// iterate t.description
-;(function(){
-  var $$obj = t.description;
-  if ('number' == typeof $$obj.length) {
-      for (var pug_index11 = 0, $$l = $$obj.length; pug_index11 < $$l; pug_index11++) {
-        var d = $$obj[pug_index11];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
-      }
-  } else {
-    var $$l = 0;
-    for (var pug_index11 in $$obj) {
-      $$l++;
-      var d = $$obj[pug_index11];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
     }
   }
 }).call(this);
@@ -391,21 +355,73 @@ if (t.descriptions) {
 ;(function(){
   var $$obj = t.descriptions;
   if ('number' == typeof $$obj.length) {
+      for (var pug_index11 = 0, $$l = $$obj.length; pug_index11 < $$l; pug_index11++) {
+        var d = $$obj[pug_index11];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
+if (d.cweId) {
+pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index11 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index11];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
+if (d.cweId) {
+pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+    }
+  }
+}).call(this);
+
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index9 in $$obj) {
+      $$l++;
+      var t = $$obj[pug_index9];
+if (t.description) {
+// iterate t.description
+;(function(){
+  var $$obj = t.description;
+  if ('number' == typeof $$obj.length) {
       for (var pug_index12 = 0, $$l = $$obj.length; pug_index12 < $$l; pug_index12++) {
         var d = $$obj[pug_index12];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
-if (d.cweId) {
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E";
-}
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
       }
   } else {
     var $$l = 0;
     for (var pug_index12 in $$obj) {
       $$l++;
       var d = $$obj[pug_index12];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
+    }
+  }
+}).call(this);
+
+}
+if (t.descriptions) {
+// iterate t.descriptions
+;(function(){
+  var $$obj = t.descriptions;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index13 = 0, $$l = $$obj.length; pug_index13 < $$l; pug_index13++) {
+        var d = $$obj[pug_index13];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
 if (d.cweId) {
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index13 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index13];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
+if (d.cweId) {
+pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
 }
     }
   }
@@ -422,7 +438,7 @@ if (con.impacts) {
 pug_html = pug_html + "\u003Cdiv class=\"impact pad\"\u003E\u003Cb class=\"vgi-impact\"\u003EImpact:  \u003C\u002Fb\u003E Code-execution (link) \u003Ca href=\"https:\u002F\u002Fcapec.mitre.org\u002Fdata\u002Fdefinitions\u002F\"\u003E\u003Csmall\u003ECPAEC-123 \u003C\u002Fsmall\u003E\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
 }
 if (con.exploits) {
-pug_html = pug_html + "\u003Cdiv class=\"exploits pad\"\u003E\u003Cb class=\"vgi-bomb\"\u003EExploits: \u003C\u002Fb\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"exploits pad\"\u003E\u003Cb class=\"vgi-bomb\"\u003EExploits\u003C\u002Fb\u003E";
 pug_mixins["spara"](con.exploits);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
@@ -430,17 +446,17 @@ if (con.pvstatus) {
 pug_mixins["statusTable"](con.pvstatus, con.v4);
 }
 if (con.solutions) {
-pug_html = pug_html + "\u003Cdiv class=\"solution pad\"\u003E\u003Cb class=\"vgi-safe\"\u003ESolution: \u003C\u002Fb\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"solution pad\"\u003E\u003Cb class=\"vgi-safe\"\u003ESolution\u003C\u002Fb\u003E";
 pug_mixins["spara"](con.solutions);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 if (con.workarounds) {
-pug_html = pug_html + "\u003Cdiv class=\"workaround pad\"\u003E\u003Cb class=\"vgi-avoid\"\u003EWorkaround: \u003C\u002Fb\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"workaround pad\"\u003E\u003Cb class=\"vgi-avoid\"\u003EWorkaround\u003C\u002Fb\u003E";
 pug_mixins["spara"](con.workarounds);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 if (con.credits) {
-pug_html = pug_html + "\u003Cdiv class=\"credits rnd bor pad\"\u003E\u003Cb class=\"vgi-like\"\u003ECredits:\u003C\u002Fb\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"credits rnd pad sec\"\u003E\u003Cb class=\"vgi-like\"\u003ECredits\u003C\u002Fb\u003E";
 pug_mixins["creditList"](con.credits);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
@@ -469,8 +485,8 @@ else {
 ;(function(){
   var $$obj = t.split(/\n/);
   if ('number' == typeof $$obj.length) {
-      for (var pug_index13 = 0, $$l = $$obj.length; pug_index13 < $$l; pug_index13++) {
-        var line = $$obj[pug_index13];
+      for (var pug_index14 = 0, $$l = $$obj.length; pug_index14 < $$l; pug_index14++) {
+        var line = $$obj[pug_index14];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
@@ -482,9 +498,9 @@ pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = line) 
       }
   } else {
     var $$l = 0;
-    for (var pug_index13 in $$obj) {
+    for (var pug_index14 in $$obj) {
       $$l++;
-      var line = $$obj[pug_index13];
+      var line = $$obj[pug_index14];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
@@ -543,8 +559,8 @@ if (l) {
 ;(function(){
   var $$obj = l;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index16 = 0, $$l = $$obj.length; pug_index16 < $$l; pug_index16++) {
-        var d = $$obj[pug_index16];
+      for (var pug_index17 = 0, $$l = $$obj.length; pug_index17 < $$l; pug_index17++) {
+        var d = $$obj[pug_index17];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
 pug_html = pug_html + "\u003Cp\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
@@ -555,9 +571,9 @@ pug_mixins["para"](d.value);
       }
   } else {
     var $$l = 0;
-    for (var pug_index16 in $$obj) {
+    for (var pug_index17 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index16];
+      var d = $$obj[pug_index17];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
 pug_html = pug_html + "\u003Cp\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }

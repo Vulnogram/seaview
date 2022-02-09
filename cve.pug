@@ -12,16 +12,14 @@ mixin cvssList(cvssList)
                     each x, i in cvss
                         if !nonSpec.includes(i)
                             div
-                                b=i
+                                =i
                                 | :  
-                                =x
+                                b=x
                     div
                         if cvss.version >= "3"
                             a.vgi-ext(href="https://cvssjs.github.io/#" + cvss.vectorString) Open CVSS Calc
                         else
                             a.vgi-ext(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString) Open CVSS Calc
-
-
 
 mixin statusTable(st,v4)
     table.tbl
@@ -62,7 +60,9 @@ mixin creditList(credits)
 
 mixin tagList(tags)
     if tags
-        a.tag.rnd.NONE EOL
+        for t in tags
+            b.tag.rnd.CRITICAL=t
+            |   
 
 mixin timeList(c)
     ul
@@ -97,23 +97,27 @@ mixin container(con)
         span
             |  
             b=cna[con.shortName]? cna[con.shortName].n : con.shortName
-            |  · 
+            br
             +renderDate(con.datePublic)
             if con.dateUpdated && con.dateUpdated != con.datePublic
                 |  (updated 
                 +renderDate(con.dateUpdated)
                 |)
         span.right.row
-            +tagList(con.tags)
-            |
             +cvssList(con.cvssList)
-            a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + con.TITLE+"&body="+con.cveId + ' ' + con.title+"%0A%0Ahttps://www.cve.org/CVERecord?id="+con.cveId)
-            a.sbn.vgi-tweet(title="Share this CVE on Twitter",href="https://twitter.com/intent/tweet?text="+con.cveId+ ' ' + con.title+"&url=https://www.cve.org/CVERecord?id="+con.cveId,target="_blank")
-            a.sbn.vgi-link(href="https://www.cve.org/CVERecord?id="+con.cveId)
+            details.popup
+                summary.vgi-out.sbn
+                div.rnd.pad.pop.wht.bor.shd
+                    a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + con.TITLE+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.github.io/seaview/?"+con.cveId)
+                    br
+                    a.sbn.vgi-tweet(title="Share this CVE on Twitter",href="https://twitter.com/intent/tweet?text="+con.cveId+ (con.title ? ' ' + con.title:'')+"&url=https://vulnogram.github.io/seaview/?"+con.cveId,target="_blank")
+                    br
+                    a.sbn.vgi-link(href="https://vulnogram.github.io/seaview/?"+con.cveId,target="_blank")
     .desc.pad
         if con.state == 'REJECTED'
             b.tag.CRITICAL REJECTED
             |  ·  
+        +tagList(con.tags)
         b=con.cveId
         | 
         if con.title
@@ -133,13 +137,15 @@ mixin container(con)
                 if t.description
                     for d in t.description
                         =d.value
+                        |  
                 if t.descriptions
                     for d in t.descriptions
                         =d.description
-                        |  
+                        |   
                         if d.cweId
                             a(href="https://cwe.mitre.org/data/definitions/"+d.cweId)
                                 small=d.cweId
+                            |  
     if con.impacts
         .impact.pad
             b.vgi-impact Impact:  
@@ -148,7 +154,7 @@ mixin container(con)
                 small CPAEC-123 
     if con.exploits
         .exploits.pad
-            b.vgi-bomb Exploits: 
+            b.vgi-bomb Exploits
             +spara(con.exploits)
     
     if con.pvstatus
@@ -156,17 +162,17 @@ mixin container(con)
 
     if con.solutions
         .solution.pad
-            b.vgi-safe Solution: 
+            b.vgi-safe Solution
             +spara(con.solutions)
 
     if con.workarounds
         .workaround.pad
-            b.vgi-avoid Workaround: 
+            b.vgi-avoid Workaround
             +spara(con.workarounds)
 
     if con.credits
-        .credits.rnd.bor.pad
-            b.vgi-like Credits:
+        .credits.rnd.pad.sec
+            b.vgi-like Credits
             +creditList(con.credits)
 
     if con.timeline

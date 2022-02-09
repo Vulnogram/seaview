@@ -1093,7 +1093,7 @@ td span .json-editor-btn-delete{
 .row {
     display: flex;
     flex-direction: column;
-    column-gap: 1em;
+    column-gap: .2em;
     align-items: left;
     margin-bottom: 2px;
 }
