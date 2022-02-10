@@ -8,6 +8,7 @@ function loadCVE(value) {
         var id = realId[1];
         var year = realId[2];
         var bucket = realId[3];
+        var jsonURL = 'https://github.com/CVEProject/cve-schema/tree/master/schema/v5.0/support/v5ReviewSet/' + year + '/' + bucket + 'xxx/' + id + '.json'
         fetch('https://raw.githubusercontent.com/CVEProject/cve-schema/master/schema/v5.0/support/v5ReviewSet/' + year + '/' + bucket + 'xxx/' + id + '.json', {
                 method: 'GET',
                 credentials: 'omit',
@@ -26,7 +27,7 @@ function loadCVE(value) {
             })
             .then(function (res) {
                 if (res.containers) {
-                    loadJSON(res, id, "Loaded "+id+" from github!");
+                    loadJSON(res, id, "Loaded "+id+" from github!", jsonURL);
                 } else {
                     errMsg.textContent = "Failed to load valid CVE JSON";
                     infoMsg.textContent = "";
@@ -253,22 +254,26 @@ cvssDesc = {
     }
 }
 
-function loadJSON(d, id, msg) {
+function loadJSON(d, id, msg, msgLink) {
     infoMsg.textContent = msg;
+    if(msgLink) {
+        var l = document.createElement('a');
+        l.setAttribute('href',msgLink)
+        l.innerText='[source]'
+        infoMsg.appendChild(l)
+    }
     errMsg.textContent = "";
-
-    const tree4 = jsonview.create(d.containers.cna.x_legacyV4Record);
-    var cve4doc = d.containers.cna.x_legacyV4Record;
-    delete d.containers.cna.x_legacyV4Record;
-    const tree5 = jsonview.create(d);
     cve4j = document.getElementById("CVE4json");
-    CVE4.innerHTML = cve4j.innerHTML = "";
     cve5j = document.getElementById("CVE5json");
+
+    var cve4doc = d.containers.cna.x_legacyV4Record;
+    var tree4 = cve({renderTemplate:'JSON',d: cve4doc});
+    delete d.containers.cna.x_legacyV4Record;
+    var tree5 = cve({renderTemplate:'JSON',d: d});
+    CVE4.innerHTML = cve4j.innerHTML = "";
     CVE5.innerHTML = cve5j.innerHTML = "";
-    jsonview.render(tree4, cve4j);
-    jsonview.expand(tree4);
-    jsonview.render(tree5, cve5j);
-    jsonview.expand(tree5);
+    cve4j.innerHTML = tree4;
+    cve5j.innerHTML = tree5;
 
     if (cve4doc) {
         var doc4 = cve({renderTemplate:'cve4',d: cve4doc, statusFunction: versionStatusTable4});

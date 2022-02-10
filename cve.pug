@@ -83,7 +83,7 @@ mixin refList(references)
                 =r.tags.join(" ")
                 |  ) 
 
-//"https://www.google.com/s2/favicons?sz=32&domain_url=https://abc.com
+
 mixin container(con)
     if con.x_ValidationErrors
         each x in con.x_ValidationErrors
@@ -262,6 +262,33 @@ mixin renderDate(value)
     if v
         = v.toJSON().substr(0,10)
 
+mixin JSON(d, par)
+    - var k;
+    if d instanceof Array
+        details.arr(open)
+            summary
+                b=(par? par + ': ' : '')
+            .in
+                each s, i in d
+                    +JSON(s)
+    else if d instanceof Object
+        details.obj(open)
+            summary
+                b=(par? par + ': ' : '')
+            .in
+                each k, i in d
+                    if d.hasOwnProperty(i)
+                        +JSON(k, i)
+    else
+        if par
+            div.i(class=(typeof d === 'number' ? 'n' : ''))
+                b=par + ': '
+                =d
+        else
+            div(class=(typeof d === 'number' ? 'n' : ''))
+                =d
+   
+
 mixin versionPairs(v, v4)
     if v4 && v
         - var n = v.shift();
@@ -375,3 +402,5 @@ block page
         +cve4(d)
     if renderTemplate == 'cve5'
         +cve5(d)
+    if renderTemplate == 'JSON'
+        +JSON(d)

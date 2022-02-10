@@ -118,6 +118,46 @@ img.logo{
     height:32px;
     margin-right: 1em;
 }
+
+.jsonBox details.obj > summary:first-of-type::after {
+  content: "{ ··· }";
+}
+.jsonBox details.arr > summary:first-of-type::after {
+  content: "[ ··· ]";
+}
+.jsonBox details.obj[open] > summary:first-of-type::after {
+  content: "{";
+}
+.jsonBox details.arr[open] > summary:first-of-type::after {
+  content: "[";
+}
+.jsonBox details.obj[open]::after {
+  content: "}";
+  display: block;
+  padding-left: .7em;
+  margin-left: .3em;
+  border-left: 1px dashed #aaa;
+}
+.jsonBox details.arr[open]::after {
+  content: "]";
+  display: block;
+  padding-left: .7em;
+  margin-left: .3em;
+  border-left: 1px dashed #aaa;
+}
+.jsonBox .i, .jsonBox .i {
+  padding-left: .7em;
+  margin-left: .3em;
+}
+.jsonBox .i {
+  border-left: 1px none;
+}
+.jsonBox .in {
+  border-left: 1px dashed #aaa;
+}
+.jsonBox .n {
+  color: green;
+}
   </style>
 </head>
 
@@ -125,7 +165,6 @@ img.logo{
   <script src="script.js"></script>
   <script src="cna.js"></script>
   <script src="cve.js"></script>
-  <script src="https://pgrabovets.github.io/json-view/jsonview.js"></script>
   <script>
     loadQueryString();
   </script>
@@ -154,10 +193,10 @@ img.logo{
   </div>
   <br/>
   <div id="holder">
-    <div id="CVE4json" class="bor rnd wht shd page">
+    <div id="CVE4json" class="jsonBox bor rnd wht shd page">
   
     </div>
-    <div id="CVE5json" class="bor rnd wht shd page">
+    <div id="CVE5json" class="jsonBox bor rnd wht shd page">
   
     </div>
   </div>

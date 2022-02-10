@@ -7,7 +7,7 @@ var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Date, JSON, Object, URL, cna, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, statusFunction) {
+    (function (Array, Date, JSON, Object, URL, cna, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, statusFunction) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -268,7 +268,6 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }).call(this);
 
 };
-pug_html = pug_html + "\u003C!--\"https:\u002F\u002Fwww.google.com\u002Fs2\u002Ffavicons?sz=32&domain_url=https:\u002F\u002Fabc.com--\u003E";
 pug_mixins["container"] = pug_interp = function(con){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (con.x_ValidationErrors) {
@@ -657,6 +656,67 @@ if (v) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = v.toJSON().substr(0,10)) ? "" : pug_interp));
 }
 };
+pug_mixins["JSON"] = pug_interp = function(d, par){
+var block = (this && this.block), attributes = (this && this.attributes) || {};
+var k;
+if (d instanceof Array) {
+pug_html = pug_html + "\u003Cdetails" + (" class=\"arr\""+pug_attr("open", true, true, false)) + "\u003E\u003Csummary\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = (par? par + ': ' : '')) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"in\"\u003E";
+// iterate d
+;(function(){
+  var $$obj = d;
+  if ('number' == typeof $$obj.length) {
+      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
+        var s = $$obj[i];
+pug_mixins["JSON"](s);
+      }
+  } else {
+    var $$l = 0;
+    for (var i in $$obj) {
+      $$l++;
+      var s = $$obj[i];
+pug_mixins["JSON"](s);
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
+}
+else
+if (d instanceof Object) {
+pug_html = pug_html + "\u003Cdetails" + (" class=\"obj\""+pug_attr("open", true, true, false)) + "\u003E\u003Csummary\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = (par? par + ': ' : '')) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"in\"\u003E";
+// iterate d
+;(function(){
+  var $$obj = d;
+  if ('number' == typeof $$obj.length) {
+      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
+        var k = $$obj[i];
+if (d.hasOwnProperty(i)) {
+pug_mixins["JSON"](k, i);
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var i in $$obj) {
+      $$l++;
+      var k = $$obj[i];
+if (d.hasOwnProperty(i)) {
+pug_mixins["JSON"](k, i);
+}
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
+}
+else {
+if (par) {
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["i",(typeof d === 'number' ? 'n' : '')], [false,true]), false, false)) + "\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = par + ': ') ? "" : pug_interp)) + "\u003C\u002Fb\u003E" + (pug_escape(null == (pug_interp = d) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+}
+else {
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes([(typeof d === 'number' ? 'n' : '')], [true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = d) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+}
+}
+};
 pug_mixins["versionPairs"] = pug_interp = function(v, v4){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (v4 && v) {
@@ -822,7 +882,12 @@ pug_mixins["cve4"](d);
 if (renderTemplate == 'cve5') {
 pug_mixins["cve5"](d);
 }
-    }.call(this, "Date" in locals_for_with ?
+if (renderTemplate == 'JSON') {
+pug_mixins["JSON"](d);
+}
+    }.call(this, "Array" in locals_for_with ?
+        locals_for_with.Array :
+        typeof Array !== 'undefined' ? Array : undefined, "Date" in locals_for_with ?
         locals_for_with.Date :
         typeof Date !== 'undefined' ? Date : undefined, "JSON" in locals_for_with ?
         locals_for_with.JSON :
