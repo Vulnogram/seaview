@@ -119,44 +119,61 @@ img.logo{
     margin-right: 1em;
 }
 
+.jsonBox summary::marker {
+  color: #999;
+}
 .jsonBox details.obj > summary:first-of-type::after {
-  content: "{ ··· }";
+  content: " · · · }";
+  color: #669;
 }
 .jsonBox details.arr > summary:first-of-type::after {
-  content: "[ ··· ]";
+  content: " · · · ]";
+  color: #669;
 }
 .jsonBox details.obj[open] > summary:first-of-type::after {
-  content: "{";
+  content: "";
 }
 .jsonBox details.arr[open] > summary:first-of-type::after {
-  content: "[";
+  content: "";
 }
+/*
 .jsonBox details.obj[open]::after {
   content: "}";
   display: block;
   padding-left: .7em;
   margin-left: .3em;
   border-left: 1px dashed #aaa;
-}
-.jsonBox details.arr[open]::after {
+}*/
+/*.jsonBox details.arr[open]::after {
   content: "]";
   display: block;
   padding-left: .7em;
   margin-left: .3em;
   border-left: 1px dashed #aaa;
-}
+}*/
 .jsonBox .i, .jsonBox .in {
   padding-left: .7em;
   margin-left: .3em;
 }
 .jsonBox .i {
   border-left: 1px none;
+  white-space: pre-wrap;
 }
 .jsonBox .in {
-  border-left: 1px dashed #aaa;
+  border-left: 1px dashed #ccc;
 }
 .jsonBox .n {
   color: green;
+}
+.jsonBox i {
+  font-size: 0;
+}
+.jsonBox b {
+  font-weight: normal;
+  color: #666699;
+}
+.tbl td {
+  vertical-align: top;
 }
   </style>
 </head>

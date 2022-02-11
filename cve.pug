@@ -262,35 +262,52 @@ mixin renderDate(value)
     if v
         = v.toJSON().substr(0,10)
 
-mixin JSON(d, par)
+mixin JSON(d, par, comma)
     - var k;
     if d instanceof Array
         details.arr(open)
             summary
-                b=(par? par + ': ' : '')
+                b=(par? par + ' : [' : '[')
             .in
                 each s, i in d
-                    +JSON(s)
+                    +JSON(s, undefined, i < d.length-1)
+            b ]
+            if comma
+                i ,
     else if d instanceof Object
         details.obj(open)
             summary
-                b=(par? par + ': ' : '')
+                b=(par? par + ' : {' : '{')
             .in
-                each k, i in d
-                    if d.hasOwnProperty(i)
-                        +JSON(k, i)
+                - var keys = Object.keys(d)
+                each k, i in keys
+                    if d.hasOwnProperty(k)
+                        +JSON(d[k], k, i < keys.length-1)
+            b }
+                if comma
+                    i ,
     else
         if par
             div.i(class=(typeof d === 'number' ? 'n' : ''))
-                b=par + ': '
-                =d
+                b=par + ' : '
+                +showVal(d, comma)
         else
             div(class=(typeof d === 'number' ? 'n' : ''))
-                =d
-   
+                +showVal(d, comma)
+
+mixin showVal(d, comma)
+    if typeof d === 'string'
+        i "
+        =d
+        i "
+    else
+        =d
+    if comma
+        i ,
+
 
 mixin versionPairs(v, v4)
-    if v4 && v
+    if v
         - var n = v.shift();
         while n != undefined
             = n

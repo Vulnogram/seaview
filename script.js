@@ -8,8 +8,8 @@ function loadCVE(value) {
         var id = realId[1];
         var year = realId[2];
         var bucket = realId[3];
-        var jsonURL = 'https://github.com/CVEProject/cve-schema/tree/master/schema/v5.0/support/v5ReviewSet/' + year + '/' + bucket + 'xxx/' + id + '.json'
-        fetch('https://raw.githubusercontent.com/CVEProject/cve-schema/master/schema/v5.0/support/v5ReviewSet/' + year + '/' + bucket + 'xxx/' + id + '.json', {
+        var jsonURL = 'https://github.com/CVEProject/cvelistV5/tree/master/review_set/' + year + '/' + bucket + 'xxx/' + id + '.json'
+        fetch('https://raw.githubusercontent.com/CVEProject/cvelistV5/master/review_set/' + year + '/' + bucket + 'xxx/' + id + '.json', {
                 method: 'GET',
                 credentials: 'omit',
                 headers: {
@@ -165,29 +165,37 @@ function versionStatusTable5(affected) {
                 }
                 if (v.version) {
                     showCols[v.status] = true;
-                    if(v.lessThan != undefined || v.lessThanOrEqual != undefined) {
-                        table[v.status][pFullName].push('>= '+v.version);
-                    } else {
-                        table[v.status][pFullName].push(v.version);
-                    }
-                }
-                var prevStatus = v.status;
-                if(v.changes) {
-                    for(c of v.changes) {
-                        showCols[c.status] = true;
-                        if(!table[c.status][pFullName]) {
-                            table[c.status][pFullName] = [];
+                    if(!v.changes) {
+                        if(v.lessThan) {
+                            addUniq(table[v.status][pFullName], '>= ' + v.version + ' to < ' + v.lessThan);
+                        } else if(v.lessThanOrEqual) {
+                            addUniq(table[v.status][pFullName], '>= ' + v.version + ' to <= ' + v.lessThan);
+                        } else {
+                            table[v.status][pFullName].push(v.version);
                         }
-                        table[prevStatus][pFullName].push('< ' + c.at);
-                        table[c.status][pFullName].push('>= ' + c.at);
-                        prevStatus = c.status;
+                    } else {
+                        var prevStatus = v.status;
+                        var prevVersion = v.version;
+                        for(c of v.changes) {
+                            showCols[c.status] = true;
+                            if(!table[c.status][pFullName]) {
+                                table[c.status][pFullName] = [];
+                            }
+                            table[prevStatus][pFullName].push('>= ' + prevVersion + ' to < ' + c.at);
+                            //table[c.status][pFullName].push('>= ' + c.at);
+                            prevStatus = c.status;
+                            prevVersion = c.at;
+                        }
+                        if(v.lessThan) {
+                            addUniq(table[prevStatus][pFullName], '>= ' + prevVersion + (v.lessThan != prevVersion ? ' to < ' + v.lessThan : ''));
+                        } else if(v.lessThanOrEqual) {
+                            addUniq(table[prevStatus][pFullName], '>= ' + prevVersion + (v.lessThanOrEqual != prevVersion ? ' to < ' + v.lessThanOrEqual : ''));
+                        } else {
+                            table[prevStatus][pFullName].push(prevVersion);
+                        }                  
                     }
                 }
-                if(v.lessThan) {
-                    addUniq(table[v.status][pFullName], '< ' + v.lessThan);
-                }
-                if(v.lessThanOrEqual) {
-                    addUniq(table[v.status][pFullName], '<= ' + v.lessThanOrEqual);
+                if(v.changes) {
                 }
             }
         }

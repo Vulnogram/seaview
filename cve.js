@@ -656,42 +656,47 @@ if (v) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = v.toJSON().substr(0,10)) ? "" : pug_interp));
 }
 };
-pug_mixins["JSON"] = pug_interp = function(d, par){
+pug_mixins["JSON"] = pug_interp = function(d, par, comma){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 var k;
 if (d instanceof Array) {
-pug_html = pug_html + "\u003Cdetails" + (" class=\"arr\""+pug_attr("open", true, true, false)) + "\u003E\u003Csummary\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = (par? par + ': ' : '')) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"in\"\u003E";
+pug_html = pug_html + "\u003Cdetails" + (" class=\"arr\""+pug_attr("open", true, true, false)) + "\u003E\u003Csummary\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = (par? par + ' : [' : '[')) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"in\"\u003E";
 // iterate d
 ;(function(){
   var $$obj = d;
   if ('number' == typeof $$obj.length) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var s = $$obj[i];
-pug_mixins["JSON"](s);
+pug_mixins["JSON"](s, undefined, i < d.length-1);
       }
   } else {
     var $$l = 0;
     for (var i in $$obj) {
       $$l++;
       var s = $$obj[i];
-pug_mixins["JSON"](s);
+pug_mixins["JSON"](s, undefined, i < d.length-1);
     }
   }
 }).call(this);
 
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003Cb\u003E]\u003C\u002Fb\u003E";
+if (comma) {
+pug_html = pug_html + "\u003Ci\u003E,\u003C\u002Fi\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fdetails\u003E";
 }
 else
 if (d instanceof Object) {
-pug_html = pug_html + "\u003Cdetails" + (" class=\"obj\""+pug_attr("open", true, true, false)) + "\u003E\u003Csummary\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = (par? par + ': ' : '')) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"in\"\u003E";
-// iterate d
+pug_html = pug_html + "\u003Cdetails" + (" class=\"obj\""+pug_attr("open", true, true, false)) + "\u003E\u003Csummary\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = (par? par + ' : {' : '{')) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"in\"\u003E";
+var keys = Object.keys(d)
+// iterate keys
 ;(function(){
-  var $$obj = d;
+  var $$obj = keys;
   if ('number' == typeof $$obj.length) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var k = $$obj[i];
-if (d.hasOwnProperty(i)) {
-pug_mixins["JSON"](k, i);
+if (d.hasOwnProperty(k)) {
+pug_mixins["JSON"](d[k], k, i < keys.length-1);
 }
       }
   } else {
@@ -699,27 +704,47 @@ pug_mixins["JSON"](k, i);
     for (var i in $$obj) {
       $$l++;
       var k = $$obj[i];
-if (d.hasOwnProperty(i)) {
-pug_mixins["JSON"](k, i);
+if (d.hasOwnProperty(k)) {
+pug_mixins["JSON"](d[k], k, i < keys.length-1);
 }
     }
   }
 }).call(this);
 
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003Cb\u003E}";
+if (comma) {
+pug_html = pug_html + "\u003Ci\u003E,\u003C\u002Fi\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fb\u003E\u003C\u002Fdetails\u003E";
 }
 else {
 if (par) {
-pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["i",(typeof d === 'number' ? 'n' : '')], [false,true]), false, false)) + "\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = par + ': ') ? "" : pug_interp)) + "\u003C\u002Fb\u003E" + (pug_escape(null == (pug_interp = d) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["i",(typeof d === 'number' ? 'n' : '')], [false,true]), false, false)) + "\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = par + ' : ') ? "" : pug_interp)) + "\u003C\u002Fb\u003E";
+pug_mixins["showVal"](d, comma);
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 else {
-pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes([(typeof d === 'number' ? 'n' : '')], [true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = d) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes([(typeof d === 'number' ? 'n' : '')], [true]), false, false)) + "\u003E";
+pug_mixins["showVal"](d, comma);
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
+}
+};
+pug_mixins["showVal"] = pug_interp = function(d, comma){
+var block = (this && this.block), attributes = (this && this.attributes) || {};
+if (typeof d === 'string') {
+pug_html = pug_html + "\u003Ci\u003E\"\u003C\u002Fi\u003E" + (pug_escape(null == (pug_interp = d) ? "" : pug_interp)) + "\u003Ci\u003E\"\u003C\u002Fi\u003E";
+}
+else {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d) ? "" : pug_interp));
+}
+if (comma) {
+pug_html = pug_html + "\u003Ci\u003E,\u003C\u002Fi\u003E";
 }
 };
 pug_mixins["versionPairs"] = pug_interp = function(v, v4){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-if (v4 && v) {
+if (v) {
 var n = v.shift();
 while (n != undefined) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = n) ? "" : pug_interp));
