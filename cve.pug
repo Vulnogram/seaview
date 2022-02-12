@@ -79,17 +79,28 @@ mixin refList(references)
             img(width=16,height=16,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
             a(href=r.url)=(r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
             if r.tags && r.tags.length > 0
-                |  (  
+                |  
                 =r.tags.join(" ")
-                |  ) 
 
-
-mixin container(con)
+mixin errors(con)
     if con.x_ValidationErrors
         each x in con.x_ValidationErrors
             p.sec.rnd.pad
-                b.vgi-alert Upconversion Error/Warning: 
-                i=x
+                b.vgi-alert Validation Error : 
+                |   
+                span=x
+
+mixin warnings(con)
+    if con.x_ConverterErrors
+        each x, i in con.x_ConverterErrors
+            p.sec.rnd.pad
+                b.vgi-alert Conversion Warning :  
+                |  
+                b=x.error
+                | 
+                span=x.message
+
+mixin container(con)
     .cna.pad
         if cna[con.shortName] && cna[con.shortName].i
             b
@@ -271,9 +282,9 @@ mixin JSON(d, par, comma)
             .in
                 each s, i in d
                     +JSON(s, undefined, i < d.length-1)
-            b ]
-            if comma
-                i ,
+                b ]
+                if comma
+                    i ,
     else if d instanceof Object
         details.obj(open)
             summary
@@ -283,7 +294,7 @@ mixin JSON(d, par, comma)
                 each k, i in keys
                     if d.hasOwnProperty(k)
                         +JSON(d[k], k, i < keys.length-1)
-            b }
+                b }
                 if comma
                     i ,
     else
@@ -338,7 +349,7 @@ mixin cve5(cve)
             //delete con.json;
             //con.json = jsonClone;
             //delete con.json.x_legacyV4Record;
-            con.x_ValidationErrors = cve.x_ValidationErrors;
+            //con.x_ValidationErrors = cve.x_ValidationErrors;
             con.state = CDM.state;
             con.cveId = CDM.cveId;
             var PMD = cve.containers.cna.providerMetadata;
@@ -417,7 +428,11 @@ mixin extra
 block page
     if renderTemplate == 'cve4'
         +cve4(d)
-    if renderTemplate == 'cve5'
+    else if renderTemplate == 'cve5'
         +cve5(d)
-    if renderTemplate == 'JSON'
+    else if renderTemplate == 'JSON'
         +JSON(d)
+    else if renderTemplate == 'warnings'
+        +warnings(d.containers.cna)
+    else if renderTemplate == 'errors'
+        +errors(d.containers.cna)

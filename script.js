@@ -282,6 +282,12 @@ function loadJSON(d, id, msg, msgLink) {
     CVE5.innerHTML = cve5j.innerHTML = "";
     cve4j.innerHTML = tree4;
     cve5j.innerHTML = tree5;
+    if (d.containers.cna.x_ValidationErrors) {
+        CVE5e.innerHTML = cve({renderTemplate:'errors',d: d});
+    }
+    if (d.containers.cna.x_ConverterErrors) {
+        CVE4e.innerHTML = cve({renderTemplate:'warnings', d: d});
+    }
 
     if (cve4doc) {
         var doc4 = cve({renderTemplate:'cve4',d: cve4doc, statusFunction: versionStatusTable4});
@@ -290,5 +296,6 @@ function loadJSON(d, id, msg, msgLink) {
     var doc5 = cve({renderTemplate:'cve5',d: d, cvssDesc: cvssDesc, statusFunction: versionStatusTable5});
     CVE5.innerHTML = doc5;
 
+    document.title = id;
     history.pushState(null, null, "?"+id);
 }
