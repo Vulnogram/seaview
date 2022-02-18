@@ -1,6 +1,6 @@
 ![SeaView Logo](https://vulnogram.github.io/seaview/apple-touch-icon.png)
-#  SeaView
- View CVE Records 
+#  [SeaView](https://vulnogram.github.io/seaview) -  an online tool to View CVE Records
+
 
 [Go to the tool online](https://vulnogram.github.io/seaview)
 
