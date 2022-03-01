@@ -92,7 +92,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
 
 }
 };
-pug_mixins["statusTable"] = pug_interp = function(st,v4){
+pug_mixins["statusTablev4"] = pug_interp = function(st){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Ctable class=\"tbl\"\u003E\u003Ccolgroup\u003E\u003Ccol\u002F\u003E";
 if (st.show.platforms) {
@@ -101,6 +101,9 @@ pug_html = pug_html + "\u003Ccol\u002F\u003E";
 pug_html = pug_html + "\u003Ccol class=\"affectedCol\"\u002F\u003E\u003C\u002Fcolgroup\u003E\u003Cthead\u003E\u003Ctr\u003E\u003Cth\u003EProduct\u003C\u002Fth\u003E";
 if (st.show.platforms) {
 pug_html = pug_html + "\u003Cth\u003EPlatforms\u003C\u002Fth\u003E";
+}
+if (st.show.modules) {
+pug_html = pug_html + "\u003Cth\u003EModules\u003C\u002Fth\u003E";
 }
 pug_html = pug_html + "\u003Cth\u003EAffected\u003C\u002Fth\u003E";
 if (st.show.unaffected) {
@@ -120,17 +123,20 @@ pug_html = pug_html + "\u003Ctr\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_
 if (st.show.platforms) {
 pug_html = pug_html + "\u003Ctd\u003E" + (pug_escape(null == (pug_interp = p[1]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E";
 }
+if (st.show.modules) {
+pug_html = pug_html + "\u003Ctd\u003E" + (pug_escape(null == (pug_interp = p[2]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E";
+}
 pug_html = pug_html + "\u003Ctd\u003E";
-pug_mixins["versionPairs"](st.vals.affected[i],v4);
+pug_mixins["versionList"](st.vals.affected[i]);
 pug_html = pug_html + "\u003C\u002Ftd\u003E";
 if (st.show.unaffected) {
 pug_html = pug_html + "\u003Ctd\u003E";
-pug_mixins["versionPairs"](st.vals.unaffected[i],v4);
+pug_mixins["versionList"](st.vals.unaffected[i]);
 pug_html = pug_html + "\u003C\u002Ftd\u003E";
 }
 if (st.show.unknown) {
 pug_html = pug_html + "\u003Ctd\u003E";
-pug_mixins["versionPairs"](st.vals.unknown[i],v4);
+pug_mixins["versionList"](st.vals.unknown[i]);
 pug_html = pug_html + "\u003C\u002Ftd\u003E";
 }
 pug_html = pug_html + "\u003C\u002Ftr\u003E";
@@ -144,17 +150,20 @@ pug_html = pug_html + "\u003Ctr\u003E\u003Ctd\u003E" + (pug_escape(null == (pug_
 if (st.show.platforms) {
 pug_html = pug_html + "\u003Ctd\u003E" + (pug_escape(null == (pug_interp = p[1]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E";
 }
+if (st.show.modules) {
+pug_html = pug_html + "\u003Ctd\u003E" + (pug_escape(null == (pug_interp = p[2]) ? "" : pug_interp)) + "\u003C\u002Ftd\u003E";
+}
 pug_html = pug_html + "\u003Ctd\u003E";
-pug_mixins["versionPairs"](st.vals.affected[i],v4);
+pug_mixins["versionList"](st.vals.affected[i]);
 pug_html = pug_html + "\u003C\u002Ftd\u003E";
 if (st.show.unaffected) {
 pug_html = pug_html + "\u003Ctd\u003E";
-pug_mixins["versionPairs"](st.vals.unaffected[i],v4);
+pug_mixins["versionList"](st.vals.unaffected[i]);
 pug_html = pug_html + "\u003C\u002Ftd\u003E";
 }
 if (st.show.unknown) {
 pug_html = pug_html + "\u003Ctd\u003E";
-pug_mixins["versionPairs"](st.vals.unknown[i],v4);
+pug_mixins["versionList"](st.vals.unknown[i]);
 pug_html = pug_html + "\u003C\u002Ftd\u003E";
 }
 pug_html = pug_html + "\u003C\u002Ftr\u003E";
@@ -164,21 +173,226 @@ pug_html = pug_html + "\u003C\u002Ftr\u003E";
 
 pug_html = pug_html + "\u003C\u002Ftbody\u003E\u003C\u002Ftable\u003E";
 };
+pug_mixins["prodDetails"] = pug_interp = function(p){
+var block = (this && this.block), attributes = (this && this.attributes) || {};
+pug_html = pug_html + "\u003Cb class=\"vgi-package\"\u003E" + (pug_escape(null == (pug_interp = p[0]) ? "" : pug_interp)) + "\u003C\u002Fb\u003E";
+if (p[2]) {
+pug_html = pug_html + "\u003Cspan\u003E » " + (pug_escape(null == (pug_interp = p[2]) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+}
+if (p[1]) {
+pug_html = pug_html + "\u003Ci class=\"lbl\"\u003E on \u003C\u002Fi\u003E \u003Cspan class=\"vgi-stack\"\u003E" + (pug_escape(null == (pug_interp = p[1]) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+}
+if (p[3]) {
+pug_html = pug_html + "\u003Cbr\u002F\u003E";
+if (p[3].collectionURL) {
+pug_html = pug_html + "\u003Ca" + (" class=\"vgi-package\""+pug_attr("href", p[3].collectionURL, true, false)) + "\u003Epackage repo\u003C\u002Fa\u003E";
+}
+if (p[3].repo) {
+pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", p[3].repo, true, false)) + "\u003Esource repo\u003C\u002Fa\u003E";
+}
+if (p[3].programFiles) {
+// iterate p[3].programFiles
+;(function(){
+  var $$obj = p[3].programFiles;
+  if ('number' == typeof $$obj.length) {
+      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
+        var f = $$obj[i];
+pug_html = pug_html + "\u003Cspan class=\"vgi-text\"\u003E" + (pug_escape(null == (pug_interp = f) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var i in $$obj) {
+      $$l++;
+      var f = $$obj[i];
+pug_html = pug_html + "\u003Cspan class=\"vgi-text\"\u003E" + (pug_escape(null == (pug_interp = f) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+    }
+  }
+}).call(this);
+
+}
+if (p[3].programRoutines) {
+// iterate p[3].programRoutines
+;(function(){
+  var $$obj = p[3].programRoutines;
+  if ('number' == typeof $$obj.length) {
+      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
+        var f = $$obj[i];
+pug_html = pug_html + "\u003Cspan class=\"vgi-edit\"\u003E" + (pug_escape(null == (pug_interp = f.name) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var i in $$obj) {
+      $$l++;
+      var f = $$obj[i];
+pug_html = pug_html + "\u003Cspan class=\"vgi-edit\"\u003E" + (pug_escape(null == (pug_interp = f.name) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+    }
+  }
+}).call(this);
+
+}
+}
+};
+pug_mixins["statusTablev5"] = pug_interp = function(st){
+var block = (this && this.block), attributes = (this && this.attributes) || {};
+pug_html = pug_html + "\u003Ctable class=\"tbl gap\"\u003E\u003Ccolgroup\u003E\u003Ccol\u002F\u003E\u003Ccol class=\"affectedCol\"\u002F\u003E\u003C\u002Fcolgroup\u003E\u003Cthead\u003E\u003Ctr\u003E\u003Cth\u003EProduct\u003C\u002Fth\u003E\u003Cth\u003EAffected\u003C\u002Fth\u003E";
+if (st.show.unaffected) {
+pug_html = pug_html + "\u003Cth\u003EUnaffected\u003C\u002Fth\u003E";
+}
+if (st.show.unknown) {
+pug_html = pug_html + "\u003Cth\u003EUnknown\u003C\u002Fth\u003E";
+}
+pug_html = pug_html + "\u003C\u002Ftr\u003E\u003Ctbody\u003E";
+// iterate st.groups
+;(function(){
+  var $$obj = st.groups;
+  if ('number' == typeof $$obj.length) {
+      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
+        var p = $$obj[i];
+var showProd = st.vals[i].length
+// iterate st.vals[i]
+;(function(){
+  var $$obj = st.vals[i];
+  if ('number' == typeof $$obj.length) {
+      for (var j = 0, $$l = $$obj.length; j < $$l; j++) {
+        var x = $$obj[j];
+pug_html = pug_html + "\u003Ctr\u003E";
+if (showProd) {
+pug_html = pug_html + "\u003Ctd" + (pug_attr("rowspan", showProd, true, false)) + "\u003E";
+pug_mixins["prodDetails"](p);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+showProd = false
+}
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.affected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+if (st.show.unaffected) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unaffected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+if (st.show.unknown) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unknown);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+pug_html = pug_html + "\u003C\u002Ftr\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var j in $$obj) {
+      $$l++;
+      var x = $$obj[j];
+pug_html = pug_html + "\u003Ctr\u003E";
+if (showProd) {
+pug_html = pug_html + "\u003Ctd" + (pug_attr("rowspan", showProd, true, false)) + "\u003E";
+pug_mixins["prodDetails"](p);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+showProd = false
+}
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.affected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+if (st.show.unaffected) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unaffected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+if (st.show.unknown) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unknown);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+pug_html = pug_html + "\u003C\u002Ftr\u003E";
+    }
+  }
+}).call(this);
+
+      }
+  } else {
+    var $$l = 0;
+    for (var i in $$obj) {
+      $$l++;
+      var p = $$obj[i];
+var showProd = st.vals[i].length
+// iterate st.vals[i]
+;(function(){
+  var $$obj = st.vals[i];
+  if ('number' == typeof $$obj.length) {
+      for (var j = 0, $$l = $$obj.length; j < $$l; j++) {
+        var x = $$obj[j];
+pug_html = pug_html + "\u003Ctr\u003E";
+if (showProd) {
+pug_html = pug_html + "\u003Ctd" + (pug_attr("rowspan", showProd, true, false)) + "\u003E";
+pug_mixins["prodDetails"](p);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+showProd = false
+}
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.affected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+if (st.show.unaffected) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unaffected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+if (st.show.unknown) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unknown);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+pug_html = pug_html + "\u003C\u002Ftr\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var j in $$obj) {
+      $$l++;
+      var x = $$obj[j];
+pug_html = pug_html + "\u003Ctr\u003E";
+if (showProd) {
+pug_html = pug_html + "\u003Ctd" + (pug_attr("rowspan", showProd, true, false)) + "\u003E";
+pug_mixins["prodDetails"](p);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+showProd = false
+}
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.affected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+if (st.show.unaffected) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unaffected);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+if (st.show.unknown) {
+pug_html = pug_html + "\u003Ctd\u003E";
+pug_mixins["versionList"](x.unknown);
+pug_html = pug_html + "\u003C\u002Ftd\u003E";
+}
+pug_html = pug_html + "\u003C\u002Ftr\u003E";
+    }
+  }
+}).call(this);
+
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Ftbody\u003E\u003C\u002Fthead\u003E\u003C\u002Ftable\u003E";
+};
 pug_mixins["creditList"] = pug_interp = function(credits){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 // iterate credits
 ;(function(){
   var $$obj = credits;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index4 = 0, $$l = $$obj.length; pug_index4 < $$l; pug_index4++) {
-        var c = $$obj[pug_index4];
+      for (var pug_index9 = 0, $$l = $$obj.length; pug_index9 < $$l; pug_index9++) {
+        var c = $$obj[pug_index9];
 pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index4 in $$obj) {
+    for (var pug_index9 in $$obj) {
       $$l++;
-      var c = $$obj[pug_index4];
+      var c = $$obj[pug_index9];
 pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
     }
   }
@@ -192,15 +406,15 @@ if (tags) {
 ;(function(){
   var $$obj = tags;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index5 = 0, $$l = $$obj.length; pug_index5 < $$l; pug_index5++) {
-        var t = $$obj[pug_index5];
+      for (var pug_index10 = 0, $$l = $$obj.length; pug_index10 < $$l; pug_index10++) {
+        var t = $$obj[pug_index10];
 pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
       }
   } else {
     var $$l = 0;
-    for (var pug_index5 in $$obj) {
+    for (var pug_index10 in $$obj) {
       $$l++;
-      var t = $$obj[pug_index5];
+      var t = $$obj[pug_index10];
 pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
     }
   }
@@ -241,8 +455,8 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
 ;(function(){
   var $$obj = references;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index7 = 0, $$l = $$obj.length; pug_index7 < $$l; pug_index7++) {
-        var r = $$obj[pug_index7];
+      for (var pug_index12 = 0, $$l = $$obj.length; pug_index12 < $$l; pug_index12++) {
+        var r = $$obj[pug_index12];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
@@ -253,9 +467,9 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index7 in $$obj) {
+    for (var pug_index12 in $$obj) {
       $$l++;
-      var r = $$obj[pug_index7];
+      var r = $$obj[pug_index12];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
@@ -275,15 +489,15 @@ if (con.x_ValidationErrors) {
 ;(function(){
   var $$obj = con.x_ValidationErrors;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index8 = 0, $$l = $$obj.length; pug_index8 < $$l; pug_index8++) {
-        var x = $$obj[pug_index8];
+      for (var pug_index13 = 0, $$l = $$obj.length; pug_index13 < $$l; pug_index13++) {
+        var x = $$obj[pug_index13];
 pug_html = pug_html + "\u003Cp class=\"sec rnd pad\"\u003E\u003Cb class=\"vgi-alert\"\u003EValidation Error : \u003C\u002Fb\u003E  \u003Cspan\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index8 in $$obj) {
+    for (var pug_index13 in $$obj) {
       $$l++;
-      var x = $$obj[pug_index8];
+      var x = $$obj[pug_index13];
 pug_html = pug_html + "\u003Cp class=\"sec rnd pad\"\u003E\u003Cb class=\"vgi-alert\"\u003EValidation Error : \u003C\u002Fb\u003E  \u003Cspan\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
     }
   }
@@ -353,22 +567,22 @@ pug_html = pug_html + "\u003Cdiv class=\"problem pad\"\u003E\u003Cb class=\"vgi-
 ;(function(){
   var $$obj = con.problemTypes;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index10 = 0, $$l = $$obj.length; pug_index10 < $$l; pug_index10++) {
-        var t = $$obj[pug_index10];
+      for (var pug_index15 = 0, $$l = $$obj.length; pug_index15 < $$l; pug_index15++) {
+        var t = $$obj[pug_index15];
 if (t.description) {
 // iterate t.description
 ;(function(){
   var $$obj = t.description;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index11 = 0, $$l = $$obj.length; pug_index11 < $$l; pug_index11++) {
-        var d = $$obj[pug_index11];
+      for (var pug_index16 = 0, $$l = $$obj.length; pug_index16 < $$l; pug_index16++) {
+        var d = $$obj[pug_index16];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
       }
   } else {
     var $$l = 0;
-    for (var pug_index11 in $$obj) {
+    for (var pug_index16 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index11];
+      var d = $$obj[pug_index16];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
     }
   }
@@ -380,8 +594,8 @@ if (t.descriptions) {
 ;(function(){
   var $$obj = t.descriptions;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index12 = 0, $$l = $$obj.length; pug_index12 < $$l; pug_index12++) {
-        var d = $$obj[pug_index12];
+      for (var pug_index17 = 0, $$l = $$obj.length; pug_index17 < $$l; pug_index17++) {
+        var d = $$obj[pug_index17];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
 if (d.cweId) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
@@ -389,9 +603,9 @@ pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/
       }
   } else {
     var $$l = 0;
-    for (var pug_index12 in $$obj) {
+    for (var pug_index17 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index12];
+      var d = $$obj[pug_index17];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
 if (d.cweId) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
@@ -404,23 +618,23 @@ pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/
       }
   } else {
     var $$l = 0;
-    for (var pug_index10 in $$obj) {
+    for (var pug_index15 in $$obj) {
       $$l++;
-      var t = $$obj[pug_index10];
+      var t = $$obj[pug_index15];
 if (t.description) {
 // iterate t.description
 ;(function(){
   var $$obj = t.description;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index13 = 0, $$l = $$obj.length; pug_index13 < $$l; pug_index13++) {
-        var d = $$obj[pug_index13];
+      for (var pug_index18 = 0, $$l = $$obj.length; pug_index18 < $$l; pug_index18++) {
+        var d = $$obj[pug_index18];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
       }
   } else {
     var $$l = 0;
-    for (var pug_index13 in $$obj) {
+    for (var pug_index18 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index13];
+      var d = $$obj[pug_index18];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
     }
   }
@@ -432,8 +646,8 @@ if (t.descriptions) {
 ;(function(){
   var $$obj = t.descriptions;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index14 = 0, $$l = $$obj.length; pug_index14 < $$l; pug_index14++) {
-        var d = $$obj[pug_index14];
+      for (var pug_index19 = 0, $$l = $$obj.length; pug_index19 < $$l; pug_index19++) {
+        var d = $$obj[pug_index19];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
 if (d.cweId) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
@@ -441,9 +655,9 @@ pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/
       }
   } else {
     var $$l = 0;
-    for (var pug_index14 in $$obj) {
+    for (var pug_index19 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index14];
+      var d = $$obj[pug_index19];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
 if (d.cweId) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
@@ -468,7 +682,12 @@ pug_mixins["spara"](con.exploits);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 if (con.pvstatus) {
-pug_mixins["statusTable"](con.pvstatus, con.v4);
+if (con.v4) {
+pug_mixins["statusTablev4"](con.pvstatus);
+}
+else {
+pug_mixins["statusTablev5"](con.pvstatus);
+}
 }
 if (con.solutions) {
 pug_html = pug_html + "\u003Cdiv class=\"solution pad\"\u003E\u003Cb class=\"vgi-safe\"\u003ESolution\u003C\u002Fb\u003E";
@@ -510,8 +729,8 @@ else {
 ;(function(){
   var $$obj = t.split(/\n/);
   if ('number' == typeof $$obj.length) {
-      for (var pug_index15 = 0, $$l = $$obj.length; pug_index15 < $$l; pug_index15++) {
-        var line = $$obj[pug_index15];
+      for (var pug_index20 = 0, $$l = $$obj.length; pug_index20 < $$l; pug_index20++) {
+        var line = $$obj[pug_index20];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
@@ -523,9 +742,9 @@ pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = line) 
       }
   } else {
     var $$l = 0;
-    for (var pug_index15 in $$obj) {
+    for (var pug_index20 in $$obj) {
       $$l++;
-      var line = $$obj[pug_index15];
+      var line = $$obj[pug_index20];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
@@ -584,8 +803,8 @@ if (l) {
 ;(function(){
   var $$obj = l;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index18 = 0, $$l = $$obj.length; pug_index18 < $$l; pug_index18++) {
-        var d = $$obj[pug_index18];
+      for (var pug_index23 = 0, $$l = $$obj.length; pug_index23 < $$l; pug_index23++) {
+        var d = $$obj[pug_index23];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
 pug_html = pug_html + "\u003Cp\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
@@ -596,9 +815,9 @@ pug_mixins["para"](d.value);
       }
   } else {
     var $$l = 0;
-    for (var pug_index18 in $$obj) {
+    for (var pug_index23 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index18];
+      var d = $$obj[pug_index23];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
 pug_html = pug_html + "\u003Cp\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
@@ -768,7 +987,7 @@ if (comma) {
 pug_html = pug_html + "\u003Ci\u003E,\u003C\u002Fi\u003E";
 }
 };
-pug_mixins["versionPairs"] = pug_interp = function(v, v4){
+pug_mixins["versionList"] = pug_interp = function(v){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (v) {
 var n = v.shift();
@@ -778,24 +997,6 @@ if (v.length > 0) {
 pug_html = pug_html + "\u003Chr\u002F\u003E";
 }
 n = v.shift();
-}
-}
-else {
-if (v) {
-n = v.shift();
-while (n != undefined) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = n) ? "" : pug_interp));
-if (n.startsWith('>')) {
-n = v.shift()
-if (n !== undefined) {
-pug_html = pug_html + ("\u003Ci\u003E to \u003C\u002Fi\u003E" + (pug_escape(null == (pug_interp = n) ? "" : pug_interp)));
-}
-}
-if (v.length > 0) {
-pug_html = pug_html + "\u003Chr\u002F\u003E";
-}
-n = v.shift();
-}
 }
 }
 };

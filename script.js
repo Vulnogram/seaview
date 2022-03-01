@@ -76,6 +76,9 @@ function versionStatusTable4(affects) {
                 var cat = "affected";
                 var platforms = "";
                 var major = version.version_name ? version.version_name : "";
+                if(!version.version_affected && version.affected) { 
+                    version.version_affected = version.affected;
+                }
                 if(version.version_affected) {
                     if(version.version_affected.startsWith('?')) {
                         cat = "unknown";
@@ -128,18 +131,17 @@ function versionStatusTable4(affects) {
             }
         }
     }
-    return({cols:nameAndPlatforms,vals:table, show: showCols});
+    return({cols:nameAndPlatforms, vals:table, show: showCols});
 }
 
+/* fullname = vendor . product . platforms . module .others 
+/* table --> [ fullname ][version][affected|unaffected|unknown] = [ list of ranges ] */
 function versionStatusTable5(affected) {
-    var table= {
-        affected: {},
-        unaffected: {},
-        unknown: {}
-    };
+    var t = {};
     nameAndPlatforms = {};
     var showCols = {
         platforms: false,
+        modules: false,
         affected: false,
         unaffected: false,
         unknown: false
@@ -148,70 +150,87 @@ function versionStatusTable5(affected) {
         var pname = p.product ? p.product : p.packageName ? p.packageName : '';
         if (p.platforms)
             showCols.platforms = true;
+        if (p.modules)
+            showCols.modules = true;
         if (p.status)
             showCols[p.status] = true;
         var platforms =
             (p.platforms ? p.platforms.join(', '): '');
+        var others = {};
+        if(p.collectionURL) {
+            others.collectionURL = p.collectionURL;
+        }
+        if(p.repo) {
+            others.repo = p.repo;
+        }
+        if(p.programFiles) {
+            others.programFiles = p.programFiles;
+        }
+        if(p.programRoutines) {
+            others.programRoutines = p.programRoutines;
+        }
         //pname = pname + platforms;
         var modules = p.modules ? p.modules.join(', ') : '';
         if(p.versions) {
             for(v of p.versions) {
+                var rows = {
+                    affected: [],
+                    unaffected: [],
+                    unknown: []
+                };
                 //var major = v.version != 'unspecified' ? v.version: undefined;//? v.version.match(/^(.*)\./): null;
                 var major = undefined;//major ? major[1] : '';
-                var pFullName = [(p.vendor ? p.vendor + ' ' : '') + pname + (major ? ' ' + major : ''), platforms ? platforms : ''];
+                var pFullName = [(p.vendor ? p.vendor + ' ' : '') + pname + (major ? ' ' + major : ''), platforms, modules, others];
                 nameAndPlatforms[pFullName] = pFullName;
-                if(!table[v.status][pFullName]) {
-                    table[v.status][pFullName] = [];
-                }
                 if (v.version) {
                     showCols[v.status] = true;
                     if(!v.changes) {
                         if(v.lessThan) {
-                            addUniq(table[v.status][pFullName], '>= ' + v.version + ' to < ' + v.lessThan);
+                            rows[v.status].push('>= ' + v.version + ' to < ' + v.lessThan);
                         } else if(v.lessThanOrEqual) {
-                            addUniq(table[v.status][pFullName], '>= ' + v.version + ' to <= ' + v.lessThan);
+                            rows[v.status].push('>= ' + v.version + ' to <= ' + v.lessThan);
                         } else {
-                            table[v.status][pFullName].push(v.version);
+                            rows[v.status].push('= ' + v.version);
                         }
                     } else {
                         var prevStatus = v.status;
                         var prevVersion = v.version;
                         for(c of v.changes) {
                             showCols[c.status] = true;
-                            if(!table[c.status][pFullName]) {
-                                table[c.status][pFullName] = [];
-                            }
-                            table[prevStatus][pFullName].push('>= ' + prevVersion + ' to < ' + c.at);
-                            //table[c.status][pFullName].push('>= ' + c.at);
+                            rows[prevStatus].push('>= ' + prevVersion + ' to < ' + c.at);
                             prevStatus = c.status;
                             prevVersion = c.at;
                         }
                         if(v.lessThan) {
-                            addUniq(table[prevStatus][pFullName], '>= ' + prevVersion + (v.lessThan != prevVersion ? ' to < ' + v.lessThan : ''));
+                            rows[prevStatus].push('>= ' + prevVersion + (v.lessThan != prevVersion ? ' to < ' + v.lessThan : ''));
                         } else if(v.lessThanOrEqual) {
-                            addUniq(table[prevStatus][pFullName], '>= ' + prevVersion + (v.lessThanOrEqual != prevVersion ? ' to < ' + v.lessThanOrEqual : ''));
+                            rows[prevStatus].push('>= ' + prevVersion + (v.lessThanOrEqual != prevVersion ? ' to < ' + v.lessThanOrEqual : ''));
                         } else {
-                            table[prevStatus][pFullName].push(prevVersion);
+                            rows[prevStatus].push(">=" + prevVersion);
                         }                  
                     }
                 }
-                if(v.changes) {
-                }
+                if(!t[pFullName]) t[pFullName] = [];
+                //if(!t[pFullName][v.version]) t[pFullName][v.version] = [];
+                t[pFullName].push(rows);
             }
         }
-        /*var defaultLabel = '';
-        if (Object.keys(table[p.defaultStatus]).length > 0) {
-            defaultLabel = ' - all other versions';
-        }
-        var pFullName = [pname + defaultLabel, platforms ? platforms : ''];
+        var pFullName = [(p.vendor ? p.vendor + ' ' : '') + pname + (major ? ' ' + major : ''), platforms, modules, others];
         nameAndPlatforms[pFullName] = pFullName;
-        table[p.defaultStatus][pFullName] = [ p.defaultStatus ];
+        var rows = {};
+        rows[p.defaultStatus] = ["everything else"];
+        if(!t[pFullName]) {
+            t[pFullName] = [rows];
+        } else {
+            t[pFullName].push(rows);
+        }
         if (p.defaultStatus)
-            showCols[p.defaultStatus] = true;*/
+            showCols[p.defaultStatus] = true;
     }
-    console.log({cols:nameAndPlatforms,vals:table, show: showCols});
-    return({cols:nameAndPlatforms,vals:table, show: showCols});
+    console.log(t);
+    return({groups:nameAndPlatforms, vals:t, show: showCols});
 }
+
 
 cvssDesc = {
     "attackVector": {

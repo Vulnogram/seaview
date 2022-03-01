@@ -21,7 +21,7 @@ mixin cvssList(cvssList)
                         else
                             a.vgi-ext(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString) Open CVSS Calc
 
-mixin statusTable(st,v4)
+mixin statusTablev4(st)
     table.tbl
         colgroup
             col
@@ -33,6 +33,8 @@ mixin statusTable(st,v4)
                 th Product
                 if st.show.platforms 
                     th Platforms
+                if st.show.modules 
+                    th Modules
                 th Affected
                 if st.show.unaffected
                     th Unaffected
@@ -44,19 +46,73 @@ mixin statusTable(st,v4)
                     td=p[0]
                     if st.show.platforms 
                         td=p[1]
+                    if st.show.modules 
+                        td=p[2]
                     td
-                        +versionPairs(st.vals.affected[i],v4)
+                        +versionList(st.vals.affected[i])
                     if st.show.unaffected
                         td
-                            +versionPairs(st.vals.unaffected[i],v4)
+                            +versionList(st.vals.unaffected[i])
                     if st.show.unknown
                         td
-                            +versionPairs(st.vals.unknown[i],v4)
+                            +versionList(st.vals.unknown[i])
+
+mixin prodDetails(p)
+    b.vgi-package=p[0]
+    if p[2]
+        span  » 
+            =p[2]
+    if p[1]
+        i.lbl  on 
+        |  
+        span.vgi-stack=p[1]
+    if p[3]
+        br
+        if p[3].collectionURL
+            a.vgi-package(href=p[3].collectionURL) package repo
+        if p[3].repo
+            a.vgi-ext(href=p[3].repo) source repo
+        if p[3].programFiles
+            each f, i in p[3].programFiles
+                span.vgi-text= f
+        if p[3].programRoutines
+            each f, i in p[3].programRoutines
+                span.vgi-edit= f.name
+
+mixin statusTablev5(st)
+    table.tbl.gap
+        colgroup
+            col
+            col.affectedCol
+        thead
+            tr
+                th Product
+                th Affected
+                if st.show.unaffected
+                    th Unaffected
+                if st.show.unknown
+                    th Unknown
+            tbody
+                each p, i in st.groups
+                    - var showProd = st.vals[i].length
+                    each x, j in st.vals[i]
+                        tr
+                            if showProd
+                                td(rowspan=showProd)
+                                    +prodDetails(p)
+                                - showProd = false
+                            td
+                                +versionList(x.affected)
+                            if st.show.unaffected
+                                td
+                                    +versionList(x.unaffected)
+                            if st.show.unknown
+                                td
+                                    +versionList(x.unknown)
 
 mixin creditList(credits)
     for c in credits
         p=c.value
-
 
 mixin tagList(tags)
     if tags
@@ -169,7 +225,10 @@ mixin container(con)
             +spara(con.exploits)
     
     if con.pvstatus
-        +statusTable(con.pvstatus, con.v4)
+        if con.v4
+            +statusTablev4(con.pvstatus)
+        else
+            +statusTablev5(con.pvstatus)
 
     if con.solutions
         .solution.pad
@@ -316,8 +375,7 @@ mixin showVal(d, comma)
     if comma
         i ,
 
-
-mixin versionPairs(v, v4)
+mixin versionList(v)
     if v
         - var n = v.shift();
         while n != undefined
@@ -325,19 +383,6 @@ mixin versionPairs(v, v4)
             if v.length > 0
                 hr
             - n = v.shift();
-    else
-        if v
-            - n = v.shift();
-            while n != undefined
-                = n
-                if n.startsWith('>')
-                    - n = v.shift()
-                    if n !== undefined
-                        i  to 
-                        = n
-                if v.length > 0
-                    hr
-                - n = v.shift();
 
 mixin cve5(cve)
     div.pad
