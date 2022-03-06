@@ -63,7 +63,7 @@ mixin prodDetails(p)
         span  » 
             =p[2]
     if p[1]
-        i.lbl  on 
+        i  on 
         |  
         span.vgi-stack=p[1]
     if p[3]
@@ -133,10 +133,10 @@ mixin refList(references)
         div
             - var u = (new URL(r.url));
             img(width=16,height=16,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
-            a(href=r.url)=(r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
+            a(href=r.url)=(r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
             if r.tags && r.tags.length > 0
                 |  
-                =r.tags.join(" ")
+                =r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")
 
 mixin errors(con)
     if con.x_ValidationErrors
@@ -207,12 +207,17 @@ mixin container(con)
                         |  
                 if t.descriptions
                     for d in t.descriptions
-                        =d.description
                         |   
                         if d.cweId
+                            if d.cweId != d.description
+                                =d.description
+                                |  
                             a(href="https://cwe.mitre.org/data/definitions/"+d.cweId)
                                 small=d.cweId
                             |  
+                        else
+                            =d.description
+
     if con.impacts
         .impact.pad
             b.vgi-impact Impact:  

@@ -180,7 +180,7 @@ if (p[2]) {
 pug_html = pug_html + "\u003Cspan\u003E » " + (pug_escape(null == (pug_interp = p[2]) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
 }
 if (p[1]) {
-pug_html = pug_html + "\u003Ci class=\"lbl\"\u003E on \u003C\u002Fi\u003E \u003Cspan class=\"vgi-stack\"\u003E" + (pug_escape(null == (pug_interp = p[1]) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+pug_html = pug_html + "\u003Ci\u003E on \u003C\u002Fi\u003E \u003Cspan class=\"vgi-stack\"\u003E" + (pug_escape(null == (pug_interp = p[1]) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
 }
 if (p[3]) {
 pug_html = pug_html + "\u003Cbr\u002F\u003E";
@@ -459,9 +459,9 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
         var r = $$obj[pug_index12];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
-pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (r.tags && r.tags.length > 0) {
-pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.join(" ")) ? "" : pug_interp)));
+pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")) ? "" : pug_interp)));
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       }
@@ -472,9 +472,9 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       var r = $$obj[pug_index12];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
-pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (r.tags && r.tags.length > 0) {
-pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.join(" ")) ? "" : pug_interp)));
+pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")) ? "" : pug_interp)));
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
     }
@@ -596,9 +596,15 @@ if (t.descriptions) {
   if ('number' == typeof $$obj.length) {
       for (var pug_index17 = 0, $$l = $$obj.length; pug_index17 < $$l; pug_index17++) {
         var d = $$obj[pug_index17];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
+pug_html = pug_html + "  ";
 if (d.cweId) {
+if (d.cweId != d.description) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+}
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+else {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
       }
   } else {
@@ -606,9 +612,15 @@ pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/
     for (var pug_index17 in $$obj) {
       $$l++;
       var d = $$obj[pug_index17];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
+pug_html = pug_html + "  ";
 if (d.cweId) {
+if (d.cweId != d.description) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+}
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+else {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
     }
   }
@@ -648,9 +660,15 @@ if (t.descriptions) {
   if ('number' == typeof $$obj.length) {
       for (var pug_index19 = 0, $$l = $$obj.length; pug_index19 < $$l; pug_index19++) {
         var d = $$obj[pug_index19];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
+pug_html = pug_html + "  ";
 if (d.cweId) {
+if (d.cweId != d.description) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+}
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+else {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
       }
   } else {
@@ -658,9 +676,15 @@ pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/
     for (var pug_index19 in $$obj) {
       $$l++;
       var d = $$obj[pug_index19];
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + "  ";
+pug_html = pug_html + "  ";
 if (d.cweId) {
+if (d.cweId != d.description) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+}
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+else {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
     }
   }

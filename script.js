@@ -218,16 +218,18 @@ function versionStatusTable5(affected) {
         var pFullName = [(p.vendor ? p.vendor + ' ' : '') + pname + (major ? ' ' + major : ''), platforms, modules, others];
         nameAndPlatforms[pFullName] = pFullName;
         var rows = {};
-        rows[p.defaultStatus] = ["everything else"];
-        if(!t[pFullName]) {
-            t[pFullName] = [rows];
-        } else {
-            t[pFullName].push(rows);
-        }
-        if (p.defaultStatus)
+        if (p.defaultStatus) {
+            rows[p.defaultStatus] = ["everything else"];
             showCols[p.defaultStatus] = true;
+            if(!t[pFullName]) {
+                t[pFullName] = [rows];
+            } else {
+                t[pFullName].push(rows);
+            }
+        }
     }
-    console.log(t);
+    //console.log(nameAndPlatforms);
+    //console.log(t);
     return({groups:nameAndPlatforms, vals:t, show: showCols});
 }
 
