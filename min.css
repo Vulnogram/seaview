@@ -197,6 +197,10 @@ body {
     position: absolute;
     z-index: 100;
 }
+details.popup summary::-webkit-details-marker {
+    display: none;
+    color: transparent;
+}
 
 details summary { 
     cursor: pointer;
