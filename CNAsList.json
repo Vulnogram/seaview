@@ -3431,7 +3431,7 @@
     "shortName": "Google",
     "cnaID": "CNA-2020-0005",
     "organizationName": "Google LLC",
-    "scope": "Google products that are not covered by Android and Chrome, as well as vulnerabilities in third-party software discovered by Google that are not in another CNA’s scope",
+    "scope": "<strong>Root Scope:</strong> Alphabet organizations<br/><strong>CNA Scope:</strong> Google products that are not covered by Android and Chrome, as well as vulnerabilities in third-party software discovered by Google that are not in another CNA’s scope",
     "contact": [
       {
         "email": [
@@ -3466,11 +3466,15 @@
     },
     "resources": [],
     "CNA": {
-      "isRoot": true,
+      "isRoot": false,
       "root": {
         "shortName": "n/a",
         "organizationName": "n/a"
       },
+      "role": [
+        "Root",
+        "CNA"
+      ],
       "type": [
         "Vendors and Projects",
         "Vulnerability Researchers"
@@ -3487,7 +3491,7 @@
         {
           "helpText": "",
           "role": "CNA"
-        }
+        }        
       ]
     },
     "country": "USA"
@@ -9416,7 +9420,7 @@
         "email": [
           {
             "label": "Email",
-            "emailAddr": "security@wordfence.com"
+            "emailAddr": "cve-request@wordfence.com"
           }
         ],
         "contact": [],
@@ -11972,7 +11976,7 @@
     "shortName": "DIVD",
     "cnaID": "CNA-2022-0001",
     "organizationName": "Dutch Institute for Vulnerability Disclosure (DIVD)",
-    "scope": "Vulnerabilities in software discovered by DIVD, and vulnerabilities in managed services provider (MSP) and subject matter expert (SME) software reported by researchers to DIVD, that are not in another CNA’s scope",
+    "scope": "Vulnerabilities in software discovered by DIVD, and vulnerabilities reported to DIVD for coordinated disclosure, which are not in another CNA’s scope",
     "contact": [
       {
         "email": [
@@ -12023,5 +12027,173 @@
       ]
     },
     "country": "Netherlands"
-  }
+  },
+  {
+    "shortName": "Baxter",
+    "cnaID": "CNA-2022-0002",
+    "organizationName": "Baxter Healthcare",
+    "scope": "Baxter’s commercially available products only",
+    "contact": [
+      {
+        "email": [
+          {
+            "label": "Email",
+            "emailAddr": "productsecurity@baxter.com"
+          }
+        ],
+        "contact": [],
+        "form": []
+      }
+    ],
+    "disclosurePolicy": [
+      {
+        "label": "Policy",
+        "language": "",
+        "url": "https://www.baxter.com/product-security#disclosure"
+      }
+    ],
+    "securityAdvisories": {
+      "alerts": [],
+      "advisories": [
+        {
+          "label": "Advisories",
+          "url": "https://www.baxter.com/product-security#additionalresources"
+        }
+      ]
+    },
+    "resources": [],
+    "CNA": {
+      "isRoot": false,
+      "root": {
+        "shortName": "n/a",
+        "organizationName": "n/a"
+      },
+      "type": [
+        "Vendors and Projects"
+      ],
+      "TLR": {
+        "shortName": "icscert",
+        "organizationName": "Cybersecurity and Infrastructure Security Agency (CISA) Industrial Control Systems (ICS)"
+      },
+      "roles": [
+        {
+          "helpText": "",
+          "role": "CNA"
+        }
+      ]
+    },
+    "country": "USA"
+  },
+  {
+    "shortName": "Citrix",
+    "cnaID": "CNA-2022-0003",
+    "organizationName": "Citrix Systems, Inc.",
+    "scope": "Citrix issues only",
+    "contact": [
+      {
+        "email": [
+          {
+            "label": "Email",
+            "emailAddr": "secure@citrix.com"
+          }
+        ],
+        "contact": [],
+        "form": []
+      }
+    ],
+    "disclosurePolicy": [
+      {
+        "label": "Policy",
+        "language": "",
+        "url": "https://www.citrix.com/about/trust-center/vulnerability-process.html"
+      }
+    ],
+    "securityAdvisories": {
+      "alerts": [],
+      "advisories": [
+        {
+          "label": "Advisories",
+          "url": "https://support.citrix.com/securitybulletins"
+        }
+      ]
+    },
+    "resources": [],
+    "CNA": {
+      "isRoot": false,
+      "root": {
+        "shortName": "n/a",
+        "organizationName": "n/a"
+      },
+      "roles": [
+        {
+          "helpText": "",
+          "role": "CNA"
+        }
+      ],
+      "TLR": {
+        "shortName": "mitre",
+        "organizationName": "MITRE Corporation"
+      },
+      "type": [
+        "Vendors and Projects"
+      ]
+    },
+    "country": "USA"
+  },
+  {
+    "shortName": "JetBrains",
+    "cnaID": "CNA-2022-0004",
+    "organizationName": "JetBrains s.r.o.",
+    "scope": "JetBrains products only",
+    "contact": [
+      {
+        "email": [
+          {
+            "label": "Email",
+            "emailAddr": "security@jetbrains.com"
+          }
+        ],
+        "contact": [],
+        "form": []
+      }
+    ],
+    "disclosurePolicy": [
+      {
+        "label": "Policy",
+        "language": "",
+        "url": "https://www.jetbrains.com/legal/docs/terms/coordinated-disclosure/"
+      }
+    ],
+    "securityAdvisories": {
+      "alerts": [],
+      "advisories": [
+        {
+          "label": "Advisories",
+          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/"
+        }
+      ]
+    },
+    "resources": [],
+    "CNA": {
+      "isRoot": false,
+      "root": {
+        "shortName": "n/a",
+        "organizationName": "n/a"
+      },
+      "roles": [
+        {
+          "helpText": "",
+          "role": "CNA"
+        }
+      ],
+      "TLR": {
+        "shortName": "mitre",
+        "organizationName": "MITRE Corporation"
+      },
+      "type": [
+        "Vendors and Projects"
+      ]
+    },
+    "country": "Czech Republic"
+  }    
 ]
