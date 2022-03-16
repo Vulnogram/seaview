@@ -188,7 +188,7 @@ function versionStatusTable5(affected) {
                         if(v.lessThan) {
                             rows[v.status].push('>= ' + v.version + ' to < ' + v.lessThan);
                         } else if(v.lessThanOrEqual) {
-                            rows[v.status].push('>= ' + v.version + ' to <= ' + v.lessThan);
+                            rows[v.status].push('>= ' + v.version + ' to <= ' + v.lessThanOrEqual);
                         } else {
                             rows[v.status].push('= ' + v.version);
                         }
