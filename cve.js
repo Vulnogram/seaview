@@ -94,7 +94,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
 };
 pug_mixins["statusTablev4"] = pug_interp = function(st){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\u003Ctable class=\"tbl\"\u003E\u003Ccolgroup\u003E\u003Ccol\u002F\u003E";
+pug_html = pug_html + "\u003Ctable class=\"tbl gap\"\u003E\u003Ccolgroup\u003E\u003Ccol\u002F\u003E";
 if (st.show.platforms) {
 pug_html = pug_html + "\u003Ccol\u002F\u003E";
 }

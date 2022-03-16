@@ -22,7 +22,7 @@ mixin cvssList(cvssList)
                             a.vgi-ext(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString) Open CVSS Calc
 
 mixin statusTablev4(st)
-    table.tbl
+    table.tbl.gap
         colgroup
             col
             if st.show.platforms 
