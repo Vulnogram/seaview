@@ -186,28 +186,29 @@ function versionStatusTable5(affected) {
                     showCols[v.status] = true;
                     if(!v.changes) {
                         if(v.lessThan) {
-                            rows[v.status].push('>= ' + v.version + ' to < ' + v.lessThan);
+                            rows[v.status].push('from ' + v.version + ' before ' + v.lessThan);
                         } else if(v.lessThanOrEqual) {
-                            rows[v.status].push('>= ' + v.version + ' to <= ' + v.lessThanOrEqual);
+                            rows[v.status].push('from ' + v.version + ' through ' + v.lessThanOrEqual);
                         } else {
-                            rows[v.status].push('= ' + v.version);
+                            rows[v.status].push(v.version);
                         }
                     } else {
                         var prevStatus = v.status;
                         var prevVersion = v.version;
+			showCols[prevStatus] = true;
+                        if(v.lessThan) {
+                            rows[prevStatus].push('from ' + prevVersion + (v.lessThan != prevVersion ? ' before ' + v.lessThan : ''));
+                        } else if(v.lessThanOrEqual) {
+                            rows[prevStatus].push('from ' + prevVersion + (v.lessThanOrEqual != prevVersion ? ' before ' + v.lessThanOrEqual : ''));
+                        } else {
+                            rows[prevStatus].push(prevVersion);
+                        }
                         for(c of v.changes) {
                             showCols[c.status] = true;
-                            rows[prevStatus].push('>= ' + prevVersion + ' to < ' + c.at);
+                            rows[c.status].push('(at ' + c.at + ' transitions to ' + c.status + ')');
                             prevStatus = c.status;
                             prevVersion = c.at;
-                        }
-                        if(v.lessThan) {
-                            rows[prevStatus].push('>= ' + prevVersion + (v.lessThan != prevVersion ? ' to < ' + v.lessThan : ''));
-                        } else if(v.lessThanOrEqual) {
-                            rows[prevStatus].push('>= ' + prevVersion + (v.lessThanOrEqual != prevVersion ? ' to < ' + v.lessThanOrEqual : ''));
-                        } else {
-                            rows[prevStatus].push(">=" + prevVersion);
-                        }                  
+                        }			
                     }
                 }
                 if(!t[pFullName]) t[pFullName] = [];
@@ -232,6 +233,7 @@ function versionStatusTable5(affected) {
     //console.log(t);
     return({groups:nameAndPlatforms, vals:t, show: showCols});
 }
+
 
 
 cvssDesc = {
