@@ -97,6 +97,7 @@ function versionStatusTable4(affects) {
                             vv = "< " + version.version_value;
                             break;
                         case ">":
+                        case "!>":
                         case "?>":
                             vv = "> " + version.version_value;
                             break;
@@ -178,34 +179,51 @@ function versionStatusTable5(affected) {
                     unaffected: [],
                     unknown: []
                 };
-                //var major = v.version != 'unspecified' ? v.version: undefined;//? v.version.match(/^(.*)\./): null;
                 var major = undefined;//major ? major[1] : '';
                 var pFullName = [(p.vendor ? p.vendor + ' ' : '') + pname + (major ? ' ' + major : ''), platforms, modules, others];
                 nameAndPlatforms[pFullName] = pFullName;
                 if (v.version) {
                     showCols[v.status] = true;
                     if(!v.changes) {
+                        var rangeStart = '';
+                        if (v.version != 'unspecified' && v.version !=  0)
+                            rangeStart = 'from ' + v.version;
                         if(v.lessThan) {
-                            rows[v.status].push('from ' + v.version + ' before ' + v.lessThan);
+                            var rangeEnd = ' before ' + v.lessThan;
+                            if(v.lessThan == 'unspecified' || v.lessThan == '*')
+                                rangeEnd = "";
+                            rows[v.status].push(rangeStart + rangeEnd);
                         } else if(v.lessThanOrEqual) {
-                            rows[v.status].push('from ' + v.version + ' through ' + v.lessThanOrEqual);
+                            var rangeEnd = ' through ' + v.lessThanOrEqual;
+                            if (v.lessThanOrEqual == 'unspecified' || v.lessThanOrEqual == '*')
+                                rangeEnd = "";
+                            rows[v.status].push(rangeStart + rangeEnd);
                         } else {
                             rows[v.status].push(v.version);
                         }
                     } else {
                         var prevStatus = v.status;
                         var prevVersion = v.version;
-			showCols[prevStatus] = true;
+			            showCols[prevStatus] = true;
+                        var rangeStart = '';
+                        if (prevVersion != 'unspecified' && prevVersion !=  0)
+                            rangeStart = 'from ' + prevVersion;
                         if(v.lessThan) {
-                            rows[prevStatus].push('from ' + prevVersion + (v.lessThan != prevVersion ? ' before ' + v.lessThan : ''));
+                            var rangeEnd = ' before ' + v.lessThan;
+                            if(v.lessThan == 'unspecified' || v.lessThan == '*')
+                                rangeEnd = "";
+                            rows[prevStatus].push(rangeStart + (v.lessThan != prevVersion ? rangeEnd : ''));
                         } else if(v.lessThanOrEqual) {
-                            rows[prevStatus].push('from ' + prevVersion + (v.lessThanOrEqual != prevVersion ? ' before ' + v.lessThanOrEqual : ''));
+                            var rangeEnd = ' through ' + v.lessThanOrEqual;
+                            if (v.lessThanOrEqual == 'unspecified' || v.lessThanOrEqual == '*')
+                                rangeEnd = "";                            
+                            rows[prevStatus].push(rangeStart + (v.lessThanOrEqual != prevVersion ? rangeEnd : ''));
                         } else {
                             rows[prevStatus].push(prevVersion);
                         }
                         for(c of v.changes) {
                             showCols[c.status] = true;
-                            rows[c.status].push('(at ' + c.at + ' transitions to ' + c.status + ')');
+                            rows[c.status].push(c.status + ' from ' + c.at);
                             prevStatus = c.status;
                             prevVersion = c.at;
                         }			
