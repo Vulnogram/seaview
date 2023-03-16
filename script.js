@@ -8,8 +8,8 @@ function loadCVE(value) {
         var id = realId[1];
         var year = realId[2];
         var bucket = realId[3];
-        var jsonURL = 'https://github.com/CVEProject/cvelistV5/tree/master/review_set/' + year + '/' + bucket + 'xxx/' + id + '.json'
-        fetch('https://raw.githubusercontent.com/CVEProject/cvelistV5/master/review_set/' + year + '/' + bucket + 'xxx/' + id + '.json', {
+        var jsonURL = 'https://github.com/CVEProject/cvelistV5/blob/main/preview_cves/' + year + '/' + bucket + 'xxx/' + id + '.json'
+        fetch('https://raw.githubusercontent.com/CVEProject/cvelistV5/main/preview_cves/' + year + '/' + bucket + 'xxx/' + id + '.json', {
                 method: 'GET',
                 credentials: 'omit',
                 headers: {
@@ -205,28 +205,30 @@ function versionStatusTable5(affected) {
                         var prevStatus = v.status;
                         var prevVersion = v.version;
 			            showCols[prevStatus] = true;
-                        var rangeStart = '';
+                        var range = '';
                         if (prevVersion != 'unspecified' && prevVersion !=  0)
-                            rangeStart = 'from ' + prevVersion;
+                            range = 'from ' + prevVersion;
                         if(v.lessThan) {
                             var rangeEnd = ' before ' + v.lessThan;
                             if(v.lessThan == 'unspecified' || v.lessThan == '*')
                                 rangeEnd = "";
-                            rows[prevStatus].push(rangeStart + (v.lessThan != prevVersion ? rangeEnd : ''));
+                            range = range + (v.lessThan != prevVersion ? rangeEnd : '');
                         } else if(v.lessThanOrEqual) {
                             var rangeEnd = ' through ' + v.lessThanOrEqual;
                             if (v.lessThanOrEqual == 'unspecified' || v.lessThanOrEqual == '*')
                                 rangeEnd = "";                            
-                            rows[prevStatus].push(rangeStart + (v.lessThanOrEqual != prevVersion ? rangeEnd : ''));
+                                range = range + (v.lessThanOrEqual != prevVersion ? rangeEnd : '');
                         } else {
-                            rows[prevStatus].push(prevVersion);
+                            range = prevVersion;
                         }
+                        var changes  = [];
                         for(c of v.changes) {
-                            showCols[c.status] = true;
-                            rows[c.status].push(c.status + ' from ' + c.at);
-                            prevStatus = c.status;
-                            prevVersion = c.at;
-                        }			
+                            changes.push(c.status + ' from ' + c.at);
+                        }
+                        if(changes.length > 0) {
+                            range = range + ' (' + changes.join(', ') + ')';
+                        }
+                        rows[v.status].push(range);
                     }
                 }
                 if(!t[pFullName]) t[pFullName] = [];
