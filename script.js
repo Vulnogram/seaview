@@ -8,8 +8,8 @@ function loadCVE(value) {
         var id = realId[1];
         var year = realId[2];
         var bucket = realId[3];
-        var jsonURL = 'https://github.com/CVEProject/cvelistV5/blob/main/preview_cves/' + year + '/' + bucket + 'xxx/' + id + '.json'
-        fetch('https://raw.githubusercontent.com/CVEProject/cvelistV5/main/preview_cves/' + year + '/' + bucket + 'xxx/' + id + '.json', {
+        var jsonURL = 'https://github.com/CVEProject/cvelistV5/blob/main/cves/' + year + '/' + bucket + 'xxx/' + id + '.json'
+        fetch('https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/' + year + '/' + bucket + 'xxx/' + id + '.json', {
                 method: 'GET',
                 credentials: 'omit',
                 headers: {
