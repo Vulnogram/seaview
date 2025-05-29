@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CVE 4 vs CVE 5</title>
+  <title>See CVEs</title>
   <meta name="description" content="Compare CVE-JSON 4 and 5 information">
   <meta name="author" content="Chandan BN">
 
@@ -136,21 +136,16 @@ img.logo{
 .jsonBox details.arr[open] > summary:first-of-type::after {
   content: "";
 }
-/*
-.jsonBox details.obj[open]::after {
-  content: "}";
-  display: block;
-  padding-left: .7em;
-  margin-left: .3em;
-  border-left: 1px dashed #aaa;
-}*/
-/*.jsonBox details.arr[open]::after {
-  content: "]";
-  display: block;
-  padding-left: .7em;
-  margin-left: .3em;
-  border-left: 1px dashed #aaa;
-}*/
+[lang]:not([lang^="en"])::before {
+	content: attr(lang);
+    background: #8ca9c9;
+    display:inline;
+    padding:2px 10px;
+    border-radius:3px;
+    margin:3px 10px;
+    text-transform: uppercase;
+    font-size: x-small;
+}
 .jsonBox .i, .jsonBox .in {
   padding-left: .7em;
   margin-left: .3em;
@@ -195,7 +190,7 @@ img.logo{
       font-size: small;
     }
   </style>
-  <h1 class="pad">Compare CVE JSON 4 and 5 information</h1>
+  <h1 class="pad">CVE View</h1>
   <div class="gap"><label class="lbl">CVE ID</label>
       <form class="out nobr" onsubmit="event.preventDefault();loadCVE(this.git.value);return false;"> 
           <input name="git" class="txt" type="search" placeholder="CVE-yyyy-mmmm" pattern="CVE-[0-9]{4}-[0-9]{4,6}"><input class="btn" type="submit" value="Go"/>

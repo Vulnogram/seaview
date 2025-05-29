@@ -8,7 +8,7 @@ var pug_match_html=/["&<>]/;function cve(locals) {var pug_html = "", pug_mixins 
     var locals_for_with = (locals || {});
     
     (function (Array, Date, JSON, Object, URL, cna, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, statusFunction) {
-      var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity']
+      var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (cvssList) {
@@ -19,6 +19,28 @@ if (cvssList) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var cvss = $$obj[i];
 pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",cvss.baseSeverity ? cvss.baseSeverity : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = cvss.baseSeverity) ? "" : pug_interp)) + "· \u003Csup\u003E" + (pug_escape(null == (pug_interp = cvss.baseScore) ? "" : pug_interp)) + "\u003C\u002Fsup\u003E⁄10\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+if (cvss.scenarios && cvss.scenarios.length > 0) {
+pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
+// iterate cvss.scenarios
+;(function(){
+  var $$obj = cvss.scenarios;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index1 = 0, $$l = $$obj.length; pug_index1 < $$l; pug_index1++) {
+        var s = $$obj[pug_index1];
+pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index1 in $$obj) {
+      $$l++;
+      var s = $$obj[pug_index1];
+pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Ful\u003E";
+}
 // iterate cvss
 ;(function(){
   var $$obj = cvss;
@@ -42,6 +64,10 @@ pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ?
 }).call(this);
 
 pug_html = pug_html + "\u003Cdiv\u003E";
+if (cvss.version >= "4") {
+pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://www.first.org/cvss/calculator/4-0#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+}
+else
 if (cvss.version >= "3") {
 pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://cvssjs.github.io/#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
@@ -56,6 +82,28 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
       $$l++;
       var cvss = $$obj[i];
 pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",cvss.baseSeverity ? cvss.baseSeverity : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = cvss.baseSeverity) ? "" : pug_interp)) + "· \u003Csup\u003E" + (pug_escape(null == (pug_interp = cvss.baseScore) ? "" : pug_interp)) + "\u003C\u002Fsup\u003E⁄10\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+if (cvss.scenarios && cvss.scenarios.length > 0) {
+pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
+// iterate cvss.scenarios
+;(function(){
+  var $$obj = cvss.scenarios;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index3 = 0, $$l = $$obj.length; pug_index3 < $$l; pug_index3++) {
+        var s = $$obj[pug_index3];
+pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index3 in $$obj) {
+      $$l++;
+      var s = $$obj[pug_index3];
+pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Ful\u003E";
+}
 // iterate cvss
 ;(function(){
   var $$obj = cvss;
@@ -79,6 +127,10 @@ pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ?
 }).call(this);
 
 pug_html = pug_html + "\u003Cdiv\u003E";
+if (cvss.version >= "4") {
+pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://www.first.org/cvss/calculator/4-0#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+}
+else
 if (cvss.version >= "3") {
 pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://cvssjs.github.io/#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
@@ -384,15 +436,15 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
 ;(function(){
   var $$obj = credits;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index9 = 0, $$l = $$obj.length; pug_index9 < $$l; pug_index9++) {
-        var c = $$obj[pug_index9];
+      for (var pug_index11 = 0, $$l = $$obj.length; pug_index11 < $$l; pug_index11++) {
+        var c = $$obj[pug_index11];
 pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index9 in $$obj) {
+    for (var pug_index11 in $$obj) {
       $$l++;
-      var c = $$obj[pug_index9];
+      var c = $$obj[pug_index11];
 pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
     }
   }
@@ -406,15 +458,15 @@ if (tags) {
 ;(function(){
   var $$obj = tags;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index10 = 0, $$l = $$obj.length; pug_index10 < $$l; pug_index10++) {
-        var t = $$obj[pug_index10];
+      for (var pug_index12 = 0, $$l = $$obj.length; pug_index12 < $$l; pug_index12++) {
+        var t = $$obj[pug_index12];
 pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
       }
   } else {
     var $$l = 0;
-    for (var pug_index10 in $$obj) {
+    for (var pug_index12 in $$obj) {
       $$l++;
-      var t = $$obj[pug_index10];
+      var t = $$obj[pug_index12];
 pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
     }
   }
@@ -455,8 +507,8 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
 ;(function(){
   var $$obj = references;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index12 = 0, $$l = $$obj.length; pug_index12 < $$l; pug_index12++) {
-        var r = $$obj[pug_index12];
+      for (var pug_index14 = 0, $$l = $$obj.length; pug_index14 < $$l; pug_index14++) {
+        var r = $$obj[pug_index14];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
@@ -467,9 +519,9 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index12 in $$obj) {
+    for (var pug_index14 in $$obj) {
       $$l++;
-      var r = $$obj[pug_index12];
+      var r = $$obj[pug_index14];
 pug_html = pug_html + "\u003Cdiv\u003E";
 var u = (new URL(r.url));
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
@@ -489,15 +541,15 @@ if (con.x_ValidationErrors) {
 ;(function(){
   var $$obj = con.x_ValidationErrors;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index13 = 0, $$l = $$obj.length; pug_index13 < $$l; pug_index13++) {
-        var x = $$obj[pug_index13];
+      for (var pug_index15 = 0, $$l = $$obj.length; pug_index15 < $$l; pug_index15++) {
+        var x = $$obj[pug_index15];
 pug_html = pug_html + "\u003Cp class=\"sec rnd pad\"\u003E\u003Cb class=\"vgi-alert\"\u003EValidation Error : \u003C\u002Fb\u003E  \u003Cspan\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
       }
   } else {
     var $$l = 0;
-    for (var pug_index13 in $$obj) {
+    for (var pug_index15 in $$obj) {
       $$l++;
-      var x = $$obj[pug_index13];
+      var x = $$obj[pug_index15];
 pug_html = pug_html + "\u003Cp class=\"sec rnd pad\"\u003E\u003Cb class=\"vgi-alert\"\u003EValidation Error : \u003C\u002Fb\u003E  \u003Cspan\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
     }
   }
@@ -556,6 +608,62 @@ pug_html = pug_html + " ";
 pug_mixins["spara"](con.descriptions);
 pug_mixins["spara"](con.rejectedReasons);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
+if ((con.metrics && con.metrics.length > 0 && con.metrics[0].other && con.metrics[0].other.type == 'ssvc')) {
+pug_html = pug_html + "\u003Cdiv class=\"metrics pad\"\u003E\u003Cb\u003EStakeholder Specific Vulnerability Catgorization (SSVC)\u003C\u002Fb\u003E";
+// iterate con.metrics[0].other.content.options
+;(function(){
+  var $$obj = con.metrics[0].other.content.options;
+  if ('number' == typeof $$obj.length) {
+      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
+        var m = $$obj[i];
+// iterate m
+;(function(){
+  var $$obj = m;
+  if ('number' == typeof $$obj.length) {
+      for (var j = 0, $$l = $$obj.length; j < $$l; j++) {
+        var o = $$obj[j];
+pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = j + ': ' + o) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var j in $$obj) {
+      $$l++;
+      var o = $$obj[j];
+pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = j + ': ' + o) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+    }
+  }
+}).call(this);
+
+      }
+  } else {
+    var $$l = 0;
+    for (var i in $$obj) {
+      $$l++;
+      var m = $$obj[i];
+// iterate m
+;(function(){
+  var $$obj = m;
+  if ('number' == typeof $$obj.length) {
+      for (var j = 0, $$l = $$obj.length; j < $$l; j++) {
+        var o = $$obj[j];
+pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = j + ': ' + o) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var j in $$obj) {
+      $$l++;
+      var o = $$obj[j];
+pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = j + ': ' + o) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+    }
+  }
+}).call(this);
+
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
+}
 if (con.configurations) {
 pug_html = pug_html + "\u003Cdiv class=\"configs pad\"\u003E\u003Cb class=\"vgi-cog\"\u003ERequired configuration for exposure: \u003C\u002Fb\u003E";
 pug_mixins["spara"](con.configurations);
@@ -567,22 +675,22 @@ pug_html = pug_html + "\u003Cdiv class=\"problem pad\"\u003E\u003Cb class=\"vgi-
 ;(function(){
   var $$obj = con.problemTypes;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index15 = 0, $$l = $$obj.length; pug_index15 < $$l; pug_index15++) {
-        var t = $$obj[pug_index15];
+      for (var pug_index20 = 0, $$l = $$obj.length; pug_index20 < $$l; pug_index20++) {
+        var t = $$obj[pug_index20];
 if (t.description) {
 // iterate t.description
 ;(function(){
   var $$obj = t.description;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index16 = 0, $$l = $$obj.length; pug_index16 < $$l; pug_index16++) {
-        var d = $$obj[pug_index16];
+      for (var pug_index21 = 0, $$l = $$obj.length; pug_index21 < $$l; pug_index21++) {
+        var d = $$obj[pug_index21];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
       }
   } else {
     var $$l = 0;
-    for (var pug_index16 in $$obj) {
+    for (var pug_index21 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index16];
+      var d = $$obj[pug_index21];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
     }
   }
@@ -594,8 +702,8 @@ if (t.descriptions) {
 ;(function(){
   var $$obj = t.descriptions;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index17 = 0, $$l = $$obj.length; pug_index17 < $$l; pug_index17++) {
-        var d = $$obj[pug_index17];
+      for (var pug_index22 = 0, $$l = $$obj.length; pug_index22 < $$l; pug_index22++) {
+        var d = $$obj[pug_index22];
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
@@ -609,9 +717,9 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pu
       }
   } else {
     var $$l = 0;
-    for (var pug_index17 in $$obj) {
+    for (var pug_index22 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index17];
+      var d = $$obj[pug_index22];
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
@@ -630,23 +738,23 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pu
       }
   } else {
     var $$l = 0;
-    for (var pug_index15 in $$obj) {
+    for (var pug_index20 in $$obj) {
       $$l++;
-      var t = $$obj[pug_index15];
+      var t = $$obj[pug_index20];
 if (t.description) {
 // iterate t.description
 ;(function(){
   var $$obj = t.description;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index18 = 0, $$l = $$obj.length; pug_index18 < $$l; pug_index18++) {
-        var d = $$obj[pug_index18];
+      for (var pug_index23 = 0, $$l = $$obj.length; pug_index23 < $$l; pug_index23++) {
+        var d = $$obj[pug_index23];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
       }
   } else {
     var $$l = 0;
-    for (var pug_index18 in $$obj) {
+    for (var pug_index23 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index18];
+      var d = $$obj[pug_index23];
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
     }
   }
@@ -658,8 +766,8 @@ if (t.descriptions) {
 ;(function(){
   var $$obj = t.descriptions;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index19 = 0, $$l = $$obj.length; pug_index19 < $$l; pug_index19++) {
-        var d = $$obj[pug_index19];
+      for (var pug_index24 = 0, $$l = $$obj.length; pug_index24 < $$l; pug_index24++) {
+        var d = $$obj[pug_index24];
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
@@ -673,9 +781,9 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pu
       }
   } else {
     var $$l = 0;
-    for (var pug_index19 in $$obj) {
+    for (var pug_index24 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index19];
+      var d = $$obj[pug_index24];
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
@@ -742,39 +850,39 @@ if (con.json) {
 pug_html = pug_html + "\u003Cpre\u003E" + (pug_escape(null == (pug_interp = JSON.stringify(con.json,1,1)) ? "" : pug_interp)) + "\u003C\u002Fpre\u003E";
 }
 };
-pug_mixins["para"] = pug_interp = function(t, hypertext){
+pug_mixins["para"] = pug_interp = function(t, hypertext, lang){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (t) {
 if (hypertext) {
-pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", lang, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
 }
 else {
 // iterate t.split(/\n/)
 ;(function(){
   var $$obj = t.split(/\n/);
   if ('number' == typeof $$obj.length) {
-      for (var pug_index20 = 0, $$l = $$obj.length; pug_index20 < $$l; pug_index20++) {
-        var line = $$obj[pug_index20];
+      for (var pug_index25 = 0, $$l = $$obj.length; pug_index25 < $$l; pug_index25++) {
+        var line = $$obj[pug_index25];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
 }
 else {
-pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", lang, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
 }
 }
       }
   } else {
     var $$l = 0;
-    for (var pug_index20 in $$obj) {
+    for (var pug_index25 in $$obj) {
       $$l++;
-      var line = $$obj[pug_index20];
+      var line = $$obj[pug_index25];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
 }
 else {
-pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", lang, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
 }
 }
     }
@@ -827,27 +935,27 @@ if (l) {
 ;(function(){
   var $$obj = l;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index23 = 0, $$l = $$obj.length; pug_index23 < $$l; pug_index23++) {
-        var d = $$obj[pug_index23];
+      for (var pug_index28 = 0, $$l = $$obj.length; pug_index28 < $$l; pug_index28++) {
+        var d = $$obj[pug_index28];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
-pug_html = pug_html + "\u003Cp\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
 else
 if (d.value) {
-pug_mixins["para"](d.value);
+pug_mixins["para"](d.value,null,d.lang);
 }
       }
   } else {
     var $$l = 0;
-    for (var pug_index23 in $$obj) {
+    for (var pug_index28 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index23];
+      var d = $$obj[pug_index28];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
-pug_html = pug_html + "\u003Cp\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
 else
 if (d.value) {
-pug_mixins["para"](d.value);
+pug_mixins["para"](d.value,null,d.lang);
 }
     }
   }
@@ -1052,7 +1160,7 @@ if ((con.metrics && con.metrics.length > 0)) {
   if ('number' == typeof $$obj.length) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var x = $$obj[i];
-var cvss = x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
+var cvss = x.cvssV4_0 ? x.cvssV4_0 : x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
 if (cvss) {
 cvss.scenarios = x.scenarios;
 con.cvssList.push(cvss);
@@ -1063,7 +1171,7 @@ con.cvssList.push(cvss);
     for (var i in $$obj) {
       $$l++;
       var x = $$obj[i];
-var cvss = x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
+var cvss = x.cvssV4_0 ? x.cvssV4_0 : x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
 if (cvss) {
 cvss.scenarios = x.scenarios;
 con.cvssList.push(cvss);
@@ -1074,6 +1182,32 @@ con.cvssList.push(cvss);
 
 }
 pug_mixins["container"](con);
+if ((cve.containers.adp && cve.containers.adp.length > 0)) {
+// iterate cve.containers.adp
+;(function(){
+  var $$obj = cve.containers.adp;
+  if ('number' == typeof $$obj.length) {
+      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
+        var x = $$obj[i];
+var PMD = x.providerMetadata;
+x.dateUpdated = PMD.dateUpdated;
+x.shortName = PMD.shortName;
+pug_mixins["container"](x);
+      }
+  } else {
+    var $$l = 0;
+    for (var i in $$obj) {
+      $$l++;
+      var x = $$obj[i];
+var PMD = x.providerMetadata;
+x.dateUpdated = PMD.dateUpdated;
+x.shortName = PMD.shortName;
+pug_mixins["container"](x);
+    }
+  }
+}).call(this);
+
+}
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 };
 pug_mixins["cve4"] = pug_interp = function(cve){

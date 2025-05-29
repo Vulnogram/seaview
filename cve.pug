@@ -1,4 +1,4 @@
-- var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity']
+- var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 mixin cvssList(cvssList)
     if cvssList
         each cvss, i in cvssList
@@ -9,6 +9,11 @@ mixin cvssList(cvssList)
                     sup=cvss.baseScore
                     | ⁄10
                 div.pop.wht.rnd.shd.pad.bor
+                    if cvss.scenarios && cvss.scenarios.length > 0
+                        b Scenarios:
+                        ul
+                            each s in cvss.scenarios
+                                li=s.value
                     each x, i in cvss
                         if !nonSpec.includes(i)
                             div
@@ -16,7 +21,9 @@ mixin cvssList(cvssList)
                                 | :  
                                 b=x
                     div
-                        if cvss.version >= "3"
+                        if cvss.version >= "4"
+                            a.vgi-ext(href="https://www.first.org/cvss/calculator/4-0#" + cvss.vectorString) Open CVSS Calc
+                        else if cvss.version >= "3"
                             a.vgi-ext(href="https://cvssjs.github.io/#" + cvss.vectorString) Open CVSS Calc
                         else
                             a.vgi-ext(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString) Open CVSS Calc
@@ -192,6 +199,12 @@ mixin container(con)
         | 
         +spara(con.descriptions)
         +spara(con.rejectedReasons)
+    if (con.metrics && con.metrics.length > 0 && con.metrics[0].other && con.metrics[0].other.type == 'ssvc')
+        .metrics.pad
+            b Stakeholder Specific Vulnerability Catgorization (SSVC)
+            each m, i in con.metrics[0].other.content.options
+                each o, j in m
+                    p=j + ': ' + o
     if con.configurations
         .configs.pad
             b.vgi-cog Required configuration for exposure: 
@@ -266,10 +279,10 @@ mixin container(con)
     if con.json
         pre=JSON.stringify(con.json,1,1)
 
-mixin para(t, hypertext)
+mixin para(t, hypertext, lang)
     if t
         if hypertext
-            p=t
+            p(lang=lang)=t
         else
             each line in t.split(/\n/)
                 if line
@@ -277,13 +290,13 @@ mixin para(t, hypertext)
                         code=line
                         br
                     else
-                        p=line
+                        p(lang=lang)=line
 
 mixin mpara(l, hypertext)
     if l
         each d in l
             if d.value
-                +para(d.value, hypertext)
+                +para(d.value, hypertext, d.lang)
 
 mixin aggpara(l)
     if l
@@ -298,9 +311,9 @@ mixin spara(l, hypertext)
     if l
         each d in l
             if d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html'
-                p !{d.supportingMedia[0].value}
+                p(lang=d.lang) !{d.supportingMedia[0].value}
             else if d.value
-                +para(d.value)
+                +para(d.value,null,d.lang)
 
 mixin linklist(l, url)
     each v, i in l
@@ -412,11 +425,18 @@ mixin cve5(cve)
             con.pvstatus = con.affected ? statusFunction(con.affected) : null;
         if (con.metrics && con.metrics.length > 0)
             each x, i in con.metrics
-                - var cvss = x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
+                - var cvss = x.cvssV4_0 ? x.cvssV4_0 : x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
                 if cvss
                     - cvss.scenarios = x.scenarios;
                     - con.cvssList.push(cvss);
         +container(con)
+        if (cve.containers.adp && cve.containers.adp.length > 0)
+            each x, i in cve.containers.adp
+                -
+                    var PMD = x.providerMetadata;
+                    x.dateUpdated = PMD.dateUpdated;
+                    x.shortName = PMD.shortName;
+                +container(x)
 
 
 mixin cve4(cve)

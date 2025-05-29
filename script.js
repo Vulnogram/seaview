@@ -335,6 +335,16 @@ function loadJSON(d, id, msg, msgLink) {
     if (cve4doc) {
         var doc4 = cve({renderTemplate:'cve4',d: cve4doc, statusFunction: versionStatusTable4});
         CVE4.innerHTML = doc4;
+        CVE4.setAttribute('class', "bor rnd wht shd page");
+        cve4j.setAttribute('class', "jsonBox bor rnd wht shd page");
+        CVE5.setAttribute('class', "bor rnd wht shd page");
+        cve5j.setAttribute('class', "jsonBox bor rnd wht shd page");
+    } else {
+        CVE4.setAttribute('class', "hid");
+        cve4j.setAttribute('class', "hid");
+        CVE5.setAttribute('class', "bor rnd wht shd");
+        cve5j.setAttribute('class', "jsonBox bor rnd wht shd");
+
     }        
     var doc5 = cve({renderTemplate:'cve5',d: d, cvssDesc: cvssDesc, statusFunction: versionStatusTable5});
     CVE5.innerHTML = doc5;
