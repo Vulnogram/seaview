@@ -1,7 +1,56 @@
 function loadQueryString() {
     const queryString = window.location.search;
-    loadCVE(queryString);
+    document.getElementById("q").value = queryString.substring(1);
+    getCVEs(queryString);
 }
+
+
+function extractUniqueCVEs(input) {
+  const cvePattern = /\bCVE-(\d{4})-(\d{4,6})\b/g;
+  const uniqueCVEs = new Set();
+  let match;
+ var yearNow = new Date().getFullYear()+2;
+  while ((match = cvePattern.exec(input.toUpperCase())) !== null) {
+    const year = parseInt(match[1], 10);
+    if (year > 1997 && year <= yearNow ) {
+      uniqueCVEs.add(match[0]);
+    }
+  }
+  return Array.from(uniqueCVEs).sort((a, b) => {
+    const [_, yearA, idA] = a.match(/CVE-(\d{4})-(\d+)/);
+    const [__, yearB, idB] = b.match(/CVE-(\d{4})-(\d+)/);
+    return yearA !== yearB ? yearA - yearB : idA - idB;
+  });
+;
+}
+
+function getCVEs(input) {
+    const container = document.getElementById('container');
+    const results = document.getElementById('results');
+    const list =  document.getElementById('list');
+    var cves = extractUniqueCVEs(input);
+    if (cves.length <= 1) {
+        list.classList.add('hid');
+    }
+    if (cves.length >= 1) {
+        container.classList.add('moved-up');
+        results.classList.add('visible');
+        list.innerHTML = '';
+        if (cves.length > 1)
+            list.classList.remove('hid');
+        results.innerHTML = `<p>Valid CVEs: <strong>${cves}</strong></p>`;
+        document.getElementById('entries').innerHTML = '';
+        cves.forEach(cve => {
+            loadCVE(cve);
+        });
+        document.title = cves.join(' ');
+        history.pushState(null, null, "?"+cves);
+    } else {
+        results.classList.add('visible');
+        results.innerHTML = `Please enter one or more valid CVE IDs <i>CVE-year-nnnn</i> format.`;
+    }
+}
+
 function loadCVE(value) {
     var realId = value.match(/(CVE-(\d{4})-(\d{1,12})(\d{3}))/);
     if (realId) {
@@ -19,26 +68,22 @@ function loadCVE(value) {
             })
             .then(function (response) {
                 if (!response.ok) {
-                    errMsg.textContent = "Failed to load valid CVE JSON";
-                    infoMsg.textContent = "";
-                    throw Error(id + ' ' + response.statusText);
+                    throw Error('Failed to load ' + id + ' ' + response.statusText);
                 }
                 return response.json();
             })
             .then(function (res) {
                 if (res.containers) {
-                    loadJSON(res, id, "Loaded "+id+" from github!", jsonURL);
+                    loadEntry(res, id);
                 } else {
-                    errMsg.textContent = "Failed to load valid CVE JSON";
-                    infoMsg.textContent = "";
+                    results.textContent = results.textContent + " Failed to load " + id;
                 }
             })
             .catch(function (error) {
-                errMsg.textContent = error.message ;
-                CVE5.textContent = CVE4.textContent = cve5j.textContent = cve4j.textContent = "";
+                results.textContent = results.textContent + ' ' +error.message ;
             })
     } else {
-        errMsg.textContent = "CVE ID required";
+        //console.log("CVE ID required");
     }
     return false;
 }
@@ -249,8 +294,6 @@ function versionStatusTable5(affected) {
             }
         }
     }
-    //console.log(nameAndPlatforms);
-    //console.log(t);
     return({groups:nameAndPlatforms, vals:t, show: showCols});
 }
 
@@ -305,50 +348,14 @@ cvssDesc = {
     }
 }
 
-function loadJSON(d, id, msg, msgLink) {
-    infoMsg.textContent = msg;
-    if(msgLink) {
-        var l = document.createElement('a');
-        l.setAttribute('href',msgLink)
-        l.innerText='[source]'
-        infoMsg.appendChild(l)
-    }
-    errMsg.textContent = "";
-    cve4j = document.getElementById("CVE4json");
-    cve5j = document.getElementById("CVE5json");
+function loadEntry(d, id, msg, msgLink) {
+    var entries = document.getElementById("entries");
+    var entryDiv = document.createElement("div");
+    var entry = cve({renderTemplate:'entry', d: d, statusFunctionv4:versionStatusTable4, statusFunctionv5:versionStatusTable5});
+    entryDiv.innerHTML = entry;
+    entries.appendChild(entryDiv);
 
-    var cve4doc = d.containers.cna.x_legacyV4Record;
-    var tree4 = cve({renderTemplate:'JSON',d: cve4doc});
-    delete d.containers.cna.x_legacyV4Record;
-    var tree5 = cve({renderTemplate:'JSON',d: d});
-    CVE4.innerHTML = cve4j.innerHTML = "";
-    CVE5.innerHTML = cve5j.innerHTML = "";
-    cve4j.innerHTML = tree4;
-    cve5j.innerHTML = tree5;
-    if (d.containers.cna.x_ValidationErrors) {
-        CVE5e.innerHTML = cve({renderTemplate:'errors',d: d});
-    }
-    if (d.containers.cna.x_ConverterErrors) {
-        CVE4e.innerHTML = cve({renderTemplate:'warnings', d: d});
-    }
-
-    if (cve4doc) {
-        var doc4 = cve({renderTemplate:'cve4',d: cve4doc, statusFunction: versionStatusTable4});
-        CVE4.innerHTML = doc4;
-        CVE4.setAttribute('class', "bor rnd wht shd page");
-        cve4j.setAttribute('class', "jsonBox bor rnd wht shd page");
-        CVE5.setAttribute('class', "bor rnd wht shd page");
-        cve5j.setAttribute('class', "jsonBox bor rnd wht shd page");
-    } else {
-        CVE4.setAttribute('class', "hid");
-        cve4j.setAttribute('class', "hid");
-        CVE5.setAttribute('class', "bor rnd wht shd");
-        cve5j.setAttribute('class', "jsonBox bor rnd wht shd");
-
-    }        
-    var doc5 = cve({renderTemplate:'cve5',d: d, cvssDesc: cvssDesc, statusFunction: versionStatusTable5});
-    CVE5.innerHTML = doc5;
-
-    document.title = id;
-    history.pushState(null, null, "?"+id);
+    var table = document.getElementById("list");
+    var tableEntry = document.getElementById('i'+id);
+    table.appendChild(tableEntry);
 }

@@ -6,8 +6,9 @@ mixin cvssList(cvssList)
                 summary.lbl.rnd.tag.CVSS(class= cvss.baseSeverity ? cvss.baseSeverity : 'gray')
                     = cvss.baseSeverity
                     | · 
-                    sup=cvss.baseScore
-                    | ⁄10
+                    b=cvss.baseScore
+                    | 
+                    sub ⁄10
                 div.pop.wht.rnd.shd.pad.bor
                     if cvss.scenarios && cvss.scenarios.length > 0
                         b Scenarios:
@@ -177,16 +178,14 @@ mixin container(con)
                 |  (updated 
                 +renderDate(con.dateUpdated)
                 |)
-        span.right.row
+        span.row.pad2
             +cvssList(con.cvssList)
-            details.popup
-                summary.vgi-out.sbn
-                div.rnd.pad.pop.wht.bor.shd
-                    a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + con.TITLE+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.github.io/seaview/?"+con.cveId)
-                    br
-                    a.sbn.vgi-tweet(title="Share this CVE on Twitter",href="https://twitter.com/intent/tweet?text="+con.cveId+ (con.title ? ' ' + con.title:'')+"&url=https://vulnogram.github.io/seaview/?"+con.cveId,target="_blank")
-                    br
-                    a.sbn.vgi-link(href="https://vulnogram.github.io/seaview/?"+con.cveId,target="_blank")
+            if con.KEV
+                summary.lbl.rnd.tag.CVSS.CRITICAL.vgi-bomb Known Exploited Since 
+                    = con.KEV.dateAdded
+            a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.github.io/seaview/?"+con.cveId)
+            a.sbn.vgi-link(href="https://vulnogram.github.io/seaview/?"+con.cveId,target="_blank")
+
     .desc.pad
         if con.state == 'REJECTED'
             b.tag.CRITICAL REJECTED
@@ -199,12 +198,14 @@ mixin container(con)
         | 
         +spara(con.descriptions)
         +spara(con.rejectedReasons)
-    if (con.metrics && con.metrics.length > 0 && con.metrics[0].other && con.metrics[0].other.type == 'ssvc')
-        .metrics.pad
-            b Stakeholder Specific Vulnerability Catgorization (SSVC)
-            each m, i in con.metrics[0].other.content.options
-                each o, j in m
-                    p=j + ': ' + o
+    if (con.metrics && con.metrics.length > 0)
+        each metric, i in con.metrics
+            if (con.metrics[i].other && con.metrics[i].other.type == 'ssvc')
+                .metrics.pad
+                    b Stakeholder Specific Vulnerability Catgorization (SSVC)
+                    each m, j in con.metrics[i].other.content.options
+                        each o, k in m
+                            p=k + ': ' + o
     if con.configurations
         .configs.pad
             b.vgi-cog Required configuration for exposure: 
@@ -315,6 +316,15 @@ mixin spara(l, hypertext)
             else if d.value
                 +para(d.value,null,d.lang)
 
+mixin lpara(l)
+    if l
+        each d in l
+            if d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html'
+                | !{d.supportingMedia[0].value} 
+            else if d.value
+                = d.value
+                | 
+
 mixin linklist(l, url)
     each v, i in l
         if(i < l.length-2)
@@ -363,11 +373,12 @@ mixin JSON(d, par, comma)
                 if comma
                     i ,
     else if d instanceof Object
-        details.obj(open)
+        - var keys = Object.keys(d)
+        details.obj(open=(keys.lenth<6?true:false))
             summary
                 b=(par? par + ' : {' : '{')
             .in
-                - var keys = Object.keys(d)
+                
                 each k, i in keys
                     if d.hasOwnProperty(k)
                         +JSON(d[k], k, i < keys.length-1)
@@ -422,7 +433,7 @@ mixin cve5(cve)
             var sourceText = {"INTERNAL":"This issue was found during internal product security testing or research.", "EXTERNAL":"This issue was discovered during an external security research.", "USER":"This issue was seen during production usage.", "UNKNOWN":""};
             var cveId = CDM.cveId.match("^CVE-[0-9-]+$") ? CDM.cveId : 'CVE-yyyy-nnnn';
             con.cvssList = [];
-            con.pvstatus = con.affected ? statusFunction(con.affected) : null;
+            con.pvstatus = con.affected ? statusFunctionv5 (con.affected) : null;
         if (con.metrics && con.metrics.length > 0)
             each x, i in con.metrics
                 - var cvss = x.cvssV4_0 ? x.cvssV4_0 : x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
@@ -432,12 +443,44 @@ mixin cve5(cve)
         +container(con)
         if (cve.containers.adp && cve.containers.adp.length > 0)
             each x, i in cve.containers.adp
+                - x.cvssList = [];
+                if (x.metrics && x.metrics.length > 0)
+                    each y, i in x.metrics
+                        - var cvss = y.cvssV4_0 ? y.cvssV4_0 : y.cvssV3_1 ? y.cvssV3_1 : y.cvssV3_0 ? y.cvssV3_0 : y.cvssV2_0 ? y.cvssV2_0 : null;
+                        if cvss
+                            - cvss.scenarios = y.scenarios;
+                            - x.cvssList.push(cvss);
+                            - con.cvssList.push(cvss);
+                        if y.other && y.other.type == 'kev'
+                            - x.KEV = y.other.content
+                            - cve.KEV = true
                 -
                     var PMD = x.providerMetadata;
                     x.dateUpdated = PMD.dateUpdated;
                     x.shortName = PMD.shortName;
+                    x.cveId = con.cveId;
                 +container(x)
-
+        table.tbl
+            tr(id='i'+con.cveId)
+                td
+                    a.flx.nowrap(href="#"+con.cveId)
+                        if cna[con.shortName] && cna[con.shortName].i
+                            img(width=20 height=20 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
+                        else
+                            .vgi-bug(width=20 height=20)
+                        =con.cveId
+                        if cve.KEV
+                            | 
+                            b.vgi-bomb KEV
+                td
+                    +cvssList(con.cvssList)
+                td
+                    | 
+                    if con.title
+                        = con.title
+                    else
+                        +lpara(con.descriptions)
+                        +lpara(con.rejectedReasons)
 
 mixin cve4(cve)
   .pad
@@ -461,7 +504,7 @@ mixin cve4(cve)
         con.descriptions = con.description ? con.description.description_data : null;
         con.configurations = con.configuration ? con.configuration : null;
         con.exploits = con.exploit ? con.exploit : null;
-        con.pvstatus = con.affects ? statusFunction(con.affects) : null;
+        con.pvstatus = con.affects ? statusFunctionv4(con.affects) : null;
         con.solutions = con.solution ? con.solution : null;
         con.workarounds = con.work_around ? con.work_around : null;
         con.credits = con.credit ? con.credit : null;
@@ -469,34 +512,49 @@ mixin cve4(cve)
         con.references = con.references? con.references.reference_data : null;
     +container(con)
 
-mixin extra
-    a.tag.orange(href="/json/"+cveid,title="Download the information in this advisory in CVE-JSON format") JSON
-    | 
-    a.btn.blue(href="/"+cveid,title="Permanent link to this advisory") 
-        span.ico.link
-    |  
-    a.btn(title="Share this advisory in email",href="mailto:?subject="+cveid+ ' ' + CDM.TITLE+"&body="+cveid + ' ' + CDM.TITLE+"%0A%0Ahttps://security.paloaltonetworks.com/"+cveid)
-        span.ico.eml
-    | 
-    a.btn.blue(title="Share this advisory on Twitter",href="https://twitter.com/intent/tweet?text="+cveid+ ' ' + CDM.TITLE+"&url=https://security.paloaltonetworks.com/"+cveid,target="_blank")
-        span.ico.tweet.wht
-    | 
-    a.btn.blue(title="Share this advisory on LinkedIn",href="https://www.linkedin.com/sharing/share-offsite/?title="+cveid+ ' ' + CDM.TITLE+"&url=https://security.paloaltonetworks.com/"+cveid)
-        span.ico.lin.wht
-    if cve.problemtype && cve.problemtype.problemtype_data
-        h3 Weakness Type
-        each px in cve.problemtype.problemtype_data
-         if px.description
-            each pd in px.description
-                - var cwe = pd.value.match(/CWE-(\d+)/)
-                if cwe
-                    p
-                        a(href="https://cwe.mitre.org/data/definitions/"+cwe[1],target="_blank",title='More at https://cwe.mitre.org/data/definitions/'+cwe[1])
-                            =pd.value
+mixin missing(id)
+    tr(id=id)
+        td
+            .flx.nowrap
+                .vig-what=id
+        td
+        td CVE record not found
 
+mixin entry(d)
+    -
+        var cve4doc = d.containers.cna.x_legacyV4Record;
+        delete d.containers.cna.x_legacyV4Record;
+
+    div(id=d.cveMetadata.cveId).bor.rnd.wht.shd.page
+        - var oDoc = structuredClone(d);
+        +cve5(d,{cvssDesc: cvssDesc})
+        .pad.fade.borTop
+            b CVE-JSON Record
+            .jsonBox
+                +JSON(oDoc)
+        if d.containers.cna.x_ValidationErrors
+            div.bor.rnd.wht.shd.page
+                +errors(d.containers.cna)   
+
+        if cve4doc
+            details.pad.fade.borTop
+                summary
+                    b Legacy CVE-JSON 4 Record 
+                div
+                    - var oDoc = structuredClone(cve4doc)
+                    +cve4(cve4doc)
+                    .pad
+                        b CVE-JSON Record
+                        .jsonBox
+                            +JSON(oDoc)
+                    if d.containers.cna.x_ConverterErrors
+                        div.bor.rnd.wht.shd.page
+                            +warnings(cve4doc.containers.cna)
 
 block page
-    if renderTemplate == 'cve4'
+    if renderTemplate == 'entry'
+        +entry(d)
+    else if renderTemplate == 'cve4'
         +cve4(d)
     else if renderTemplate == 'cve5'
         +cve5(d)

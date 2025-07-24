@@ -1,22 +1,23 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>See CVEs</title>
-  <meta name="description" content="Compare CVE-JSON 4 and 5 information">
+  <meta name="description" content="Lookup CVEs">
   <meta name="author" content="Chandan BN">
 
-  <meta property="og:title" content="Compare CVE-JSON 4 and 5 information">
+  <meta property="og:title" content="Lookup CVEs">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://">
-  <meta property="og:description" content="Compare CVE-JSON 4 and 5 information.">
+  <meta property="og:description" content="Lookup CVEs">
   <meta property="og:image" content="apple-touch-icon.png">
 
   <link rel="icon" href="apple-touch-icon.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="min.css">
-  <link rel="stylesheet" href="https://vulnogram.github.io/cve5/css/vg-icons.css">
+  <link rel="stylesheet" href="https://vulnogram.github.io/css/vg-icons.css">
   <style>
     #errMsg {
       color: brown;
@@ -27,12 +28,18 @@
     }
   .page{
       min-width: 40em;
-        width:47vw;
+      margin: 1em;
       /*  max-height: 80vh;*/
         display: inline-block;
         vertical-align: top;
       }
-    
+
+    .nowrap {
+      white-space: nowrap;
+      gap:0.5em;
+      flex-direction: row;
+      flex-wrap: nowrap;
+    }
  .NONE {
     --tc: white;
     background-color: green;
@@ -54,6 +61,11 @@
     --tc: white;
     background-color: orangered;
 }
+
+.fade {
+  background-color: rgb(255 250 243);
+}
+
 .right {
   margin-left: auto;
   text-align: right;
@@ -62,7 +74,9 @@
   display: flex;
   align-items: center;
 }
-
+.CVSS sup {
+  font-weight: bold;
+}
 hr {
   border: none;
   border-top: 1px dashed #8c8b8b;
@@ -172,58 +186,76 @@ img.logo{
   color: #666699;
 }
 .tbl td {
-  vertical-align: top;
+  vertical-align: middle;
 }
+.borTop {
+  border-top: 1px dotted #c5c7ca;
+}
+
+body, html {
+      height: 100%;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 1s ease;
+      flex-direction: column;
+    }
+
+    .container.moved-up {
+      justify-content: flex-start;
+      padding-top: 1em;
+    }
+
+    .search-box {
+      width: 80%;
+      max-width: 600px;
+    }
+
+    input[type="search"] {
+      width: 100%;
+      height: 50px;
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    .results {
+      margin-top: 1em;
+      display: none;
+      width: 70%;
+      max-width: 600px;
+    }
+
+    .results.visible {
+      display: block;
+    }
   </style>
 </head>
-
-<body>
+<body onload="loadQueryString()">
   <script src="script.js"></script>
   <script src="cna.js"></script>
   <script src="cve.js"></script>
+  <div class="container" id="container">
+    <form class="search-box flx nowrap" id="searchForm" onsubmit="event.preventDefault();getCVEs(this.q.value);return false;">
+        <img class="rnd" width="50px" height="50px" src="apple-touch-icon.png" alt="CVEs"/>
+        <input type="search" class="rnd txt" id="q" placeholder="Extract and Lookup CVEs... " pattern=".*\bCVE-[12][0-9]{3}-[0-9]{4,6}\b.*">
+        <input class="btn rnd" type="submit" value="Go"/>
+    </form>
+    <div class="results" id="results">
+</div>
+  <table class="tbl page rnd bor shd" id="list"></table>
+  <div id="entries"></div>
+
+  </div>
+
   <script>
-    loadQueryString();
+ 
   </script>
-  <style>
-    .json-container {
-      font-family: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace !important;
-      font-size: small;
-    }
-  </style>
-  <h1 class="pad">CVE View</h1>
-  <div class="gap"><label class="lbl">CVE ID</label>
-      <form class="out nobr" onsubmit="event.preventDefault();loadCVE(this.git.value);return false;"> 
-          <input name="git" class="txt" type="search" placeholder="CVE-yyyy-mmmm" pattern="CVE-[0-9]{4}-[0-9]{4,6}"><input class="btn" type="submit" value="Go"/>
-      </form>
-      &nbsp;
-      <span id="infoMsg"></span>
-      <span id="errMsg"></span> 
-  </div>
-  <div id="holder">
-  <div id="CVE4" class="bor rnd wht shd page">
 
-  </div>
-  <div id="CVE5" class="bor rnd wht shd page">
-
-  </div>
-  </div>
-  <br/>
-  <div id="holder">
-    <div id="CVE4e" class="page">
-  
-    </div>
-    <div id="CVE5e" class="page">
-  
-    </div>
-  </div>
-  <br/>
-  <div id="holder">
-    <div id="CVE4json" class="jsonBox bor rnd wht shd page">
-  
-    </div>
-    <div id="CVE5json" class="jsonBox bor rnd wht shd page">
-  
-    </div>
-  </div>
 </body>
 </html>
