@@ -9,9 +9,6 @@ mixin cvssList(cvssList)
                     b=cvss.baseScore
                     | 
                     sub ⁄10
-                    b=cvss.baseScore
-                    | 
-                    sub ⁄10
                 div.pop.wht.rnd.shd.pad.bor
                     if cvss.scenarios && cvss.scenarios.length > 0
                         b Scenarios:
@@ -465,7 +462,6 @@ mixin cve5(cve)
                     x.dateUpdated = PMD.dateUpdated;
                     x.shortName = PMD.shortName;
                     x.cveId = con.cveId;
-                    x.cveId = con.cveId;
                 +container(x)
         table
             tr(id='i'+con.cveId)
@@ -559,49 +555,8 @@ mixin entry(d)
                     if d.containers.cna.x_ConverterErrors
                         div.bor.rnd.wht.shd.page
                             +warnings(cve4doc.containers.cna)
-mixin missing(id)
-    tr(id=id)
-        td
-            .flx.nowrap
-                .vig-what=id
-        td
-        td CVE record not found
-
-mixin entry(d)
-    -
-        var cve4doc = d.containers.cna.x_legacyV4Record;
-        delete d.containers.cna.x_legacyV4Record;
-
-    div(id=d.cveMetadata.cveId).bor.rnd.wht.shd.page
-        - var oDoc = structuredClone(d);
-        +cve5(d,{cvssDesc: cvssDesc})
-        .pad.fade.borTop
-            b CVE-JSON Record
-            .jsonBox
-                +JSON(oDoc)
-        if d.containers.cna.x_ValidationErrors
-            div.bor.rnd.wht.shd.page
-                +errors(d.containers.cna)   
-
-        if cve4doc
-            details.pad.fade.borTop
-                summary
-                    b Legacy CVE-JSON 4 Record 
-                div
-                    - var oDoc = structuredClone(cve4doc)
-                    +cve4(cve4doc)
-                    .pad
-                        b CVE-JSON Record
-                        .jsonBox
-                            +JSON(oDoc)
-                    if d.containers.cna.x_ConverterErrors
-                        div.bor.rnd.wht.shd.page
-                            +warnings(cve4doc.containers.cna)
 
 block page
-    if renderTemplate == 'entry'
-        +entry(d)
-    else if renderTemplate == 'cve4'
     if renderTemplate == 'entry'
         +entry(d)
     else if renderTemplate == 'cve4'
