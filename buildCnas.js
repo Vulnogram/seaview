@@ -1,10 +1,36 @@
 const fs = require('fs');
-const cnas = require('./CNAsList.json');
 const fetch = require('node-fetch');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const crypto = require('crypto');
+const REMOTE_URL = 'https://raw.githubusercontent.com/CVEProject/cve-website/main/src/assets/data/CNAsList.json';
+const LOCAL_PATH = './CNAsList.json'; // Ensure you have this file
+var cnas = null;
+var ch = {};
+async function fetchCNAs() {
+    try {
+        const response = await fetch(REMOTE_URL);
 
-ch={};
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        cnas = await response.json();
+        console.log('✅ Loaded CNAs from remote URL.');
+
+    } catch (error) {
+        console.warn(`❌ Remote fetch failed. Falling back to local cache: ${error.message}`);
+        
+        try {
+            // Synchronous fallback using require() as requested
+            cnas = require(LOCAL_PATH);
+            console.log('✅ Loaded CNAs from local cache.');
+        } catch (localError) {
+            console.error(`💥 Failed to load local file: ${localError.message}`);
+            cnas = {}; // Final fallback
+        }
+    }
+
+    console.log(`Total CNAs loaded: ${cnas?.length || 0}`);
+}
 
 async function getFavicon(u) {
     try{
@@ -21,7 +47,9 @@ async function getFavicon(u) {
     }
 }
 
-async function getCnaList() {
+async function generateCnaList() {
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
     var cnaList = `<html><head><title>CNA Favicons</title>
 <style>
 body {
@@ -86,11 +114,13 @@ for (c of cnas) {
 }
 ch['CISA-ADP'] = {n: 'CISA ADP', i: 'https://www.cisa.gov/'};
 ch['CVE'] = {n: 'CVE', i: 'https://www.cve.org/'};
+ch['mitre'] = {}
 return cnaList;
 }
 
 async function main(){
-    fs.writeFileSync('cna.html', await getCnaList() + "</div></body></html>");
+    await fetchCNAs();
+    fs.writeFileSync('cna.html', await generateCnaList() + "</div></body></html>");
     fs.writeFileSync('cna.js', 'var cna = ' + JSON.stringify(ch));
 }
 

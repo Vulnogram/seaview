@@ -1,7 +1,72 @@
 function loadQueryString() {
     const queryString = window.location.search;
-    loadCVE(queryString);
+    document.getElementById("q").value = queryString.substring(1);
+    if (queryString) {
+        getCVEs(queryString);
+    }
 }
+
+
+function extractUniqueCVEs(input) {
+  const cvePattern = /\bCVE-(\d{4})-(\d{4,6})\b/g;
+  const uniqueCVEs = new Set();
+  let match;
+ var yearNow = new Date().getFullYear()+2;
+  while ((match = cvePattern.exec(input.toUpperCase())) !== null) {
+    const year = parseInt(match[1], 10);
+    if (year > 1997 && year <= yearNow ) {
+      uniqueCVEs.add(match[0]);
+    }
+  }
+  return Array.from(uniqueCVEs).sort((a, b) => {
+    const [_, yearA, idA] = a.match(/CVE-(\d{4})-(\d+)/);
+    const [__, yearB, idB] = b.match(/CVE-(\d{4})-(\d+)/);
+    return yearA !== yearB ? yearA - yearB : idA - idB;
+  });
+;
+}
+
+var searchResults;
+async function getCVEs(input) {
+    const container = document.getElementById('container');
+    const results = document.getElementById('results');
+    const list =  document.getElementById('list');
+    searchResults = null;
+    resetSort(list.parentElement);
+    var cves = extractUniqueCVEs(input);
+    if(cves.length == 0 && input.length < 100) {
+        searchResults = await searchCve(input);
+        if(searchResults) {
+            cves = searchResults.items
+        } else {
+            window.location.hash = '';
+            results.classList.add('visible');
+            statusText.innerText = `No matching CVEs found. Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords`;
+        }
+    } else {
+        window.location.hash = '';
+        results.classList.add('visible');
+        statusText.innerText = `Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords`;
+    }
+    if (cves.length <= 1) {
+        list.parentElement.classList.add('hid');
+    }
+    if (cves.length >= 1) {
+        container.classList.add('moved-up');
+        results.classList.add('visible');
+        list.innerHTML = '';
+        if (cves.length > 1)
+            list.parentElement.classList.remove('hid');
+        statusText.innerText = `Found ${searchResults? searchResults.totalSoFar + (searchResults.totalSoFar == 100? '+':''): cves.length} CVE${cves.length > 1 ? 's':''}: ${cves}`;
+        document.getElementById('entries').innerHTML = '';
+        cves.forEach(cve => {
+            loadCVE(cve);
+        });
+        document.title = cves.join(' ');
+        history.pushState(null, null, "?"+cves);
+    }
+}
+
 function loadCVE(value) {
     var realId = value.match(/(CVE-(\d{4})-(\d{1,12})(\d{3}))/);
     if (realId) {
@@ -19,26 +84,22 @@ function loadCVE(value) {
             })
             .then(function (response) {
                 if (!response.ok) {
-                    errMsg.textContent = "Failed to load valid CVE JSON";
-                    infoMsg.textContent = "";
-                    throw Error(id + ' ' + response.statusText);
+                    throw Error('Failed to load ' + id + ' ' + response.statusText);
                 }
                 return response.json();
             })
             .then(function (res) {
                 if (res.containers) {
-                    loadJSON(res, id, "Loaded "+id+" from github!", jsonURL);
+                    loadEntry(res, id);
                 } else {
-                    errMsg.textContent = "Failed to load valid CVE JSON";
-                    infoMsg.textContent = "";
+                    results.textContent = results.textContent + " Failed to load " + id;
                 }
             })
             .catch(function (error) {
-                errMsg.textContent = error.message ;
-                CVE5.textContent = CVE4.textContent = cve5j.textContent = cve4j.textContent = "";
+                results.textContent = results.textContent + ' ' +error.message ;
             })
     } else {
-        errMsg.textContent = "CVE ID required";
+        //console.log("CVE ID required");
     }
     return false;
 }
@@ -51,7 +112,6 @@ function addUniq(array, element) {
         array.push(element);
     }
 };
-
 
 function versionStatusTable4(affects) {
     var collator = new Intl.Collator(undefined, {numeric: true});
@@ -249,8 +309,6 @@ function versionStatusTable5(affected) {
             }
         }
     }
-    //console.log(nameAndPlatforms);
-    //console.log(t);
     return({groups:nameAndPlatforms, vals:t, show: showCols});
 }
 
@@ -305,50 +363,340 @@ cvssDesc = {
     }
 }
 
-function loadJSON(d, id, msg, msgLink) {
-    infoMsg.textContent = msg;
-    if(msgLink) {
-        var l = document.createElement('a');
-        l.setAttribute('href',msgLink)
-        l.innerText='[source]'
-        infoMsg.appendChild(l)
-    }
-    errMsg.textContent = "";
-    cve4j = document.getElementById("CVE4json");
-    cve5j = document.getElementById("CVE5json");
+function loadEntry(d, id, msg, msgLink) {
+    var entries = document.getElementById("entries");
+    var entryDiv = document.createElement("div");
+    var entry = cve({renderTemplate:'entry', d: d, statusFunctionv4:versionStatusTable4, statusFunctionv5:versionStatusTable5});
+    entryDiv.innerHTML = entry;
+    entries.appendChild(entryDiv);
 
-    var cve4doc = d.containers.cna.x_legacyV4Record;
-    var tree4 = cve({renderTemplate:'JSON',d: cve4doc});
-    delete d.containers.cna.x_legacyV4Record;
-    var tree5 = cve({renderTemplate:'JSON',d: d});
-    CVE4.innerHTML = cve4j.innerHTML = "";
-    CVE5.innerHTML = cve5j.innerHTML = "";
-    cve4j.innerHTML = tree4;
-    cve5j.innerHTML = tree5;
-    if (d.containers.cna.x_ValidationErrors) {
-        CVE5e.innerHTML = cve({renderTemplate:'errors',d: d});
-    }
-    if (d.containers.cna.x_ConverterErrors) {
-        CVE4e.innerHTML = cve({renderTemplate:'warnings', d: d});
-    }
-
-    if (cve4doc) {
-        var doc4 = cve({renderTemplate:'cve4',d: cve4doc, statusFunction: versionStatusTable4});
-        CVE4.innerHTML = doc4;
-        CVE4.setAttribute('class', "bor rnd wht shd page");
-        cve4j.setAttribute('class', "jsonBox bor rnd wht shd page");
-        CVE5.setAttribute('class', "bor rnd wht shd page");
-        cve5j.setAttribute('class', "jsonBox bor rnd wht shd page");
-    } else {
-        CVE4.setAttribute('class', "hid");
-        cve4j.setAttribute('class', "hid");
-        CVE5.setAttribute('class', "bor rnd wht shd");
-        cve5j.setAttribute('class', "jsonBox bor rnd wht shd");
-
-    }        
-    var doc5 = cve({renderTemplate:'cve5',d: d, cvssDesc: cvssDesc, statusFunction: versionStatusTable5});
-    CVE5.innerHTML = doc5;
-
-    document.title = id;
-    history.pushState(null, null, "?"+id);
+    var table = document.getElementById("list");
+    var tableEntry = document.getElementById('i'+id);
+    table.appendChild(tableEntry);
 }
+
+
+async function searchCVEs(text, count = 100) {
+
+  var repo = 'CVEProject/cvelistV5';
+  const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const repoRegex = `^github\\.com/${escapeRe(repo)}$`;
+
+  // Compose a Sourcegraph search query:
+  // - restrict to repo
+  // - search files (not commits/repos)
+  // - literal pattern (no regex)
+  // - limit result count
+  // - search for the literal "text"
+  const sgQuery =
+    `type:file repo:^github\.com/CVEProject/cvelistV5$ lang:JSON ${JSON.stringify(text)}`;
+
+  // Minimal GraphQL to fetch file paths of matches
+  const graphql = `
+    query Search($q: String!) {
+      search(query: $q, version: V3) {
+        results {
+          results {
+            ... on FileMatch { file { path } }
+          }
+        }
+      }
+    }
+  `;
+
+  const res = await fetch("https://sourcegraph.com/.api/graphql", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify({ query: graphql, variables: { q: sgQuery } })
+  });
+
+  if (!res.ok) throw new Error(`Sourcegraph API error ${res.status} ${res.statusText}`);
+  const data = await res.json();
+
+  const paths = (data?.data?.search?.results?.results || [])
+    .map(r => r?.file?.path)
+    .filter(Boolean);
+
+  // Return unique file names (last path segment)
+  return Array.from(new Set(paths.map(p => p.split("/").pop())));
+}
+
+
+/**
+ * Searches a public GitHub repository for file names matching a search term
+ * using the Sourcegraph public search API.
+ *
+ * @param {string} repo - The repository path (e.g., "twbs/bootstrap").
+ * @param {string} searchTerm - The string to search for within file paths.
+ * @returns {Promise<string[]>} A promise that resolves to an array of matching file names.
+ */
+async function searchRepoFiles(searchTerm) {
+      var repo = 'CVEProject/cvelistV5';
+
+  // 1. Construct the Sourcegraph query.
+  // We use `repo:^github\.com/user/repo$` for an exact match.
+  // We use `type:path` to ensure we only get file names, not code content.
+  const repoPattern = `^github\\.com/${repo}$`;
+  const query = `repo:${repoPattern} type:path ${searchTerm}`;
+
+  // 2. Build the API URL.
+  const endpoint = 'https://sourcegraph.com/.api/search/stream';
+  const url = `${endpoint}?q=${encodeURIComponent(query)}`;
+
+  const fileNames = new Set();
+
+  try {
+    // 3. Make the request using the browser's fetch API.
+    const response = await fetch(url);
+    if (!response.ok) {
+      console.error("Sourcegraph API error:", response.status);
+      return [];
+    }
+
+    // 4. Process the stream response.
+    // The response is a text stream of Server-Sent Events (SSE).
+    // We read it as text and split by line.
+    const text = await response.text();
+    const lines = text.split('\n');
+
+    // 5. Parse the SSE-like data.
+    // We only care about lines starting with "data:".
+    for (const line of lines) {
+      if (line.startsWith('data:')) {
+        // Get the content after "data: "
+        const dataStr = line.substring(5).trim();
+
+        // Skip empty data lines (like the final "done" event)
+        if (dataStr.length > 0 && dataStr.startsWith('[')) {
+          try {
+            // The data is a JSON array of match objects
+            const matches = JSON.parse(dataStr);
+            for (const match of matches) {
+              if (match.type === 'path' && match.path) {
+                fileNames.add(match.path);
+              }
+            }
+          } catch (e) {
+            // Ignore parsing errors for non-result lines
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching from Sourcegraph:", error);
+    return [];
+  }
+
+  // 6. Return the unique file names as an array.
+  return [...fileNames];
+}
+
+/**
+ * Search JSON files in CVEProject/cvelistV5 whose **contents** contain `searchText`,
+ * then return CVE IDs extracted from the **file names**. Results are paged (100 by default).
+ *
+ * @param {string} searchText - literal text to search within file contents
+ * @param {Object} [opts]
+ * @param {number} [opts.cursor=0] - zero-based offset into the result set (e.g., 0, 100, 200, …)
+ * @param {number} [opts.pageSize=100] - number of items to return
+ * @param {number} [opts.timeoutMs=30000] - safety timeout
+ * @returns {Promise<{ items: Array<{cveId:string,path:string,blobUrl:string,rawUrl:string }>,
+ *                     nextCursor: number|null, totalSoFar:number, done:boolean }>}
+ */
+async function searchCve(searchText, {
+  cursor = 0,
+  pageSize = 100,
+  timeoutMs = 30000
+} = {}) {
+  const SOURCEGRAPH_BASE = 'https://sourcegraph.com';
+  const REPO = 'github.com/CVEProject/cvelistV5';
+  const CVE_RE = /CVE-\d{4}-\d{4,7}/;              // CVE-ID pattern in filenames
+  const needed = cursor + pageSize;
+
+  // Build a Sourcegraph query:
+  // - repo: restricts to the CVE repo
+  // - file:\.json$ restricts to JSON files
+  // - content:"..." searches literal text in file contents (avoids query-token confusion)
+  // - select:file converts results to unique file hits (not individual line matches)
+  // - count:all asks the backend not to stop early
+  // Docs: stream endpoint + SSE events; query language (file:, select:, count:)
+  // https://sourcegraph.com/.api/search/stream  (see citations below)
+  const q = [
+    `repo:^${REPO}$`,
+    `file:\\.json$`,
+    `content:${searchText}`,
+    `select:file`,
+    `count:100`
+  ].join(' ');
+
+  const params = new URLSearchParams({
+    q,
+    v: 'V3',            // query version
+    t: 'keyword'       // pattern type (aka "keyword/standard" search)
+  });
+
+  const url = `${SOURCEGRAPH_BASE}/.api/search/stream?${params.toString()}`;
+
+  return new Promise((resolve, reject) => {
+    const results = [];
+    const seenPaths = new Set();
+    let done = false;
+
+    const finalize = () => {
+      // Page the accumulated results client-side
+      const slice = results.slice(cursor, cursor + pageSize);
+      const moreExpected = !done || results.length > cursor + pageSize;
+      resolve({
+        items: slice,
+        nextCursor: moreExpected ? cursor + slice.length : null,
+        totalSoFar: results.length,
+        done
+      });
+    };
+
+    // Safety timeout (in case the stream never ends)
+    const timeout = setTimeout(() => {
+      try { es.close(); } catch {}
+      done = true;
+      finalize();
+    }, timeoutMs);
+
+    // Start SSE stream
+    const es = new EventSource(url, { withCredentials: false });
+
+    es.addEventListener('matches', (evt) => {
+      // Each "matches" event contains an array of match objects.
+      // With `select:file`, each object corresponds to a unique file result.
+      const batch = JSON.parse(evt.data);
+      for (const m of batch) {
+        const path = m.path; // Works for both content/path match objects
+        if (!path) continue;
+        if (!path.endsWith('.json')) continue;
+
+        const mCve = path.match(CVE_RE);
+        if (!mCve) continue;
+
+        if (!seenPaths.has(path)) {
+          seenPaths.add(path);
+            //  const repo = m.repository || REPO;
+            //   const blobUrl = `${SOURCEGRAPH_BASE}/${encodeURIComponent(repo)}/-/blob/${path}`;
+            //  const ghOwnerRepo = repo.replace(/^github\.com\//, '');
+            //  const rawUrl = `https://raw.githubusercontent.com/${ghOwnerRepo}/HEAD/${path}`;
+
+          results.push(mCve[0]);
+          /*results.push({
+            cveId: mCve[0],
+            path,
+            blobUrl,
+            rawUrl
+          });*/
+        }
+      }
+
+      // If we have enough to serve this page, we can stop early to save bandwidth.
+      if (results.length >= needed) {
+        clearTimeout(timeout);
+        try { es.close(); } catch {}
+        done = false; // stream ended early by us; more could exist
+        finalize();
+      }
+    });
+
+    es.addEventListener('progress', (evt) => {
+      const p = JSON.parse(evt.data);
+      if (p.done) {
+        clearTimeout(timeout);
+        try { es.close(); } catch {}
+        done = true;
+        finalize();
+      }
+    });
+
+    es.addEventListener('alert', (evt) => {
+      // Non-fatal warnings/info; log to console for visibility.
+      try {
+        const alert = JSON.parse(evt.data);
+        console.warn('Sourcegraph alert:', alert);
+      } catch {}
+    });
+
+    es.addEventListener('error', (err) => {
+      clearTimeout(timeout);
+      try { es.close(); } catch {}
+      // If we already have enough to serve the requested page, return what we have.
+      if (results.length >= cursor) {
+        done = true;
+        finalize();
+      } else {
+        reject(new Error('Stream error from Sourcegraph'));
+      }
+    });
+
+    es.addEventListener('done', () => {
+      clearTimeout(timeout);
+      try { es.close(); } catch {}
+      done = true;
+      finalize();
+    });
+  });
+}
+
+function resetSort(table){
+  Array.from(table.tHead.rows[0].children).forEach(t=>t.removeAttribute('data-sort'));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  var tables = document.getElementsByClassName('sortable');
+  for (let i = 0; i < tables.length; i++) {
+    var table = tables[i];
+
+      if (!table) return;
+
+  // Function to get the cell value for comparison
+  const getCellValue = (tr, colIndex) => {
+    const cell = tr.children[colIndex];
+    // (1) Use data-sort attribute, else cell content
+    return cell.getAttribute('data-val') || cell.textContent;
+  };
+
+  // Function to compare two values
+  const comparer = (idx, dataType, asc) => (a, b) => {
+    let v1 = getCellValue(asc ? a : b, idx);
+    let v2 = getCellValue(asc ? b : a, idx);
+
+    // (2) Distinguish numbers and strings based on data-type
+    if (dataType == 'number') {
+      // Use parseFloat for numerical comparison
+      v1 = parseFloat(v1.replace(/[^0-9.-]/g, '')); // Clean up (e.g., remove commas)
+      v2 = parseFloat(v2.replace(/[^0-9.-]/g, ''));
+      return v1 - v2;
+    }
+
+    // Default to string comparison (case-insensitive)
+    return v1.toString().toLowerCase().localeCompare(v2.toString().toLowerCase());
+  };
+
+  // Attach click listener to all table headers (TH)
+  Array.from(table.tHead.rows[0].children).forEach((th, index) => {
+    th.addEventListener('click', () => {
+      const tbody = table.tBodies[0];
+      const dataType = th.getAttribute('data-type') || 'string';
+      
+      // Determine the current sort direction and toggle it
+      let sortDir = th.getAttribute('data-sort') == 'desc' ? 'asc' : 'desc';
+
+      // Remove sort direction indicators from all other headers
+      Array.from(th.parentNode.children).forEach(h => h.removeAttribute('data-sort'));
+
+      // Set the new sort direction indicator on the clicked header
+      // Show sort direction indicators
+      th.setAttribute('data-sort', sortDir);
+
+      // Get the rows and sort them
+      Array.from(tbody.querySelectorAll('tr'))
+        .sort(comparer(index, dataType, sortDir == 'asc'))
+        .forEach(tr => tbody.appendChild(tr)); // Re-append rows to re-order the table
+    });
+  });
+}
+});
