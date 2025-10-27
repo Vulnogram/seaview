@@ -188,6 +188,7 @@ mixin container(con)
 
     .desc.pad
         if con.state == 'REJECTED'
+            - con.maxCVSS = -1;
             b.tag.CRITICAL REJECTED
             |  ·  
         +tagList(con.tags)

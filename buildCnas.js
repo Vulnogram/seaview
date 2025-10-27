@@ -114,7 +114,7 @@ for (c of cnas) {
 }
 ch['CISA-ADP'] = {n: 'CISA ADP', i: 'https://www.cisa.gov/'};
 ch['CVE'] = {n: 'CVE', i: 'https://www.cve.org/'};
-ch['mitre'] = {}
+ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org/'};
 return cnaList;
 }
 

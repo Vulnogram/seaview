@@ -27,26 +27,34 @@ function extractUniqueCVEs(input) {
 }
 
 var searchResults;
+function clearURL() {
+  history.replaceState && history.replaceState(
+  null, '', location.pathname
+);
+}
 async function getCVEs(input) {
     const container = document.getElementById('container');
     const results = document.getElementById('results');
     const list =  document.getElementById('list');
+    const statusText = document.getElementById('statusText');
     searchResults = null;
     resetSort(list.parentElement);
     var cves = extractUniqueCVEs(input);
-    if(cves.length == 0 && input.length < 100) {
+    if(cves.length == 0 && input.length <= maxSearch) {
         searchResults = await searchCve(input);
-        if(searchResults) {
+        console.log(searchResults);
+        if(searchResults && searchResults.items && searchResults.items.length > 0) {
             cves = searchResults.items
         } else {
-            window.location.hash = '';
+            clearURL();
             results.classList.add('visible');
-            statusText.innerText = `No matching CVEs found. Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords`;
+            document.getElementById('entries').innerHTML = '';
+            statusText.innerText = `No matching CVEs found. Please enter CVE IDs CVE-year-nnnn or fewer keywords.`;
         }
     } else {
-        window.location.hash = '';
+        clearURL();
         results.classList.add('visible');
-        statusText.innerText = `Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords`;
+        statusText.innerText = `Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords.`;
     }
     if (cves.length <= 1) {
         list.parentElement.classList.add('hid');
@@ -57,7 +65,7 @@ async function getCVEs(input) {
         list.innerHTML = '';
         if (cves.length > 1)
             list.parentElement.classList.remove('hid');
-        statusText.innerText = `Found ${searchResults? searchResults.totalSoFar + (searchResults.totalSoFar == 100? '+':''): cves.length} CVE${cves.length > 1 ? 's':''}: ${cves}`;
+        statusText.innerText = `Found ${searchResults? searchResults.totalSoFar + (searchResults.totalSoFar == 50? '+':''): cves.length} CVE${cves.length > 1 ? 's':''}: ${cves}`;
         document.getElementById('entries').innerHTML = '';
         cves.forEach(cve => {
             loadCVE(cve);
@@ -375,8 +383,8 @@ function loadEntry(d, id, msg, msgLink) {
     table.appendChild(tableEntry);
 }
 
-
-async function searchCVEs(text, count = 100) {
+var maxSearch = 50;
+async function searchCVEs(text, count = maxSearch) {
 
   var repo = 'CVEProject/cvelistV5';
   const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -498,14 +506,14 @@ async function searchRepoFiles(searchTerm) {
  * @param {string} searchText - literal text to search within file contents
  * @param {Object} [opts]
  * @param {number} [opts.cursor=0] - zero-based offset into the result set (e.g., 0, 100, 200, …)
- * @param {number} [opts.pageSize=100] - number of items to return
+ * @param {number} [opts.pageSize=50] - number of items to return
  * @param {number} [opts.timeoutMs=30000] - safety timeout
  * @returns {Promise<{ items: Array<{cveId:string,path:string,blobUrl:string,rawUrl:string }>,
  *                     nextCursor: number|null, totalSoFar:number, done:boolean }>}
  */
 async function searchCve(searchText, {
   cursor = 0,
-  pageSize = 100,
+  pageSize = maxSearch,
   timeoutMs = 30000
 } = {}) {
   const SOURCEGRAPH_BASE = 'https://sourcegraph.com';
@@ -526,7 +534,7 @@ async function searchCve(searchText, {
     `file:\\.json$`,
     `content:${searchText}`,
     `select:file`,
-    `count:100`
+    `count:${maxSearch}`
   ].join(' ');
 
   const params = new URLSearchParams({
