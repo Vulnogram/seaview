@@ -18,7 +18,10 @@ if (cvssList) {
   if ('number' == typeof $$obj.length) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var cvss = $$obj[i];
-pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",cvss.baseSeverity ? cvss.baseSeverity : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = cvss.baseSeverity) ? "" : pug_interp)) + "· \u003Cb\u003E" + (pug_escape(null == (pug_interp = cvss.baseScore) ? "" : pug_interp)) + "\u003C\u002Fb\u003E \u003Csub\u003E⁄10\u003C\u002Fsub\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
+var sev = cvss.threatSeverity || cvss.baseSeverity;
+var score = cvss.threatScore || cvss.baseScore;
+pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + "· \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E \u003Csub\u003E⁄10\u003C\u002Fsub\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
 // iterate cvss.scenarios
@@ -65,7 +68,7 @@ pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ?
 
 pug_html = pug_html + "\u003Cdiv\u003E";
 if (cvss.version >= "4") {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://www.first.org/cvss/calculator/4-0#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://vulnogram.org/cvss4?" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 else
 if (cvss.version >= "3") {
@@ -81,7 +84,10 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
     for (var i in $$obj) {
       $$l++;
       var cvss = $$obj[i];
-pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",cvss.baseSeverity ? cvss.baseSeverity : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = cvss.baseSeverity) ? "" : pug_interp)) + "· \u003Cb\u003E" + (pug_escape(null == (pug_interp = cvss.baseScore) ? "" : pug_interp)) + "\u003C\u002Fb\u003E \u003Csub\u003E⁄10\u003C\u002Fsub\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
+var sev = cvss.threatSeverity || cvss.baseSeverity;
+var score = cvss.threatScore || cvss.baseScore;
+pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + "· \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E \u003Csub\u003E⁄10\u003C\u002Fsub\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
 // iterate cvss.scenarios
@@ -128,7 +134,7 @@ pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ?
 
 pug_html = pug_html + "\u003Cdiv\u003E";
 if (cvss.version >= "4") {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://www.first.org/cvss/calculator/4-0#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://vulnogram.org/cvss4?" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 else
 if (cvss.version >= "3") {
