@@ -427,7 +427,7 @@ mixin cve5(cve)
             //con.x_ValidationErrors = cve.x_ValidationErrors;
             con.state = CDM.state;
             con.cveId = CDM.cveId;
-            var PMD = cve.containers.cna.providerMetadata;
+            var PMD = con.providerMetadata;
             con.dateUpdated = PMD.dateUpdated;
             con.shortName = PMD.shortName;
             var title = con.title;
@@ -528,8 +528,9 @@ mixin missing(id)
 
 mixin entry(d)
     -
-        var cve4doc = d.containers.cna.x_legacyV4Record;
-        delete d.containers.cna.x_legacyV4Record;
+        var con = cve.containers ? cve.containers.cna : {};
+        var cve4doc = con.x_legacyV4Record;
+        delete con.x_legacyV4Record;
 
     div(id=d.cveMetadata.cveId).bor.rnd.wht.shd.page
         - var oDoc = structuredClone(d);
@@ -538,9 +539,9 @@ mixin entry(d)
             b CVE-JSON Record
             .jsonBox
                 +JSON(oDoc)
-        if d.containers.cna.x_ValidationErrors
+        if con.x_ValidationErrors
             div.bor.rnd.wht.shd.page
-                +errors(d.containers.cna)   
+                +errors(con)   
 
         if cve4doc
             details.pad.fade.borTop

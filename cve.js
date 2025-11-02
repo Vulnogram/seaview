@@ -7,7 +7,7 @@ var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, cvssDesc, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, statusFunctionv4, statusFunctionv5, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, cve, cvssDesc, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, statusFunctionv4, statusFunctionv5, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -1258,7 +1258,7 @@ var con = cve.containers ? cve.containers.cna : {};
 //con.x_ValidationErrors = cve.x_ValidationErrors;
 con.state = CDM.state;
 con.cveId = CDM.cveId;
-var PMD = cve.containers.cna.providerMetadata;
+var PMD = con.providerMetadata;
 con.dateUpdated = PMD.dateUpdated;
 con.shortName = PMD.shortName;
 var title = con.title;
@@ -1471,8 +1471,9 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 
 pug_mixins["entry"] = pug_interp = function(d){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-var cve4doc = d.containers.cna.x_legacyV4Record;
-delete d.containers.cna.x_legacyV4Record;
+var con = cve.containers ? cve.containers.cna : {};
+var cve4doc = con.x_legacyV4Record;
+delete con.x_legacyV4Record;
 
 pug_html = pug_html + "\u003Cdiv" + (" class=\"bor rnd wht shd page\""+pug_attr("id", d.cveMetadata.cveId, true, false)) + "\u003E";
 var oDoc = structuredClone(d);
@@ -1480,13 +1481,13 @@ pug_mixins["cve5"](d,{cvssDesc: cvssDesc});
 pug_html = pug_html + "\u003Cdiv class=\"pad fade borTop\"\u003E\u003Cb\u003ECVE-JSON Record\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
 pug_mixins["JSON"](oDoc);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
-if (d.containers.cna.x_ValidationErrors) {
+if (con.x_ValidationErrors) {
 pug_html = pug_html + "\u003Cdiv class=\"bor rnd wht shd page\"\u003E";
 pug_mixins["errors"].call({
 block: function(){
 pug_html = pug_html + "  ";
 }
-}, d.containers.cna);
+}, con);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 if (cve4doc) {
@@ -1540,7 +1541,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.URL :
         typeof URL !== 'undefined' ? URL : undefined, "cna" in locals_for_with ?
         locals_for_with.cna :
-        typeof cna !== 'undefined' ? cna : undefined, "cvssDesc" in locals_for_with ?
+        typeof cna !== 'undefined' ? cna : undefined, "cve" in locals_for_with ?
+        locals_for_with.cve :
+        typeof cve !== 'undefined' ? cve : undefined, "cvssDesc" in locals_for_with ?
         locals_for_with.cvssDesc :
         typeof cvssDesc !== 'undefined' ? cvssDesc : undefined, "d" in locals_for_with ?
         locals_for_with.d :
