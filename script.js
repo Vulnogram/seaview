@@ -8,7 +8,7 @@ function loadQueryString() {
 
 
 function extractUniqueCVEs(input) {
-  const cvePattern = /\bCVE-(\d{4})-(\d{4,6})\b/g;
+  const cvePattern = /CVE-(\d{4})-(\d{4,6})/g;
   const uniqueCVEs = new Set();
   let match;
  var yearNow = new Date().getFullYear()+2;
@@ -100,11 +100,11 @@ function loadCVE(value) {
                 if (res.containers) {
                     loadEntry(res, id);
                 } else {
-                    results.textContent = results.textContent + " Failed to load " + id;
+                    statusText.textContent = statusText.textContent + " Failed to load " + id;
                 }
             })
             .catch(function (error) {
-                results.textContent = results.textContent + ' ' +error.message ;
+                statusText.textContent = statusText.textContent + ' ' +error.message ;
             })
     } else {
         //console.log("CVE ID required");
