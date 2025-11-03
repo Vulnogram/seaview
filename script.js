@@ -40,9 +40,9 @@ async function getCVEs(input) {
     searchResults = null;
     resetSort(list.parentElement);
     var cves = extractUniqueCVEs(input);
-    if(cves.length == 0 && input.length <= maxSearch) {
+    if(cves.length == 0 && input.length <= 100) {
         searchResults = await searchCve(input);
-        console.log(searchResults);
+        //console.log(searchResults);
         if(searchResults && searchResults.items && searchResults.items.length > 0) {
             cves = searchResults.items
         } else {
@@ -65,7 +65,7 @@ async function getCVEs(input) {
         list.innerHTML = '';
         if (cves.length > 1)
             list.parentElement.classList.remove('hid');
-        statusText.innerText = `Found ${searchResults? searchResults.totalSoFar + (searchResults.totalSoFar == 50? '+':''): cves.length} CVE${cves.length > 1 ? 's':''}: ${cves}`;
+        statusText.innerText = `Found ${searchResults? searchResults.totalSoFar + (searchResults.totalSoFar == maxSearch? '+':''): cves.length} CVE${cves.length > 1 ? 's':''}: ${cves}`;
         document.getElementById('entries').innerHTML = '';
         cves.forEach(cve => {
             loadCVE(cve);
@@ -383,121 +383,7 @@ function loadEntry(d, id, msg, msgLink) {
     table.appendChild(tableEntry);
 }
 
-var maxSearch = 50;
-async function searchCVEs(text, count = maxSearch) {
-  text = text.replace(/[\u201C\u201D\u201E\u201F\u275D\u275E\u301D\u301E\u301F]/g, '"');
-  var repo = 'CVEProject/cvelistV5';
-  const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const repoRegex = `^github\\.com/${escapeRe(repo)}$`;
-
-  // Compose a Sourcegraph search query:
-  // - restrict to repo
-  // - search files (not commits/repos)
-  // - literal pattern (no regex)
-  // - limit result count
-  // - search for the literal "text"
-  const sgQuery =
-    `type:file repo:^github\.com/CVEProject/cvelistV5$ lang:JSON ${JSON.stringify(text)}`;
-
-  // Minimal GraphQL to fetch file paths of matches
-  const graphql = `
-    query Search($q: String!) {
-      search(query: $q, version: V3) {
-        results {
-          results {
-            ... on FileMatch { file { path } }
-          }
-        }
-      }
-    }
-  `;
-
-  const res = await fetch("https://sourcegraph.com/.api/graphql", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify({ query: graphql, variables: { q: sgQuery } })
-  });
-
-  if (!res.ok) throw new Error(`Sourcegraph API error ${res.status} ${res.statusText}`);
-  const data = await res.json();
-
-  const paths = (data?.data?.search?.results?.results || [])
-    .map(r => r?.file?.path)
-    .filter(Boolean);
-
-  // Return unique file names (last path segment)
-  return Array.from(new Set(paths.map(p => p.split("/").pop())));
-}
-
-
-/**
- * Searches a public GitHub repository for file names matching a search term
- * using the Sourcegraph public search API.
- *
- * @param {string} repo - The repository path (e.g., "twbs/bootstrap").
- * @param {string} searchTerm - The string to search for within file paths.
- * @returns {Promise<string[]>} A promise that resolves to an array of matching file names.
- */
-async function searchRepoFiles(searchTerm) {
-      var repo = 'CVEProject/cvelistV5';
-
-  // 1. Construct the Sourcegraph query.
-  // We use `repo:^github\.com/user/repo$` for an exact match.
-  // We use `type:path` to ensure we only get file names, not code content.
-  const repoPattern = `^github\\.com/${repo}$`;
-  const query = `repo:${repoPattern} type:path ${searchTerm}`;
-
-  // 2. Build the API URL.
-  const endpoint = 'https://sourcegraph.com/.api/search/stream';
-  const url = `${endpoint}?q=${encodeURIComponent(query)}`;
-
-  const fileNames = new Set();
-
-  try {
-    // 3. Make the request using the browser's fetch API.
-    const response = await fetch(url);
-    if (!response.ok) {
-      console.error("Sourcegraph API error:", response.status);
-      return [];
-    }
-
-    // 4. Process the stream response.
-    // The response is a text stream of Server-Sent Events (SSE).
-    // We read it as text and split by line.
-    const text = await response.text();
-    const lines = text.split('\n');
-
-    // 5. Parse the SSE-like data.
-    // We only care about lines starting with "data:".
-    for (const line of lines) {
-      if (line.startsWith('data:')) {
-        // Get the content after "data: "
-        const dataStr = line.substring(5).trim();
-
-        // Skip empty data lines (like the final "done" event)
-        if (dataStr.length > 0 && dataStr.startsWith('[')) {
-          try {
-            // The data is a JSON array of match objects
-            const matches = JSON.parse(dataStr);
-            for (const match of matches) {
-              if (match.type === 'path' && match.path) {
-                fileNames.add(match.path);
-              }
-            }
-          } catch (e) {
-            // Ignore parsing errors for non-result lines
-          }
-        }
-      }
-    }
-  } catch (error) {
-    console.error("Error fetching from Sourcegraph:", error);
-    return [];
-  }
-
-  // 6. Return the unique file names as an array.
-  return [...fileNames];
-}
+var maxSearch = 30;
 
 /**
  * Search JSON files in CVEProject/cvelistV5 whose **contents** contain `searchText`,
@@ -529,6 +415,9 @@ async function searchCve(searchText, {
   // - count:all asks the backend not to stop early
   // Docs: stream endpoint + SSE events; query language (file:, select:, count:)
   // https://sourcegraph.com/.api/search/stream  (see citations below)
+
+  searchText = searchText.replace(/[\u201C\u201D\u201E\u201F\u275D\u275E\u301D\u301E\u301F]/g, '"');
+
   const q = [
     `repo:^${REPO}$`,
     `file:\\.json$`,
