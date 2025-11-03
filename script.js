@@ -385,7 +385,7 @@ function loadEntry(d, id, msg, msgLink) {
 
 var maxSearch = 50;
 async function searchCVEs(text, count = maxSearch) {
-
+  text = text.replace(/[\u201C\u201D\u201E\u201F\u275D\u275E\u301D\u301E\u301F]/g, '"');
   var repo = 'CVEProject/cvelistV5';
   const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const repoRegex = `^github\\.com/${escapeRe(repo)}$`;
