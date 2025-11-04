@@ -597,3 +597,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 }
 });
+
+const cvssSeverity = score => {
+  const s = Number(score);
+  if (!Number.isFinite(s) || s < 0 || s > 10) return '';
+  return s === 0 ? 'NONE' : s <= 3.9 ? 'LOW' : s <= 6.9 ? 'MEDIUM' : s <= 8.9 ? 'HIGH' : 'CRITICAL';
+};

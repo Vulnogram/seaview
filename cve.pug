@@ -3,8 +3,8 @@ mixin cvssList(cvssList)
     if cvssList
         each cvss, i in cvssList
             details.popup
-                - var sev = cvss.threatSeverity || cvss.baseSeverity;
                 - var score = cvss.threatScore || cvss.baseScore;
+                - var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
                 summary.lbl.rnd.tag.CVSS(class= sev ? sev : 'gray')
                     = sev
                     | · 
