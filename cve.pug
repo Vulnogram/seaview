@@ -141,12 +141,14 @@ mixin timeList(c)
 mixin refList(references)
     each r in references
         div
-            - var u = (new URL(r.url));
-            img(width=16,height=16,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
-            a(href=r.url)=(r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
-            if r.tags && r.tags.length > 0
-                |  
-                =r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")
+            if(shownURLs && !shownURLs[r.url])
+                - var u = (new URL(r.url));
+                - shownURLs[r.url] = true;
+                img(width=16,height=16,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
+                a(href=r.url)=(r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
+                if r.tags && r.tags.length > 0
+                    |  
+                    =r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")
 
 mixin errors(con)
     if con.x_ValidationErrors
@@ -279,7 +281,7 @@ mixin container(con)
             details(open) 
                 summary
                     b.vgi-ext References
-                +refList(con.references)
+                +refList(con.references, con)
     if con.json
         pre=JSON.stringify(con.json,1,1)
 
@@ -429,6 +431,7 @@ mixin cve5(cve)
             //con.x_ValidationErrors = cve.x_ValidationErrors;
             con.state = CDM.state;
             con.cveId = CDM.cveId;
+            shownURLs = {};
             var PMD = con.providerMetadata;
             con.dateUpdated = PMD.dateUpdated;
             con.shortName = PMD.shortName;
@@ -448,6 +451,7 @@ mixin cve5(cve)
         +container(con)
         if (cve.containers.adp && cve.containers.adp.length > 0)
             each x, i in cve.containers.adp
+                hr.line
                 - x.cvssList = [];
                 if (x.metrics && x.metrics.length > 0)
                     each y, i in x.metrics

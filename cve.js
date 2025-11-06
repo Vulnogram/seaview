@@ -7,7 +7,7 @@ var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, statusFunctionv4, statusFunctionv5, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, statusFunctionv5, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -516,10 +516,13 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
       for (var pug_index14 = 0, $$l = $$obj.length; pug_index14 < $$l; pug_index14++) {
         var r = $$obj[pug_index14];
 pug_html = pug_html + "\u003Cdiv\u003E";
+if ((shownURLs && !shownURLs[r.url])) {
 var u = (new URL(r.url));
+shownURLs[r.url] = true;
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (r.tags && r.tags.length > 0) {
 pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")) ? "" : pug_interp)));
+}
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       }
@@ -529,10 +532,13 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       $$l++;
       var r = $$obj[pug_index14];
 pug_html = pug_html + "\u003Cdiv\u003E";
+if ((shownURLs && !shownURLs[r.url])) {
 var u = (new URL(r.url));
+shownURLs[r.url] = true;
 pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (r.tags && r.tags.length > 0) {
 pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")) ? "" : pug_interp)));
+}
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
     }
@@ -604,7 +610,7 @@ pug_mixins["cvssList"](con.cvssList);
 if (con.KEV) {
 pug_html = pug_html + "\u003Csummary class=\"lbl rnd tag CVSS CRITICAL vgi-bomb\"\u003EKnown Exploited Since " + (pug_escape(null == (pug_interp = con.KEV.dateAdded) ? "" : pug_interp)) + "\u003C\u002Fsummary\u003E";
 }
-pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.github.io/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.github.io/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
 if (con.state == 'REJECTED') {
 con.maxCVSS = -1;
 pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E ·  ";
@@ -927,7 +933,7 @@ pug_html = pug_html + "\u003C\u002Fdetails\u003E\u003C\u002Fdiv\u003E";
 }
 if (con.references) {
 pug_html = pug_html + "\u003Cdiv class=\"references pad\"\u003E\u003Cdetails" + (pug_attr("open", true, true, false)) + "\u003E \u003Csummary\u003E\u003Cb class=\"vgi-ext\"\u003EReferences\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E";
-pug_mixins["refList"](con.references);
+pug_mixins["refList"](con.references, con);
 pug_html = pug_html + "\u003C\u002Fdetails\u003E\u003C\u002Fdiv\u003E";
 }
 if (con.json) {
@@ -1264,6 +1270,7 @@ var con = cve.containers ? cve.containers.cna : {};
 //con.x_ValidationErrors = cve.x_ValidationErrors;
 con.state = CDM.state;
 con.cveId = CDM.cveId;
+shownURLs = {};
 var PMD = con.providerMetadata;
 con.dateUpdated = PMD.dateUpdated;
 con.shortName = PMD.shortName;
@@ -1311,6 +1318,7 @@ if ((cve.containers.adp && cve.containers.adp.length > 0)) {
   if ('number' == typeof $$obj.length) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var x = $$obj[i];
+pug_html = pug_html + "\u003Chr class=\"line\"\u002F\u003E";
 x.cvssList = [];
 if ((x.metrics && x.metrics.length > 0)) {
 // iterate x.metrics
@@ -1363,6 +1371,7 @@ pug_mixins["container"](x);
     for (var i in $$obj) {
       $$l++;
       var x = $$obj[i];
+pug_html = pug_html + "\u003Chr class=\"line\"\u002F\u003E";
 x.cvssList = [];
 if ((x.metrics && x.metrics.length > 0)) {
 // iterate x.metrics
@@ -1563,7 +1572,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.nonSpec :
         typeof nonSpec !== 'undefined' ? nonSpec : undefined, "renderTemplate" in locals_for_with ?
         locals_for_with.renderTemplate :
-        typeof renderTemplate !== 'undefined' ? renderTemplate : undefined, "statusFunctionv4" in locals_for_with ?
+        typeof renderTemplate !== 'undefined' ? renderTemplate : undefined, "shownURLs" in locals_for_with ?
+        locals_for_with.shownURLs :
+        typeof shownURLs !== 'undefined' ? shownURLs : undefined, "statusFunctionv4" in locals_for_with ?
         locals_for_with.statusFunctionv4 :
         typeof statusFunctionv4 !== 'undefined' ? statusFunctionv4 : undefined, "statusFunctionv5" in locals_for_with ?
         locals_for_with.statusFunctionv5 :
