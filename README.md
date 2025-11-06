@@ -1,10 +1,10 @@
-![SeaView Logo](https://vulnogram.github.io/seaview/apple-touch-icon.png)
-#  [SeaView](https://vulnogram.github.io/seaview) -  an online tool to Extract and View CVE Records
+![SeaView Logo](https://vulnogram.org/seaview/apple-touch-icon.png)
+#  [SeaView](https://vulnogram.org/seaview) -  an online tool to Extract and View CVE Records
 
 
-[Go to the tool online](https://vulnogram.github.io/seaview)
+[Go to the tool online](https://vulnogram.org/seaview)
 
-SeaView (named because CVE-View is a tongue twister) loads CVE JSON 5 documents from [github.com/CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5/) and presents a rendering of the version 4 document next to a version 5 document upconverted using the [CVE_4_to_5_converter](https://github.com/CVEProject/cve-schema/tree/master/schema/v5.0/support/CVE_4_to_5_converter).
+SeaView (named because CVE-View is a tongue twister) identifies CVE ids in a given text and shows them, else searches for given keywords CVE records, loads the records from [github.com/CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5/) and presents a more complete rendering of most of the information in the record, like the fix and workaround information that are hidden on cve.org
 
 ## CVE rendering code
 
@@ -17,6 +17,6 @@ The function cve() to get an HTML rendering that is then displayed client side.
 
 ## CNA favicons
 
-[buildCnas.js](./buildCnas.js) file loads a JSON listing of CNAs, trys to fetch the favicon using Google's favicon service from the CNA's webistes to. Then [stores them in an object](./cna.js) indexed by CNA's shortName and generates a [thumbnail index](https://vulnogram.github.io/seaview/cna).
+[buildCnas.js](./buildCnas.js) file loads a JSON listing of CNAs, trys to fetch the favicon using Google's favicon service from the CNA's webistes to. Then [stores them in an object](./cna.js) indexed by CNA's shortName and generates a [thumbnail index](https://vulnogram.org/seaview/cna).
 
 
