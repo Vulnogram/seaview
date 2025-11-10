@@ -229,16 +229,19 @@ pre, .pre {
 .wrp {
     white-space: pre-wrap;
 }
-/*
+
 a {
     text-decoration: none;
     color: var(--lnk);
 }
-
+/*
 a:hover, a:active, a:focus {
     text-decoration: underline;
-    color: var(--lnk);
+}*/
+#idxTble a {
+    color: var(--txt);
 }
+
 */
 /* UI elements */
 

@@ -485,6 +485,7 @@ mixin cve5(cve)
                         b.tag.CRITICAL REJECTED
                     +cvssList(con.cvssList)
                 td
+                  a(href="#"+con.cveId)
                     | 
                     if con.title
                         = con.title
