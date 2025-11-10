@@ -7,7 +7,7 @@ var pug_has_own_property=Object.prototype.hasOwnProperty;
 var pug_match_html=/["&<>]/;function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, statusFunctionv5, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, gitURL, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, statusFunctionv5, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -21,7 +21,7 @@ if (cvssList) {
 pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + "· \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E \u003Csub\u003E⁄10\u003C\u002Fsub\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
 // iterate cvss.scenarios
@@ -87,7 +87,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
 pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + "· \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E \u003Csub\u003E⁄10\u003C\u002Fsub\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
 // iterate cvss.scenarios
@@ -610,7 +610,7 @@ pug_mixins["cvssList"](con.cvssList);
 if (con.KEV) {
 pug_html = pug_html + "\u003Csummary class=\"lbl rnd tag CVSS CRITICAL vgi-bomb\"\u003EKnown Exploited Since " + (pug_escape(null == (pug_interp = con.KEV.dateAdded) ? "" : pug_interp)) + "\u003C\u002Fsummary\u003E";
 }
-pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", gitURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
 if (con.state == 'REJECTED') {
 con.maxCVSS = -1;
 pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E ·  ";
@@ -1493,7 +1493,7 @@ delete con.x_legacyV4Record;
 pug_html = pug_html + "\u003Cdiv" + (" class=\"bor rnd wht shd page\""+pug_attr("id", d.cveMetadata.cveId, true, false)) + "\u003E";
 var oDoc = structuredClone(d);
 pug_mixins["cve5"](d,{cvssDesc: cvssDesc});
-pug_html = pug_html + "\u003Cdiv class=\"pad fade borTop\"\u003E\u003Cb\u003ECVE-JSON Record\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"pad fade borTop\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"vgi-versions\""+pug_attr("href", gitURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
 pug_mixins["JSON"](oDoc);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 if (con.x_ValidationErrors) {
@@ -1509,7 +1509,7 @@ if (cve4doc) {
 pug_html = pug_html + "\u003Cdetails class=\"pad fade borTop\"\u003E\u003Csummary\u003E\u003Cb\u003ELegacy CVE-JSON 4 Record \u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv\u003E";
 var oDoc = structuredClone(cve4doc)
 pug_mixins["cve4"](cve4doc);
-pug_html = pug_html + "\u003Cdiv class=\"pad\"\u003E\u003Cb\u003ECVE-JSON Record\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"pad\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", gitURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
 pug_mixins["JSON"](oDoc);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 if (d.containers.cna.x_ConverterErrors) {
@@ -1566,7 +1566,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.d :
         typeof d !== 'undefined' ? d : undefined, "encodeURIComponent" in locals_for_with ?
         locals_for_with.encodeURIComponent :
-        typeof encodeURIComponent !== 'undefined' ? encodeURIComponent : undefined, "isNaN" in locals_for_with ?
+        typeof encodeURIComponent !== 'undefined' ? encodeURIComponent : undefined, "gitURL" in locals_for_with ?
+        locals_for_with.gitURL :
+        typeof gitURL !== 'undefined' ? gitURL : undefined, "isNaN" in locals_for_with ?
         locals_for_with.isNaN :
         typeof isNaN !== 'undefined' ? isNaN : undefined, "nonSpec" in locals_for_with ?
         locals_for_with.nonSpec :

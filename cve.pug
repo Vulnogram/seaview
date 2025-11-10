@@ -5,12 +5,10 @@ mixin cvssList(cvssList)
             details.popup
                 - var score = cvss.threatScore || cvss.baseScore;
                 - var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-                summary.lbl.rnd.tag.CVSS(class= sev ? sev : 'gray')
+                summary.lbl.rnd.tag.CVSS(class= sev ? sev : 'gray', title=score + ' out of 10')
                     = sev
-                    | · 
+                    |  · 
                     b=score
-                    | 
-                    sub ⁄10
                 div.pop.wht.rnd.shd.pad.bor
                     if cvss.scenarios && cvss.scenarios.length > 0
                         b Scenarios:
@@ -189,7 +187,7 @@ mixin container(con)
                     = con.KEV.dateAdded
             a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId)
             a.sbn.vgi-link(href="https://vulnogram.org/seaview/?"+con.cveId,target="_blank")
-
+            a.sbn.vgi-versions(href=gitURL,target="_blank" title="View in GitHub")
     .desc.pad
         if con.state == 'REJECTED'
             - con.maxCVSS = -1;
@@ -543,6 +541,7 @@ mixin entry(d)
         +cve5(d,{cvssDesc: cvssDesc})
         .pad.fade.borTop
             b CVE-JSON Record
+                a.vgi-versions(href=gitURL,target="_blank" title="View in GitHub")
             .jsonBox
                 +JSON(oDoc)
         if con.x_ValidationErrors
@@ -558,6 +557,7 @@ mixin entry(d)
                     +cve4(cve4doc)
                     .pad
                         b CVE-JSON Record
+                            a.sbn.vgi-versions(href=gitURL,target="_blank" title="View in GitHub")
                         .jsonBox
                             +JSON(oDoc)
                     if d.containers.cna.x_ConverterErrors

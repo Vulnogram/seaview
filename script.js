@@ -1,8 +1,11 @@
 function loadQueryString() {
     const queryString = window.location.search;
-    document.getElementById("q").value = queryString.substring(1);
-    if (queryString) {
-        getCVEs(queryString);
+    if(queryString && queryString.length >= 1) {
+        var q = decodeURIComponent(queryString.substring(1));
+        document.getElementById("q").value = q
+        if (q) {
+            getCVEs(q);
+        }
     }
 }
 
@@ -32,16 +35,18 @@ function clearURL() {
   null, '', location.pathname
 );
 }
-async function getCVEs(input) {
+async function getCVEs(text) {
     const container = document.getElementById('container');
     const results = document.getElementById('results');
     const list =  document.getElementById('list');
     const statusText = document.getElementById('statusText');
     searchResults = null;
     resetSort(list.parentElement);
-    var cves = extractUniqueCVEs(input);
-    if(cves.length == 0 && input.length <= 100) {
-        searchResults = await searchCve(input);
+    var cves = extractUniqueCVEs(text);
+    var textSearch = false;
+    if(cves.length == 0 && text.length <= 100) {
+        textSearch = true;
+        searchResults = await searchCve(text);
         //console.log(searchResults);
         if(searchResults && searchResults.items && searchResults.items.length > 0) {
             cves = searchResults.items
@@ -70,8 +75,13 @@ async function getCVEs(input) {
         cves.forEach(cve => {
             loadCVE(cve);
         });
-        document.title = cves.join(' ');
-        history.pushState(null, null, "?"+cves);
+        if(textSearch) {
+            document.title = text;
+            history.pushState({text:text}, null, "?"+encodeURIComponent(text));
+        } else {
+            document.title = cves.join(' ');
+            history.pushState({cves:cves}, null, "?"+cves);
+        }
     }
 }
 
@@ -98,7 +108,7 @@ function loadCVE(value) {
             })
             .then(function (res) {
                 if (res.containers) {
-                    loadEntry(res, id);
+                    loadEntry(res, id, jsonURL);
                 } else {
                     statusText.textContent = statusText.textContent + " Failed to load " + id;
                 }
@@ -371,10 +381,10 @@ cvssDesc = {
     }
 }
 
-function loadEntry(d, id, msg, msgLink) {
+function loadEntry(d, id, gitURL) {
     var entries = document.getElementById("entries");
     var entryDiv = document.createElement("div");
-    var entry = cve({renderTemplate:'entry', d: d, statusFunctionv4:versionStatusTable4, statusFunctionv5:versionStatusTable5});
+    var entry = cve({renderTemplate:'entry', d: d, statusFunctionv4:versionStatusTable4, statusFunctionv5:versionStatusTable5, gitURL:gitURL});
     entryDiv.innerHTML = entry;
     entries.appendChild(entryDiv);
 
@@ -603,3 +613,16 @@ const cvssSeverity = score => {
   if (!Number.isFinite(s) || s < 0 || s > 10) return '';
   return s === 0 ? 'NONE' : s <= 3.9 ? 'LOW' : s <= 6.9 ? 'MEDIUM' : s <= 8.9 ? 'HIGH' : 'CRITICAL';
 };
+
+addEventListener("popstate", (event) => {
+    if(event.state)
+        if(event.state.text) {
+            document.getElementById("q").value = event.state.text
+            getCVEs(event.state.text);
+    } else {
+        if(event.state.cves) {
+            document.getElementById("q").value = event.state.cves
+            getCVEs(event.state.cves);
+        }
+    }
+})
