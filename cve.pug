@@ -469,24 +469,27 @@ mixin cve5(cve)
                     x.cveId = con.cveId;
                 +container(x)
         table
-            tr(id='i'+con.cveId)
-                td
-                    a.flx.nowrap(href="#"+con.cveId)
-                        if cna[con.shortName] && cna[con.shortName].i
-                            img(width=20 height=20 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
-                        else
-                            .vgi-bug(width=20 height=20)
-                        =con.cveId
-                        if cve.KEV
-                            | 
-                            b.vgi-bomb KEV
-                td(data-val=con.maxCVSS)
-                    if con.state == 'REJECTED'
-                        b.tag.CRITICAL REJECTED
-                    +cvssList(con.cvssList)
-                td
-                  a(href="#"+con.cveId)
+            +row(cve, con)
+
+mixin row(cve,con)
+    tr(id='i'+con.cveId)
+        td
+            a.flx.nowrap(href="#"+con.cveId)
+                if cna[con.shortName] && cna[con.shortName].i
+                    img(width=20 height=20 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
+                else
+                    .vgi-bug(width=20 height=20)
+                =con.cveId
+                if cve.KEV
                     | 
+                    b.vgi-bomb KEV
+        td(data-val=con.maxCVSS)
+            if con.state == 'REJECTED'
+                b.tag.CRITICAL REJECTED
+            +cvssList(con.cvssList)
+        td
+            a(href="#"+con.cveId)
+                div
                     if con.title
                         = con.title
                     else

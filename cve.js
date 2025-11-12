@@ -1423,7 +1423,13 @@ pug_mixins["container"](x);
 }).call(this);
 
 }
-pug_html = pug_html + "\u003Ctable\u003E\u003Ctr" + (pug_attr("id", 'i'+con.cveId, true, false)) + "\u003E\u003Ctd\u003E\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)) + "\u003E";
+pug_html = pug_html + "\u003Ctable\u003E";
+pug_mixins["row"](cve, con);
+pug_html = pug_html + "\u003C\u002Ftable\u003E\u003C\u002Fdiv\u003E";
+};
+pug_mixins["row"] = pug_interp = function(cve,con){
+var block = (this && this.block), attributes = (this && this.attributes) || {};
+pug_html = pug_html + "\u003Ctr" + (pug_attr("id", 'i'+con.cveId, true, false)) + "\u003E\u003Ctd\u003E\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)) + "\u003E";
 if (cna[con.shortName] && cna[con.shortName].i) {
 pug_html = pug_html + "\u003Cimg" + (" width=\"20\" height=\"20\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E";
 }
@@ -1439,7 +1445,7 @@ if (con.state == 'REJECTED') {
 pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E";
 }
 pug_mixins["cvssList"](con.cvssList);
-pug_html = pug_html + "\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Ca" + (pug_attr("href", "#"+con.cveId, true, false)) + "\u003E ";
+pug_html = pug_html + "\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Ca" + (pug_attr("href", "#"+con.cveId, true, false)) + "\u003E\u003Cdiv\u003E";
 if (con.title) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = con.title) ? "" : pug_interp));
 }
@@ -1447,7 +1453,7 @@ else {
 pug_mixins["lpara"](con.descriptions);
 pug_mixins["lpara"](con.rejectedReasons);
 }
-pug_html = pug_html + "\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E\u003C\u002Ftable\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
 };
 pug_mixins["cve4"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
