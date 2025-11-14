@@ -96,13 +96,6 @@ a {
     text-decoration: none;
     color: var(--lnk);
 }
-/*
-a:hover, a:active, a:focus {
-    text-decoration: underline;
-}*/
-#idxTble a {
-    color: var(--txt);
-}
 
 /* UI elements */
 
@@ -263,39 +256,70 @@ box-shadow: 0 0 0 0.2em rgba(147, 147, 147, 0.3);
     margin-bottom: 0px;
 }
 
-/* Apply to: <table id="idxTble"> ... */
-#idxTble { min-width: 100%; max-width: 100vw; border-collapse: separate; border-spacing: 0;  margin: 0px; border: none;}
+/* --- Desktop & Default Styles --- */
 
-/* Mobile-first: cols 1–2 side-by-side, col 3 full-width below.
-   minmax(0,1fr) + min-width:0 prevents overflow beyond the viewport. */
-#idxTble tr {
-  display: grid;
-  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
-  grid-template-rows: auto auto;
-  gap: .25rem .5rem;
-  padding: .5rem 0;
-  border-bottom: 1px solid #e5e7eb;
-}
-#idxTble tbody tr:last-child { border-bottom: 0; }
+#idxTble a {
+  /* 1. Use Flexbox for easy alignment */
+  display: flex;
+  align-items: center; /* Vertically center all items */
+  
+  /* 2. Make the <a> tag fill the parent .row */
+  width: 100%;
+  
+  /* 3. Add spacing between the left-side items */
+  gap: 0.5em; 
+  
+  /* Prevents layout issues from long content */
+  overflow: hidden; 
 
-#idxTble th, #idxTble td {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  white-space: normal;
-  padding: .5rem;
-  border: 0;
+  padding: 0.5em;
   box-sizing: border-box;
+  border-bottom: 1px solid var(--bor);
+color: var(--txt);
 }
 
-#idxTble  td:nth-child(1) { grid-column: 1; }
-#idxTble  td:nth-child(2) { grid-column: 2; }
-#idxTble  td:nth-child(3) { grid-column: 1 / -1; }
+/* 4. Target the text span */
+#idxTble a span {
+  flex-grow: 1; /* Allow span to take all available space */
+  min-width: 0;   /* CRITICAL for ellipsis to work in flex */
 
-/* Wider screens: return to normal table layout */
-@media (min-width: 640px) {
-  #idxTble { border-collapse: collapse; table-layout: fixed; }
-  #idxTble tr { display: table-row; padding: 0; border: 0; }
-  #idxTble th, #idxTble td { display: table-cell; padding: .5rem .75rem; }
-  #idxTble td { border-bottom: 1px solid #e5e7eb; }
-  #idxTble tr:last-child td { border-bottom: 0; }
+  /* 5. Create the "..." ellipsis for overflow */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 6. Target the date */
+#idxTble a b.dt {
+  margin-left: auto; /* Pushes this item to the far right */
+  flex-shrink: 0;   /* Prevents the date from shrinking/wrapping */
+  padding-left: 0.5em; /* Ensures space between text and date */
+}
+
+/* 7. Prevent other items from shrinking */
+#idxTble a img,
+#idxTble a b {
+  flex-shrink: 0;
+}
+
+
+/* --- Mobile Styles --- */
+
+@media (max-width: 600px) {
+  #idxTble a {
+    /* 8. Allow items to wrap to multiple lines */
+    flex-wrap: wrap;
+  }
+  #idxTble a span {
+    /* 9. Force the span to a new line, taking 100% width */
+    flex-basis: 100%;
+    order: 1; /* Ensures it's the last item (visually) */
+    
+    /* 10. Reset text styles to allow wrapping on mobile */
+    white-space: normal;
+    overflow: visible;
+    max-height: 2.75em;
+    text-overflow: clip; /* Disables ellipsis */
+    margin-top: 0.25em; /* Add space between the rows */
+  }
 }

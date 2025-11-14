@@ -303,6 +303,12 @@ mixin mpara(l, hypertext)
             if d.value
                 +para(d.value, hypertext, d.lang)
 
+mixin text(l)
+    if l
+        each d in l
+            if d.value
+                =d.value
+
 mixin aggpara(l)
     if l
         ul
@@ -432,25 +438,23 @@ mixin cve5(cve)
 
 mixin row(cve)
     - con = cve.containers.cna;
-    tr(id='i'+con.cveId)
-        td
-            a.flx.nowrap(href="#"+con.cveId)
-                if cna[con.shortName] && cna[con.shortName].i
-                    img(width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
-                else
-                    img(width=28 height=28 src="https://vulnogram.org/vg-icons/src/bug.svg")
-                b(class=(con.state == 'REJECTED'?'rej':''),style=(con.maxCVSS ? "background-color:"+getGradientColor(con.maxCVSS)+';':'')+(con.maxCVSS >= 8 ? 'color:#fff;':''))
-                    =con.cveId
-                    if con.maxCVSS
-                        |  · 
-                        = con.maxCVSS
-                if cve.KEV
-                    b.vgi-bomb
-                if con.title
-                    = con.title
-                else
-                    +lpara(con.descriptions)
-                    +lpara(con.rejectedReasons)
+    a.flx.nowrap(href="#"+con.cveId)
+        if cna[con.shortName] && cna[con.shortName].i
+            img(width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
+        else
+            img(width=28 height=28 src="https://vulnogram.org/vg-icons/src/bug.svg")
+        b(class=(con.state == 'REJECTED'?'rej':''),style=(con.maxCVSS ? "background-color:"+getGradientColor(con.maxCVSS)+';':'')+(con.maxCVSS >= 8 ? 'color:#fff;':''))
+            =con.cveId
+            if con.maxCVSS
+                |  · 
+                = con.maxCVSS
+        span(class=cve.KEV?'vgi-bomb':false)
+            if con.title
+                = con.title
+            else
+                +text(con.descriptions)
+                +text(con.rejectedReasons)
+        b.dt=formatFriendlyDate(con.date)
 
 mixin cve4(cve)
   .pad

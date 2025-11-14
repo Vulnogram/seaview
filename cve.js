@@ -8,7 +8,7 @@ var pug_match_html=/["&<>]/;
 function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, con, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, getGradientColor, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, con, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -1004,6 +1004,33 @@ pug_html = pug_html + "\u003Cp" + (pug_attr("lang", lang, true, false)) + "\u003
 
 
 
+pug_mixins["text"] = pug_interp = function(l){
+var block = (this && this.block), attributes = (this && this.attributes) || {};
+if (l) {
+// iterate l
+;(function(){
+  var $$obj = l;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index31 = 0, $$l = $$obj.length; pug_index31 < $$l; pug_index31++) {
+        var d = $$obj[pug_index31];
+if (d.value) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index31 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index31];
+if (d.value) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+}
+    }
+  }
+}).call(this);
+
+}
+};
 
 
 
@@ -1030,49 +1057,14 @@ if (l) {
 ;(function(){
   var $$obj = l;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index32 = 0, $$l = $$obj.length; pug_index32 < $$l; pug_index32++) {
-        var d = $$obj[pug_index32];
-if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
-pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
-}
-else
-if (d.value) {
-pug_mixins["para"](d.value,null,d.lang);
-}
-      }
-  } else {
-    var $$l = 0;
-    for (var pug_index32 in $$obj) {
-      $$l++;
-      var d = $$obj[pug_index32];
-if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
-pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
-}
-else
-if (d.value) {
-pug_mixins["para"](d.value,null,d.lang);
-}
-    }
-  }
-}).call(this);
-
-}
-};
-pug_mixins["lpara"] = pug_interp = function(l){
-var block = (this && this.block), attributes = (this && this.attributes) || {};
-if (l) {
-// iterate l
-;(function(){
-  var $$obj = l;
-  if ('number' == typeof $$obj.length) {
       for (var pug_index33 = 0, $$l = $$obj.length; pug_index33 < $$l; pug_index33++) {
         var d = $$obj[pug_index33];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
-pug_html = pug_html + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + " ";
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
 else
 if (d.value) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
+pug_mixins["para"](d.value,null,d.lang);
 }
       }
   } else {
@@ -1081,11 +1073,11 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_inte
       $$l++;
       var d = $$obj[pug_index33];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
-pug_html = pug_html + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + " ";
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
 else
 if (d.value) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
+pug_mixins["para"](d.value,null,d.lang);
 }
     }
   }
@@ -1093,6 +1085,31 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_inte
 
 }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1297,7 +1314,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 pug_mixins["row"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 con = cve.containers.cna;
-pug_html = pug_html + "\u003Ctr" + (pug_attr("id", 'i'+con.cveId, true, false)) + "\u003E\u003Ctd\u003E\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)) + "\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)) + "\u003E";
 if (cna[con.shortName] && cna[con.shortName].i) {
 pug_html = pug_html + "\u003Cimg" + (" width=\"28\" height=\"28\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E";
 }
@@ -1308,18 +1325,15 @@ pug_html = pug_html + ("\u003Cb" + (pug_attr("class", pug_classes([(con.state ==
 if (con.maxCVSS) {
 pug_html = pug_html + (" · " + (pug_escape(null == (pug_interp = con.maxCVSS) ? "" : pug_interp)));
 }
-pug_html = pug_html + "\u003C\u002Fb\u003E";
-if (cve.KEV) {
-pug_html = pug_html + "\u003Cb class=\"vgi-bomb\"\u003E\u003C\u002Fb\u003E";
-}
+pug_html = pug_html + "\u003C\u002Fb\u003E\u003Cspan" + (pug_attr("class", pug_classes([cve.KEV?'vgi-bomb':false], [true]), false, false)) + "\u003E";
 if (con.title) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = con.title) ? "" : pug_interp));
 }
 else {
-pug_mixins["lpara"](con.descriptions);
-pug_mixins["lpara"](con.rejectedReasons);
+pug_mixins["text"](con.descriptions);
+pug_mixins["text"](con.rejectedReasons);
 }
-pug_html = pug_html + "\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cb class=\"dt\"\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(con.date)) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fa\u003E";
 };
 pug_mixins["cve4"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -1443,7 +1457,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.d :
         typeof d !== 'undefined' ? d : undefined, "encodeURIComponent" in locals_for_with ?
         locals_for_with.encodeURIComponent :
-        typeof encodeURIComponent !== 'undefined' ? encodeURIComponent : undefined, "getGradientColor" in locals_for_with ?
+        typeof encodeURIComponent !== 'undefined' ? encodeURIComponent : undefined, "formatFriendlyDate" in locals_for_with ?
+        locals_for_with.formatFriendlyDate :
+        typeof formatFriendlyDate !== 'undefined' ? formatFriendlyDate : undefined, "getGradientColor" in locals_for_with ?
         locals_for_with.getGradientColor :
         typeof getGradientColor !== 'undefined' ? getGradientColor : undefined, "isNaN" in locals_for_with ?
         locals_for_with.isNaN :

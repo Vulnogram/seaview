@@ -337,7 +337,7 @@
       overflow-y: auto;
     }
 
-    #idxTble tbody tr.selected {
+    #idxTble .selected {
       background-color: var(--sec);
     }
 
@@ -479,17 +479,8 @@
   </div>
   <div class="master-detail single" id="masterDetail" data-state="detail">
     <section class="panel-list" aria-label="CVE results list">
-      <table id="idxTble" class="tbl">
-        <!--thead>
-          <tr>
-            <th data-type="string">ID</th>
-            <th data-type="number">Score</th>
-            <th data-type="string">Summary</th>
-          </tr>
-        </thead-->
-        <tbody id="list">
-        </tbody>
-      </table>
+      <div id="idxTble">
+      </div>
     </section>
     <div class="splitter" aria-hidden="true"></div>
     <section class="panel-detail" aria-label="CVE entry details">

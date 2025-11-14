@@ -237,7 +237,7 @@ function setupSplitterResize() {
 async function getCVEs(text) {
     const container = document.getElementById('container');
     const results = document.getElementById('results');
-    const list =  document.getElementById('list');
+    const list =  document.getElementById('idxTble');
     const statusText = document.getElementById('statusText');
     searchResults = null;
     //resetSort(list.parentElement);
@@ -599,6 +599,48 @@ cvssDesc = {
     }
 }
 
+/**
+ * Takes an ISO date-time string and renders it in a user-friendly format
+ * based on its recency.
+ *
+ * - If the date is today, shows the local time (e.g., "12:43 PM").
+ * - If the date is this year (but not today), shows "MMM DD" (e.g., "Nov 14").
+ * - If the date is a previous year, shows "YYYY MMM DD" (e.g., "2024 Nov 14").
+ *
+ * @param {string} isoString A string representing a date in ISO format.
+ * @returns {string} A formatted, user-friendly date string.
+ */
+function formatFriendlyDate(isoString) {
+  const date = new Date(isoString);
+  const now = new Date();
+
+  // Create date objects for comparison, stripping out the time part.
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const inputDateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  // Case 1: The date is today
+  if (inputDateOnly.getTime() === today.getTime()) {
+    return date.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+    });
+  }
+
+  // Case 2: The date is this year (but not today)
+  if (date.getFullYear() === now.getFullYear()) {
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+
+  // Case 3: The date is from a previous year
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 function preProcess(cve, statusFn) {
     if (!cve || !cve.containers) {
         return {}
@@ -612,6 +654,7 @@ function preProcess(cve, statusFn) {
 
     var PMD = con.providerMetadata || {};
     con.dateUpdated = PMD.dateUpdated;
+    con.date = CDM.datePublic || con.dateUpdated;
     con.shortName = PMD.shortName;
 
     con.cvssList = [];
@@ -672,10 +715,11 @@ function preProcess(cve, statusFn) {
 
 function loadItem(d) {
     var row = cve({renderTemplate:'row', d: d});
-    var list = document.getElementById("list");
-    var tr = document.createElement("tr");
-    list.appendChild(tr);
-    tr.outerHTML = row;
+    var list = document.getElementById("idxTble");
+    var rowElem = document.createElement('div');
+    rowElem.id = 'i' + d.containers.cna.cveId;
+    rowElem.innerHTML = row;
+    list.appendChild(rowElem);
 }
 
 function loadEntry(id) {
