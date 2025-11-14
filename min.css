@@ -46,8 +46,6 @@ body {
 }
 
 .tbl th {
-    position: sticky;
-    top: 45px;
     background-color: var(--hig);
     font-size: x-small;
 }
@@ -266,7 +264,7 @@ box-shadow: 0 0 0 0.2em rgba(147, 147, 147, 0.3);
 }
 
 /* Apply to: <table id="idxTble"> ... */
-#idxTble { min-width: 100%; max-width: 100vw; border-collapse: separate; border-spacing: 0;  margin: 0px;}
+#idxTble { min-width: 100%; max-width: 100vw; border-collapse: separate; border-spacing: 0;  margin: 0px; border: none;}
 
 /* Mobile-first: cols 1–2 side-by-side, col 3 full-width below.
    minmax(0,1fr) + min-width:0 prevents overflow beyond the viewport. */

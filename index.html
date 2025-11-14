@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!DOCTYPE html>
 <html lang="en">
@@ -7,15 +6,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Search & See CVEs</title>
-  <meta name="description" content="Quick CVE search and lookups - Tool to extract and list CVE IDs from text or searches by keywords and phrases, providing a more complete, detailed view of each vulnerability record.">
+  <meta name="description"
+    content="Quick CVE search and lookups - Tool to extract and list CVE IDs from text or searches by keywords and phrases, providing a more complete, detailed view of each vulnerability record.">
   <meta name="author" content="Chandan BN">
 
   <meta property="og:title" content="Quick CVE search and viewing for power users">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vulnogram.org/seaview">
-  <meta property="og:description" content="Quick CVE search and lookups - Tool to extract and list CVE IDs from text or searches by keywords and phrases, providing a more complete, detailed view of each vulnerability record.">
+  <meta property="og:description"
+    content="Quick CVE search and lookups - Tool to extract and list CVE IDs from text or searches by keywords and phrases, providing a more complete, detailed view of each vulnerability record.">
   <meta property="og:image" content="/seaview/seaview.jpg">
-  <meta property="og:logo" content="/seaview/apple-touch-icon.png"/>
+  <meta property="og:logo" content="/seaview/apple-touch-icon.png" />
 
   <link rel="icon" href="/seaview/apple-touch-icon.png">
   <link rel="apple-touch-icon" href="/seaview/apple-touch-icon.png">
@@ -30,28 +31,30 @@
       margin-right: 1.2vw;
       margin-left: 1.2vw;
     }
-  .page{
-      min-width: 40em;
-      margin: 1em;
+
+    .page {
+      min-width: 20em;
       /*  max-height: 80vh;*/
-        display: inline-block;
-        vertical-align: top;
-      }
+      display: inline-block;
+      vertical-align: top;
+    }
 
     .cnaIcn {
       display: block;
       margin: 0 auto;
     }
+
     .nowrap {
       white-space: nowrap;
-      gap:0.5em;
+      gap: 0.5em;
       flex-direction: row;
       flex-wrap: nowrap;
     }
- .NONE {
-    --tc: white;
-    background-color: green;
-}
+
+    .NONE {
+      --tc: white;
+      background-color: green;
+    }
 
     .LOW {
       background-color: gold;
@@ -65,33 +68,40 @@
       background-color: salmon;
     }
 
-.CRITICAL {
-    --tc: white;
-    background-color: orangered;
-}
+    .CRITICAL {
+      --tc: white;
+      background-color: orangered;
+    }
 
-.fade {
-  background-color: rgb(255 250 243);
-}
+    .fade {
+      background-color: rgb(255 250 243);
+    }
 
-.right {
-  margin-left: auto;
-  text-align: right;
-}
-.cna {
-  display: flex;
-  align-items: center;
-}
-.CVSS sup {
-  font-weight: bold;
-}
-hr {
-  border: none;
-  border-top: 1px dashed #8c8b8b;
-}
-p {
-margin-top: 0px; margin-bottom: .25em;
-}
+    .right {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .cna {
+      display: flex;
+      align-items: center;
+    }
+
+    .CVSS sup {
+      font-weight: bold;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #8c8b8b;
+    }
+
+    p {
+      margin-top: 0px;
+      margin-bottom: .25em;
+    }
+
+    /*
 .tbl th {
     position: sticky;
     top: 45px;
@@ -111,17 +121,24 @@ margin-top: 0px; margin-bottom: .25em;
       border-left: solid var(--bor) 1px;
       border-top: solid var(--bor) 1px;
     }
-
+*/
     [class*=" vgi-"],
     [class^=vgi-] {
       display: inline-flex;
       vertical-align: baseline;
     }
-
+    #idxTble b {
+      font-weight: normal;
+      padding: 2px 10px;
+      color: var(--txt);
+      border-radius: 14px;
+    }
     summary::marker {
       color: grey;
     }
-
+    .rej {
+      text-decoration: line-through;
+    }
     .timeline ul {
       list-style-type: none;
       margin-top: 0px;
@@ -146,66 +163,81 @@ margin-top: 0px; margin-bottom: .25em;
       margin-right: 1em;
     }
 
-.jsonBox summary::marker {
-  color: #999;
-}
-.jsonBox details.obj > summary:first-of-type::after {
-  content: " · · · }";
-  color: #669;
-}
-.jsonBox details.arr > summary:first-of-type::after {
-  content: " · · · ]";
-  color: #669;
-}
-.jsonBox details.obj[open] > summary:first-of-type::after {
-  content: "";
-}
-.jsonBox details.arr[open] > summary:first-of-type::after {
-  content: "";
-}
-[lang]:not([lang^="en"])::before {
-	content: attr(lang);
-    background: #8ca9c9;
-    display:inline;
-    padding:2px 10px;
-    border-radius:3px;
-    margin:3px 10px;
-    text-transform: uppercase;
-    font-size: x-small;
-}
-.jsonBox .i, .jsonBox .in {
-  padding-left: .7em;
-  margin-left: .3em;
-}
-.jsonBox .i {
-  border-left: 1px none;
-  white-space: pre-wrap;
-}
-.jsonBox .in {
-  border-left: 1px dashed #ccc;
-  border-bottom-left-radius: 1em;
-  border-bottom: 1px solid transparent;
-}
-.jsonBox .n {
-  color: green;
-}
-.jsonBox i {
-  font-size: 0;
-  height: 0px;
-  max-height: 0px;
-}
-.jsonBox b {
-  font-weight: normal;
-  color: #666699;
-}
-.tbl td {
-  vertical-align: middle;
-}
-.borTop {
-  border-top: 1px dotted #c5c7ca;
-}
+    .jsonBox summary::marker {
+      color: #999;
+    }
 
-body, html {
+    .jsonBox details.obj>summary:first-of-type::after {
+      content: " · · · }";
+      color: #669;
+    }
+
+    .jsonBox details.arr>summary:first-of-type::after {
+      content: " · · · ]";
+      color: #669;
+    }
+
+    .jsonBox details.obj[open]>summary:first-of-type::after {
+      content: "";
+    }
+
+    .jsonBox details.arr[open]>summary:first-of-type::after {
+      content: "";
+    }
+
+    [lang]:not([lang^="en"])::before {
+      content: attr(lang);
+      background: #8ca9c9;
+      display: inline;
+      padding: 2px 10px;
+      border-radius: 3px;
+      margin: 3px 10px;
+      text-transform: uppercase;
+      font-size: x-small;
+    }
+
+    .jsonBox .i,
+    .jsonBox .in {
+      padding-left: .7em;
+      margin-left: .3em;
+    }
+
+    .jsonBox .i {
+      border-left: 1px none;
+      white-space: pre-wrap;
+    }
+
+    .jsonBox .in {
+      border-left: 1px dashed #ccc;
+      border-bottom-left-radius: 1em;
+      border-bottom: 1px solid transparent;
+    }
+
+    .jsonBox .n {
+      color: green;
+    }
+
+    .jsonBox i {
+      font-size: 0;
+      height: 0px;
+      max-height: 0px;
+    }
+
+    .jsonBox b {
+      font-weight: normal;
+      color: #666699;
+    }
+
+    .tbl td {
+      vertical-align: middle;
+    }
+
+    .borTop {
+      border-top: 1px dotted #c5c7ca;
+    }
+
+    body,
+    html {
       height: 100%;
       margin: 0;
       font-family: Arial, sans-serif;
@@ -243,71 +275,228 @@ body, html {
       margin-top: 1em;
       display: none;
       width: 70%;
-      max-width: 600px;
+      max-width: 1200px;
     }
 
     .results.visible {
       display: flex;
     }
 
-/* CSS to truncate text and show ellipses */
-.truncate-text {
-    /*width: 200px; /* Set a fixed width for the container */
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide the overflowing text */
-    text-overflow: ellipsis; /* Display ellipses (...) for truncated text */
-}
+    .master-detail {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 0;
+      width: 100%;
+      margin: 0em 0em;
+    }
 
-/* CSS for the expanded state */
-.truncate-text.expanded {
-    white-space: normal; /* Allow text to wrap */
-    overflow: visible; /* Show all content */
-    text-overflow: clip; /* Hide the ellipses */
-    width: auto; /* Allow the container to expand */
-}
+    .panel-list,
+    .panel-detail {
+      overflow-y: auto;
+    }
 
- table.sortable th { cursor: pointer; user-select: none; }
-  th[data-sort="asc"]::after  { content: " ▲"; }
-  th[data-sort="desc"]::after { content: " ▼"; }
+    .master-detail.single .splitter,
+    .master-detail.single .panel-list {
+      display: none;
+    }
 
+    .master-detail.single .panel-detail {
+      padding-left: 0;
+      flex: 1 1 auto;
+    }
+
+    .master-detail.split .panel-list {
+      border-right: 1px solid var(--bor);
+    }
+
+    .panel-list {
+      flex: 0 0 320px;
+      flex-basis: 320px;
+      width: 320px;
+      max-width: 100%;
+      min-width: 220px;
+      background-color: var(--wht);
+      transition: width 0.35s ease, flex-basis 0.35s ease;
+    }
+
+    .panel-list.resizing {
+      transition: none;
+    }
+
+    .splitter {
+      flex: 0 0 4px;
+      background-color: var(--bor);
+      cursor: col-resize;
+    }
+
+    .panel-detail {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding-left: 0em;
+      overflow-y: auto;
+    }
+
+    #idxTble tbody tr.selected {
+      background-color: var(--sec);
+    }
+
+
+    .back-button {
+      display: none;
+      margin-bottom: 0.5em;
+      margin-left: 1em;
+      gap: 0.3em;
+      align-items: center;
+    }
+
+    body.resizing {
+      user-select: none;
+      cursor: col-resize;
+    }
+
+    @media (max-width: 768px) {
+      .master-detail {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .panel-list {
+        flex: none;
+        max-width: none;
+        width: 100%;
+        resize: none;
+        border-right: none;
+        border-bottom: 1px solid var(--bor);
+      }
+
+      .panel-detail {
+        padding-left: 0;
+      }
+
+      .splitter {
+        display: none;
+      }
+
+      .master-detail.split[data-state="list"] .panel-detail {
+        display: none;
+      }
+
+      .master-detail.split[data-state="detail"] .panel-list {
+        display: none;
+      }
+
+      .master-detail.split[data-state="detail"] .back-button {
+        display: inline-flex;
+      }
+    }
+
+    .master-detail.split[data-state="list"] .panel-detail,
+    .master-detail.split[data-state="list"] .splitter {
+      display: none;
+    }
+
+    .master-detail.split[data-state="list"] .panel-list {
+      flex: 1 1 auto;
+      flex-basis: 100%;
+      width: 100%;
+      max-width: none;
+    }
+
+    .master-detail.split[data-state="detail"]:not(.resized) .panel-list {
+      flex: 0 0 30%;
+      flex-basis: 30%;
+      width: 30%;
+      max-width: none;
+    }
+
+    @media (min-width: 769px) {
+      .master-detail {
+        height: calc(100vh - 111px);
+        max-height: calc(100vh - 111px);
+      }
+
+      .panel-list,
+      .panel-detail {
+        height: calc(100vh - 111px);
+        max-height: calc(100vh - 111px);
+      }
+    }
+
+    /* CSS to truncate text and show ellipses */
+    .truncate-text {
+      /*width: 200px; /* Set a fixed width for the container */
+      white-space: nowrap;
+      /* Prevent text from wrapping */
+      overflow: hidden;
+      /* Hide the overflowing text */
+      text-overflow: ellipsis;
+      /* Display ellipses (...) for truncated text */
+    }
+
+    /* CSS for the expanded state */
+    .truncate-text.expanded {
+      white-space: normal;
+      /* Allow text to wrap */
+      overflow: visible;
+      /* Show all content */
+      text-overflow: clip;
+      /* Hide the ellipses */
+      width: auto;
+      /* Allow the container to expand */
+    }
+
+    table.sortable th {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    th[data-sort="asc"]::after {
+      content: " ▲";
+    }
+
+    th[data-sort="desc"]::after {
+      content: " ▼";
+    }
   </style>
 </head>
+
 <body onload="loadQueryString()">
   <script src="script.js"></script>
   <script src="cna.js"></script>
   <script src="cve.js"></script>
   <div class="container" id="container">
-    <form class="search-box flx nowrap" id="searchForm" onsubmit="event.preventDefault();getCVEs(this.q.value);return false;">
-        <img class="rnd" width="50px" height="50px" src="apple-touch-icon.png" alt="CVEs"/>
-        <input type="search" class="rnd txt" id="q" placeholder="Search, lookup CVEs... ">
-        <input class="btn rnd" type="submit" value="Go"/>
+    <form class="search-box flx nowrap" id="searchForm"
+      onsubmit="event.preventDefault();getCVEs(this.q.value);return false;">
+      <img class="rnd" width="50px" height="50px" src="apple-touch-icon.png" alt="CVEs" />
+      <input type="search" class="rnd txt" id="q" placeholder="Search, lookup CVEs... ">
+      <input class="btn rnd" type="submit" value="Go" />
     </form>
-  <div class="results" id="results">
-    <p id="statusText" class="truncate-text" onclick="this.classList.toggle('expanded');">
-    </p>
+    <div class="results" id="results">
+      <p id="statusText" class="truncate-text" onclick="this.classList.toggle('expanded');">
+      </p>
+    </div>
   </div>
-</div>
-
-
- <table id="idxTble" class="tbl sortable">
-<thead>
-    <tr>
-      <th data-type="string">ID</th>
-      <th data-type="number">Score</th>
-      <th data-type="string">Summary</th>
-    </tr>
-  </thead>
-<tbody id="list">
-</tbody>
-  </table>
-  <div id="entries"></div>
-
+  <div class="master-detail single" id="masterDetail" data-state="detail">
+    <section class="panel-list" aria-label="CVE results list">
+      <table id="idxTble" class="tbl">
+        <!--thead>
+          <tr>
+            <th data-type="string">ID</th>
+            <th data-type="number">Score</th>
+            <th data-type="string">Summary</th>
+          </tr>
+        </thead-->
+        <tbody id="list">
+        </tbody>
+      </table>
+    </section>
+    <div class="splitter" aria-hidden="true"></div>
+    <section class="panel-detail" aria-label="CVE entry details">
+      <button type="button" class="btn rnd back-button" id="backButton">&#8592; Back to list</button>
+      <div id="entry"></div>
+    </section>
   </div>
-
-  <script>
- 
-  </script>
-
 </body>
 
 </html>

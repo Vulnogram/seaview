@@ -187,7 +187,8 @@ mixin container(con)
                     = con.KEV.dateAdded
             a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId)
             a.sbn.vgi-link(href="https://vulnogram.org/seaview/?"+con.cveId,target="_blank")
-            a.sbn.vgi-versions(href=gitURL,target="_blank" title="View in GitHub")
+            if con.jsonURL
+                a.sbn.vgi-versions(href=con.jsonURL,target="_blank" title="View in GitHub")
     .desc.pad
         if con.state == 'REJECTED'
             - con.maxCVSS = -1;
@@ -417,84 +418,39 @@ mixin versionList(v)
             - n = v.shift();
 
 mixin cve5(cve)
+    -
+        var con = cve.containers.cna;
+        var adpContainers = (cve.containers && cve.containers.adp ? cve.containers.adp : []);
+        shownURLs = {};
+        con.jsonURL = cve.jsonURL;
     div.pad
-        -
-            var CDM = cve.cveMetadata;
-            var con = cve.containers ? cve.containers.cna : {};
-            //var jsonClone = {};
-            //Object.assign(jsonClone, cve.containers.cna);
-            //delete con.json;
-            //con.json = jsonClone;
-            //delete con.json.x_legacyV4Record;
-            //con.x_ValidationErrors = cve.x_ValidationErrors;
-            con.state = CDM.state;
-            con.cveId = CDM.cveId;
-            shownURLs = {};
-            var PMD = con.providerMetadata;
-            con.dateUpdated = PMD.dateUpdated;
-            con.shortName = PMD.shortName;
-            var title = con.title;
-            var sourceText = {"INTERNAL":"This issue was found during internal product security testing or research.", "EXTERNAL":"This issue was discovered during an external security research.", "USER":"This issue was seen during production usage.", "UNKNOWN":""};
-            var cveId = CDM.cveId.match("^CVE-[0-9-]+$") ? CDM.cveId : 'CVE-yyyy-nnnn';
-            con.cvssList = [];
-            con.maxCVSS = 0;
-            con.pvstatus = con.affected ? statusFunctionv5 (con.affected) : null;
-        if (con.metrics && con.metrics.length > 0)
-            each x, i in con.metrics
-                - var cvss = x.cvssV4_0 ? x.cvssV4_0 : x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
-                if cvss
-                    - cvss.scenarios = x.scenarios;
-                    - con.cvssList.push(cvss);
-                    - if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
         +container(con)
-        if (cve.containers.adp && cve.containers.adp.length > 0)
-            each x, i in cve.containers.adp
+        if adpContainers && adpContainers.length > 0
+            each x, i in adpContainers
                 hr.line
-                - x.cvssList = [];
-                if (x.metrics && x.metrics.length > 0)
-                    each y, i in x.metrics
-                        - var cvss = y.cvssV4_0 ? y.cvssV4_0 : y.cvssV3_1 ? y.cvssV3_1 : y.cvssV3_0 ? y.cvssV3_0 : y.cvssV2_0 ? y.cvssV2_0 : null;
-                        if cvss
-                            - cvss.scenarios = y.scenarios;
-                            - x.cvssList.push(cvss);
-                            - con.cvssList.push(cvss);
-                            - if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
-                        if y.other && y.other.type == 'kev'
-                            - x.KEV = y.other.content
-                            - cve.KEV = true
-                -
-                    var PMD = x.providerMetadata;
-                    x.dateUpdated = PMD.dateUpdated;
-                    x.shortName = PMD.shortName;
-                    x.cveId = con.cveId;
                 +container(x)
-        table
-            +row(cve, con)
 
-mixin row(cve,con)
+mixin row(cve)
+    - con = cve.containers.cna;
     tr(id='i'+con.cveId)
         td
             a.flx.nowrap(href="#"+con.cveId)
                 if cna[con.shortName] && cna[con.shortName].i
-                    img(width=20 height=20 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
+                    img(width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
                 else
-                    .vgi-bug(width=20 height=20)
-                =con.cveId
+                    img(width=28 height=28 src="https://vulnogram.org/vg-icons/src/bug.svg")
+                b(class=(con.state == 'REJECTED'?'rej':''),style=(con.maxCVSS ? "background-color:"+getGradientColor(con.maxCVSS)+';':'')+(con.maxCVSS >= 8 ? 'color:#fff;':''))
+                    =con.cveId
+                    if con.maxCVSS
+                        |  · 
+                        = con.maxCVSS
                 if cve.KEV
-                    | 
-                    b.vgi-bomb KEV
-        td(data-val=con.maxCVSS)
-            if con.state == 'REJECTED'
-                b.tag.CRITICAL REJECTED
-            +cvssList(con.cvssList)
-        td
-            a(href="#"+con.cveId)
-                div
-                    if con.title
-                        = con.title
-                    else
-                        +lpara(con.descriptions)
-                        +lpara(con.rejectedReasons)
+                    b.vgi-bomb
+                if con.title
+                    = con.title
+                else
+                    +lpara(con.descriptions)
+                    +lpara(con.rejectedReasons)
 
 mixin cve4(cve)
   .pad
@@ -531,8 +487,7 @@ mixin missing(id)
         td
             .flx.nowrap
                 .vig-what=id
-        td
-        td CVE record not found
+            | CVE record not found
 
 mixin entry(d)
     -
@@ -540,14 +495,13 @@ mixin entry(d)
         var cve4doc = con.x_legacyV4Record;
         delete con.x_legacyV4Record;
 
-    div(id=d.cveMetadata.cveId).bor.rnd.wht.shd.page
-        - var oDoc = structuredClone(d);
+    div(id=d.cveMetadata.cveId).wht
         +cve5(d,{cvssDesc: cvssDesc})
         .pad.fade.borTop
             b CVE-JSON Record
-                a.vgi-versions(href=gitURL,target="_blank" title="View in GitHub")
+                a.vgi-versions(href=d.jsonURL,target="_blank" title="View in GitHub")
             .jsonBox
-                +JSON(oDoc)
+                +JSON(d.oldJSON)
         if con.x_ValidationErrors
             div.bor.rnd.wht.shd.page
                 +errors(con)   
@@ -561,7 +515,7 @@ mixin entry(d)
                     +cve4(cve4doc)
                     .pad
                         b CVE-JSON Record
-                            a.sbn.vgi-versions(href=gitURL,target="_blank" title="View in GitHub")
+                            a.sbn.vgi-versions(href=d.jsonURL,target="_blank" title="View in GitHub")
                         .jsonBox
                             +JSON(oDoc)
                     if d.containers.cna.x_ConverterErrors
@@ -569,7 +523,9 @@ mixin entry(d)
                             +warnings(cve4doc.containers.cna)
 
 block page
-    if renderTemplate == 'entry'
+    if renderTemplate == 'row'
+        +row(d)
+    else if renderTemplate == 'entry'
         +entry(d)
     else if renderTemplate == 'cve4'
         +cve4(d)

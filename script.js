@@ -5,10 +5,32 @@ function loadQueryString() {
         document.getElementById("q").value = q
         if (q) {
             getCVEs(q);
+            handleHashChange();
         }
     }
 }
 
+function handleHashChange() {
+    // 1. Extract the raw fragment, remove the leading '#'
+    const rawHash = window.location.hash;
+    const fragment = rawHash.startsWith('#') ? rawHash.substring(1) : rawHash;
+
+    if (!fragment) {
+        return;
+    }
+    
+    if (isValidCveFormat(fragment)) {
+        loadEntry(fragment);
+    }
+}
+window.addEventListener('hashchange', handleHashChange);
+
+function isValidCveFormat(id) {
+    // Regex for 'CVE-YYYY-NNNN+' (case-insensitive for robustness)
+    // It requires "cve-", followed by 4 digits, followed by '-', and at least 4 more digits.
+    const cveRegex = /^cve-\d{4}-\d{4,}$/i;
+    return cveRegex.test(id);
+}
 
 function extractUniqueCVEs(input) {
   const cvePattern = /CVE-(\d{4})-(\d{4,6})/g;
@@ -35,16 +57,193 @@ function clearURL() {
   null, '', location.pathname
 );
 }
+
+var entryView = false;
+var multiResultMode = false;
+var selectedEntryId = null;
+var listPanelWidth = 320;
+var listPanelMinWidth = 220;
+var listPanelMaxWidth = 1200;
+var userResizedList = false;
+
+function getPanelList() {
+    return document.querySelector('.panel-list');
+}
+
+function getLayoutRoot() {
+    return document.getElementById('masterDetail');
+}
+
+function setInlineListWidth(width) {
+    var panelList = getPanelList();
+    if (!panelList) {
+        return;
+    }
+    listPanelWidth = width;
+    panelList.style.flex = '0 0 ' + width + 'px';
+    panelList.style.flexBasis = width + 'px';
+    panelList.style.width = width + 'px';
+}
+
+function clearInlineListWidth() {
+    var panelList = getPanelList();
+    if (!panelList) {
+        return;
+    }
+    panelList.style.removeProperty('flex');
+    panelList.style.removeProperty('flex-basis');
+    panelList.style.removeProperty('width');
+}
+
+function resetListPanelSizing() {
+    userResizedList = false;
+    listPanelWidth = 320;
+    clearInlineListWidth();
+    var layout = getLayoutRoot();
+    if (layout) {
+        layout.classList.remove('resized');
+    }
+}
+
+function setSplitMode(isSplit) {
+    var layout = getLayoutRoot();
+    multiResultMode = isSplit;
+    if (!layout) {
+        return;
+    }
+    layout.classList.toggle('split', isSplit);
+    layout.classList.toggle('single', !isSplit);
+    layout.dataset.state = isSplit ? 'list' : 'detail';
+    if (!isSplit) {
+        resetListPanelSizing();
+        return;
+    }
+    layout.classList.remove('resized');
+    clearInlineListWidth();
+}
+
+function setLayoutState(state) {
+    var layout = getLayoutRoot();
+    if (!layout) {
+        return;
+    }
+    layout.dataset.state = state;
+    if (!multiResultMode) {
+        return;
+    }
+    if (state === 'detail' && userResizedList) {
+        layout.classList.add('resized');
+        setInlineListWidth(listPanelWidth);
+    }
+    if (state === 'list') {
+        layout.classList.remove('resized');
+        if (userResizedList) {
+            clearInlineListWidth();
+        }
+    }
+}
+
+function showListPanel() {
+    if (!multiResultMode) {
+        return;
+    }
+    setLayoutState('list');
+}
+
+function showDetailPanel() {
+    setLayoutState('detail');
+}
+
+function highlightRow(id) {
+    if (selectedEntryId) {
+        var previousRow = document.getElementById('i' + selectedEntryId);
+        if (previousRow) {
+            previousRow.classList.remove('selected');
+        }
+    }
+    selectedEntryId = id || null;
+    if (!selectedEntryId) {
+        return;
+    }
+    var currentRow = document.getElementById('i' + selectedEntryId);
+    if (currentRow) {
+        currentRow.classList.add('selected');
+    }
+}
+
+function clampListWidth(width) {
+    var layout = getLayoutRoot();
+    var layoutWidth = layout ? layout.getBoundingClientRect().width : window.innerWidth;
+    var dynamicMax = Math.max(listPanelMinWidth, Math.min(listPanelMaxWidth, layoutWidth - listPanelMinWidth));
+    if (!Number.isFinite(dynamicMax) || dynamicMax < listPanelMinWidth) {
+        dynamicMax = listPanelMaxWidth;
+    }
+    return Math.max(listPanelMinWidth, Math.min(dynamicMax, width));
+}
+
+function setupSplitterResize() {
+    var splitter = document.querySelector('.splitter');
+    var panelList = getPanelList();
+    if (!splitter || !panelList) {
+        return;
+    }
+    var dragging = false;
+    var startX = 0;
+    var startWidth = 0;
+    var layout = getLayoutRoot();
+    var isDesktop = () => !window.matchMedia('(max-width: 768px)').matches;
+
+    function stopDrag() {
+        if (!dragging) {
+            return;
+        }
+        dragging = false;
+        document.body.classList.remove('resizing');
+        panelList.classList.remove('resizing');
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerup', stopDrag);
+        window.removeEventListener('pointercancel', stopDrag);
+    }
+
+    function onPointerMove(evt) {
+        if (!dragging) {
+            return;
+        }
+        var delta = evt.clientX - startX;
+        var newWidth = clampListWidth(startWidth + delta);
+        setInlineListWidth(newWidth);
+    }
+
+    splitter.addEventListener('pointerdown', function (evt) {
+        if (!multiResultMode || !isDesktop()) {
+            return;
+        }
+        dragging = true;
+        userResizedList = true;
+        layout = getLayoutRoot();
+        startX = evt.clientX;
+        var currentWidth = panelList.getBoundingClientRect().width;
+        layout && layout.classList.add('resized');
+        setInlineListWidth(currentWidth);
+        startWidth = listPanelWidth;
+        document.body.classList.add('resizing');
+        panelList.classList.add('resizing');
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerup', stopDrag);
+        window.addEventListener('pointercancel', stopDrag);
+        evt.preventDefault();
+    });
+}
 async function getCVEs(text) {
     const container = document.getElementById('container');
     const results = document.getElementById('results');
     const list =  document.getElementById('list');
     const statusText = document.getElementById('statusText');
     searchResults = null;
-    resetSort(list.parentElement);
+    //resetSort(list.parentElement);
     var cves = extractUniqueCVEs(text);
     var textSearch = false;
-    if(cves.length == 0 && text.length <= 100) {
+    if(cves.length == 0 && (text.length > 0 && text.length <= 100)) {
         textSearch = true;
         searchResults = await searchCve(text);
         //console.log(searchResults);
@@ -53,25 +252,27 @@ async function getCVEs(text) {
         } else {
             clearURL();
             results.classList.add('visible');
-            document.getElementById('entries').innerHTML = '';
+            document.getElementById('entry').innerHTML = '';
             statusText.innerText = `No matching CVEs found. Please enter CVE IDs CVE-year-nnnn or fewer keywords.`;
         }
     } else {
         clearURL();
         results.classList.add('visible');
+        document.getElementById('entry').innerHTML = '';
         statusText.innerText = `Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords.`;
     }
-    if (cves.length <= 1) {
-        list.parentElement.classList.add('hid');
-    }
+    entryView = (cves.length == 1);
+    resetListPanelSizing();
+    setSplitMode(cves.length > 1);
     if (cves.length >= 1) {
         container.classList.add('moved-up');
         results.classList.add('visible');
         list.innerHTML = '';
+        highlightRow(null);
         if (cves.length > 1)
             list.parentElement.classList.remove('hid');
         statusText.innerText = `Found ${searchResults? searchResults.totalSoFar + (searchResults.totalSoFar == maxSearch? '+':''): cves.length} CVE${cves.length > 1 ? 's':''}: ${cves}`;
-        document.getElementById('entries').innerHTML = '';
+        document.getElementById('entry').innerHTML = '';
         cves.forEach(cve => {
             loadCVE(cve);
         });
@@ -83,7 +284,18 @@ async function getCVEs(text) {
             history.pushState({cves:cves}, null, "?"+cves);
         }
     }
+    if (cves.length <= 1) {
+        list.parentElement.classList.add('hid');
+    }
+    if (entryView && cves.length === 1) {
+        showDetailPanel();
+    } else {
+        showListPanel();
+    }
 }
+
+var cveCache = {};
+var entryCache = {};
 
 function loadCVE(value) {
     var realId = value.match(/(CVE-(\d{4})-(\d{1,12})(\d{3}))/);
@@ -108,7 +320,15 @@ function loadCVE(value) {
             })
             .then(function (res) {
                 if (res.containers) {
-                    loadEntry(res, id, jsonURL);
+                    preProcess(res);
+                    res.jsonURL = jsonURL;
+                    cveCache[id] = res;
+                    delete entryCache[id];
+                    if (entryView) {
+                        loadEntry(id);
+                    } else {
+                        loadItem(res);
+                    }
                 } else {
                     statusText.textContent = statusText.textContent + " Failed to load " + id;
                 }
@@ -330,8 +550,6 @@ function versionStatusTable5(affected) {
     return({groups:nameAndPlatforms, vals:t, show: showCols});
 }
 
-
-
 cvssDesc = {
     "attackVector": {
         "NETWORK": "Worst: The vulnerable component is bound to the network stack and the set of possible attackers extends beyond the other options listed below, up to and including the entire Internet. Such a vulnerability is often termed “remotely exploitable” and can be thought of as an attack being exploitable at the protocol level one or more network hops away (e.g., across one or more routers)."
@@ -381,16 +599,97 @@ cvssDesc = {
     }
 }
 
-function loadEntry(d, id, gitURL) {
-    var entries = document.getElementById("entries");
-    var entryDiv = document.createElement("div");
-    var entry = cve({renderTemplate:'entry', d: d, statusFunctionv4:versionStatusTable4, statusFunctionv5:versionStatusTable5, gitURL:gitURL});
-    entryDiv.innerHTML = entry;
-    entries.appendChild(entryDiv);
+function preProcess(cve, statusFn) {
+    if (!cve || !cve.containers) {
+        return {}
+    }
+    var oldJSON = structuredClone(cve);
+    cve.oldJSON = oldJSON;
+    var con = cve.containers.cna ? cve.containers.cna : {};
+    var CDM = cve.cveMetadata || {};
+    con.state = CDM.state;
+    con.cveId = CDM.cveId;
 
-    var table = document.getElementById("list");
-    var tableEntry = document.getElementById('i'+id);
-    table.appendChild(tableEntry);
+    var PMD = con.providerMetadata || {};
+    con.dateUpdated = PMD.dateUpdated;
+    con.shortName = PMD.shortName;
+
+    con.cvssList = [];
+    con.maxCVSS = 0;
+
+    var statusCalculator = statusFn || (typeof versionStatusTable5 === 'function' ? versionStatusTable5 : null);
+    con.pvstatus = con.affected && statusCalculator ? statusCalculator(con.affected) : null;
+
+    function normalizeList(list) {
+        if (!list) {
+            return [];
+        }
+        return Array.isArray(list) ? list : Object.keys(list).map(function (key) {
+            return list[key];
+        });
+    }
+
+    function updateMaxScore(cvss) {
+        if (cvss && typeof cvss.baseScore === 'number' && con.maxCVSS < cvss.baseScore) {
+            con.maxCVSS = cvss.baseScore;
+        }
+    }
+
+    normalizeList(con.metrics).forEach(function (metric) {
+        var cvss = metric.cvssV4_0 || metric.cvssV3_1 || metric.cvssV3_0 || metric.cvssV2_0 || null;
+        if (cvss) {
+            cvss.scenarios = metric.scenarios;
+            con.cvssList.push(cvss);
+            updateMaxScore(cvss);
+        }
+    });
+
+    var adpContainers = normalizeList(cve.containers.adp);
+    adpContainers.forEach(function (adp) {
+        adp.cvssList = [];
+        normalizeList(adp.metrics).forEach(function (metric) {
+            var cvss = metric.cvssV4_0 || metric.cvssV3_1 || metric.cvssV3_0 || metric.cvssV2_0 || null;
+            if (cvss) {
+                cvss.scenarios = metric.scenarios;
+                adp.cvssList.push(cvss);
+                con.cvssList.push(cvss);
+                updateMaxScore(cvss);
+            }
+            if (metric.other && metric.other.type === 'kev') {
+                adp.KEV = metric.other.content;
+                cve.KEV = true;
+            }
+        });
+
+        var provider = adp.providerMetadata || {};
+        adp.dateUpdated = provider.dateUpdated;
+        adp.shortName = provider.shortName;
+        adp.cveId = con.cveId;
+    });
+
+    return cve;
+}
+
+function loadItem(d) {
+    var row = cve({renderTemplate:'row', d: d});
+    var list = document.getElementById("list");
+    var tr = document.createElement("tr");
+    list.appendChild(tr);
+    tr.outerHTML = row;
+}
+
+function loadEntry(id) {
+    if (cveCache[id]) {
+        var entry = document.getElementById("entry");
+        if(!entryCache[id]) {
+            entryCache[id] = cve({ renderTemplate: 'entry', d: cveCache[id], statusFunctionv4: versionStatusTable4, statusFunctionv5: versionStatusTable5 });
+        }
+        entry.innerHTML = entryCache[id];
+        highlightRow(id);
+        showDetailPanel();
+    } else {
+        console.log(' no entry '+id)
+    }
 }
 
 var maxSearch = 30;
@@ -426,8 +725,8 @@ async function searchCve(searchText, {
   // Docs: stream endpoint + SSE events; query language (file:, select:, count:)
   // https://sourcegraph.com/.api/search/stream  (see citations below)
 
-  searchText = searchText.replace(/[\u201C\u201D\u201E\u201F\u275D\u275E\u301D\u301E\u301F]/g, '"');
-
+  searchText = searchText.replace(/[\u201C\u201D\u201E\u201F\u275D\u275E\u301D\u301E\u301F]/g, '"').trim();
+  
   const q = [
     `repo:^${REPO}$`,
     `file:\\.json$`,
@@ -553,7 +852,7 @@ function resetSort(table){
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  var tables = document.getElementsByClassName('sortable');
+ /* var tables = document.getElementsByClassName('sortable');
   for (let i = 0; i < tables.length; i++) {
     var table = tables[i];
 
@@ -605,7 +904,15 @@ document.addEventListener('DOMContentLoaded', () => {
         .forEach(tr => tbody.appendChild(tr)); // Re-append rows to re-order the table
     });
   });
-}
+}*/
+  var backButton = document.getElementById('backButton');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+        document.location.hash = '';
+      showListPanel();
+    });
+  }
+  setupSplitterResize();
 });
 
 const cvssSeverity = score => {
@@ -613,6 +920,67 @@ const cvssSeverity = score => {
   if (!Number.isFinite(s) || s < 0 || s > 10) return '';
   return s === 0 ? 'NONE' : s <= 3.9 ? 'LOW' : s <= 6.9 ? 'MEDIUM' : s <= 8.9 ? 'HIGH' : 'CRITICAL';
 };
+
+// --- 1. DEFINE YOUR 5 COLORS AND STOPS ---
+// The colors MUST be in RGB format for the math to work.
+const stops = [
+  { pos: 0,  color: { r: 102,   g: 153,   b: 0 } }, // Green
+  { pos: 2,  color: { r: 202,   g: 211, b: 29 } }, // Cyan
+  { pos: 5,  color: { r: 255,   g: 213, b: 28 } },   // Green
+  { pos: 8,  color: { r: 242, g: 145, b: 0 } },   // Yellow
+  { pos: 10, color: { r: 204, g: 1,   b: 25 } }    // Red
+];
+
+/**
+ * Linearly interpolates between two numbers.
+ * @param {number} a - The start value.
+ * @param {number} b - The end value.
+ *param {number} t - The percentage (0.0 to 1.0).
+ * @returns {number}
+ */
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+
+/**
+ * Gets the interpolated color for a given value on the gradient scale.
+ * @param {number} value - The input number (e.g., 1 to 10).
+ * @param {Array} stops - The array of gradient stops.
+ * @returns {string} - A CSS 'rgb(r, g, b)' string.
+ */
+function getGradientColor(value) {
+  // --- Handle edge cases ---
+  if (value <= stops[0].pos) {
+    const { r, g, b } = stops[0].color;
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+  if (value >= stops[stops.length - 1].pos) {
+    const { r, g, b } = stops[stops.length - 1].color;
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  // --- Find the two stops the value is between ---
+  let stop1 = stops[0];
+  let stop2 = stops[1];
+  for (let i = 1; i < stops.length; i++) {
+    if (value <= stops[i].pos) {
+      stop1 = stops[i - 1];
+      stop2 = stops[i];
+      break;
+    }
+  }
+
+  // --- 3. Calculate Percentage (t) ---
+  // How far is the value between stop1 and stop2?
+  const t = (value - stop1.pos) / (stop2.pos - stop1.pos);
+
+  // --- 4. Mix Colors (Interpolate R, G, and B) ---
+  const r = Math.round(lerp(stop1.color.r, stop2.color.r, t));
+  const g = Math.round(lerp(stop1.color.g, stop2.color.g, t));
+  const b = Math.round(lerp(stop1.color.b, stop2.color.b, t));
+
+  return `rgb(${r}, ${g}, ${b})`;
+}
 
 addEventListener("popstate", (event) => {
     if(event.state)

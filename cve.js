@@ -4,10 +4,11 @@ function pug_classes_array(r,a){for(var s,e="",u="",c=Array.isArray(a),g=0;g<r.l
 function pug_classes_object(r){var a="",n="";for(var o in r)o&&r[o]&&pug_has_own_property.call(r,o)&&(a=a+n+o,n=" ");return a}
 function pug_escape(e){var a=""+e,t=pug_match_html.exec(a);if(!t)return e;var r,c,n,s="";for(r=t.index,c=0;r<a.length;r++){switch(a.charCodeAt(r)){case 34:n="&quot;";break;case 38:n="&amp;";break;case 60:n="&lt;";break;case 62:n="&gt;";break;default:continue}c!==r&&(s+=a.substring(c,r)),c=r+1,s+=n}return c!==r?s+a.substring(c,r):s}
 var pug_has_own_property=Object.prototype.hasOwnProperty;
-var pug_match_html=/["&<>]/;function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
+var pug_match_html=/["&<>]/;
+function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, gitURL, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, statusFunctionv5, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, con, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, getGradientColor, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -610,7 +611,11 @@ pug_mixins["cvssList"](con.cvssList);
 if (con.KEV) {
 pug_html = pug_html + "\u003Csummary class=\"lbl rnd tag CVSS CRITICAL vgi-bomb\"\u003EKnown Exploited Since " + (pug_escape(null == (pug_interp = con.KEV.dateAdded) ? "" : pug_interp)) + "\u003C\u002Fsummary\u003E";
 }
-pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", gitURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E";
+if (con.jsonURL) {
+pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", con.jsonURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
 if (con.state == 'REJECTED') {
 con.maxCVSS = -1;
 pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E ·  ";
@@ -1259,111 +1264,20 @@ n = v.shift();
 };
 pug_mixins["cve5"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-pug_html = pug_html + "\u003Cdiv class=\"pad\"\u003E";
-var CDM = cve.cveMetadata;
-var con = cve.containers ? cve.containers.cna : {};
-//var jsonClone = {};
-//Object.assign(jsonClone, cve.containers.cna);
-//delete con.json;
-//con.json = jsonClone;
-//delete con.json.x_legacyV4Record;
-//con.x_ValidationErrors = cve.x_ValidationErrors;
-con.state = CDM.state;
-con.cveId = CDM.cveId;
+var con = cve.containers.cna;
+var adpContainers = (cve.containers && cve.containers.adp ? cve.containers.adp : []);
 shownURLs = {};
-var PMD = con.providerMetadata;
-con.dateUpdated = PMD.dateUpdated;
-con.shortName = PMD.shortName;
-var title = con.title;
-var sourceText = {"INTERNAL":"This issue was found during internal product security testing or research.", "EXTERNAL":"This issue was discovered during an external security research.", "USER":"This issue was seen during production usage.", "UNKNOWN":""};
-var cveId = CDM.cveId.match("^CVE-[0-9-]+$") ? CDM.cveId : 'CVE-yyyy-nnnn';
-con.cvssList = [];
-con.maxCVSS = 0;
-con.pvstatus = con.affected ? statusFunctionv5 (con.affected) : null;
-if ((con.metrics && con.metrics.length > 0)) {
-// iterate con.metrics
-;(function(){
-  var $$obj = con.metrics;
-  if ('number' == typeof $$obj.length) {
-      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
-        var x = $$obj[i];
-var cvss = x.cvssV4_0 ? x.cvssV4_0 : x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
-if (cvss) {
-cvss.scenarios = x.scenarios;
-con.cvssList.push(cvss);
-if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
-}
-      }
-  } else {
-    var $$l = 0;
-    for (var i in $$obj) {
-      $$l++;
-      var x = $$obj[i];
-var cvss = x.cvssV4_0 ? x.cvssV4_0 : x.cvssV3_1 ? x.cvssV3_1 : x.cvssV3_0 ? x.cvssV3_0 : x.cvssV2_0 ? x.cvssV2_0 : null;
-if (cvss) {
-cvss.scenarios = x.scenarios;
-con.cvssList.push(cvss);
-if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
-}
-    }
-  }
-}).call(this);
-
-}
+con.jsonURL = cve.jsonURL;
+pug_html = pug_html + "\u003Cdiv class=\"pad\"\u003E";
 pug_mixins["container"](con);
-if ((cve.containers.adp && cve.containers.adp.length > 0)) {
-// iterate cve.containers.adp
+if (adpContainers && adpContainers.length > 0) {
+// iterate adpContainers
 ;(function(){
-  var $$obj = cve.containers.adp;
+  var $$obj = adpContainers;
   if ('number' == typeof $$obj.length) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var x = $$obj[i];
 pug_html = pug_html + "\u003Chr class=\"line\"\u002F\u003E";
-x.cvssList = [];
-if ((x.metrics && x.metrics.length > 0)) {
-// iterate x.metrics
-;(function(){
-  var $$obj = x.metrics;
-  if ('number' == typeof $$obj.length) {
-      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
-        var y = $$obj[i];
-var cvss = y.cvssV4_0 ? y.cvssV4_0 : y.cvssV3_1 ? y.cvssV3_1 : y.cvssV3_0 ? y.cvssV3_0 : y.cvssV2_0 ? y.cvssV2_0 : null;
-if (cvss) {
-cvss.scenarios = y.scenarios;
-x.cvssList.push(cvss);
-con.cvssList.push(cvss);
-if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
-}
-if (y.other && y.other.type == 'kev') {
-x.KEV = y.other.content
-cve.KEV = true
-}
-      }
-  } else {
-    var $$l = 0;
-    for (var i in $$obj) {
-      $$l++;
-      var y = $$obj[i];
-var cvss = y.cvssV4_0 ? y.cvssV4_0 : y.cvssV3_1 ? y.cvssV3_1 : y.cvssV3_0 ? y.cvssV3_0 : y.cvssV2_0 ? y.cvssV2_0 : null;
-if (cvss) {
-cvss.scenarios = y.scenarios;
-x.cvssList.push(cvss);
-con.cvssList.push(cvss);
-if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
-}
-if (y.other && y.other.type == 'kev') {
-x.KEV = y.other.content
-cve.KEV = true
-}
-    }
-  }
-}).call(this);
-
-}
-var PMD = x.providerMetadata;
-x.dateUpdated = PMD.dateUpdated;
-x.shortName = PMD.shortName;
-x.cveId = con.cveId;
 pug_mixins["container"](x);
       }
   } else {
@@ -1372,80 +1286,32 @@ pug_mixins["container"](x);
       $$l++;
       var x = $$obj[i];
 pug_html = pug_html + "\u003Chr class=\"line\"\u002F\u003E";
-x.cvssList = [];
-if ((x.metrics && x.metrics.length > 0)) {
-// iterate x.metrics
-;(function(){
-  var $$obj = x.metrics;
-  if ('number' == typeof $$obj.length) {
-      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
-        var y = $$obj[i];
-var cvss = y.cvssV4_0 ? y.cvssV4_0 : y.cvssV3_1 ? y.cvssV3_1 : y.cvssV3_0 ? y.cvssV3_0 : y.cvssV2_0 ? y.cvssV2_0 : null;
-if (cvss) {
-cvss.scenarios = y.scenarios;
-x.cvssList.push(cvss);
-con.cvssList.push(cvss);
-if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
-}
-if (y.other && y.other.type == 'kev') {
-x.KEV = y.other.content
-cve.KEV = true
-}
-      }
-  } else {
-    var $$l = 0;
-    for (var i in $$obj) {
-      $$l++;
-      var y = $$obj[i];
-var cvss = y.cvssV4_0 ? y.cvssV4_0 : y.cvssV3_1 ? y.cvssV3_1 : y.cvssV3_0 ? y.cvssV3_0 : y.cvssV2_0 ? y.cvssV2_0 : null;
-if (cvss) {
-cvss.scenarios = y.scenarios;
-x.cvssList.push(cvss);
-con.cvssList.push(cvss);
-if (con.maxCVSS < cvss.baseScore) con.maxCVSS = cvss.baseScore;
-}
-if (y.other && y.other.type == 'kev') {
-x.KEV = y.other.content
-cve.KEV = true
-}
-    }
-  }
-}).call(this);
-
-}
-var PMD = x.providerMetadata;
-x.dateUpdated = PMD.dateUpdated;
-x.shortName = PMD.shortName;
-x.cveId = con.cveId;
 pug_mixins["container"](x);
     }
   }
 }).call(this);
 
 }
-pug_html = pug_html + "\u003Ctable\u003E";
-pug_mixins["row"](cve, con);
-pug_html = pug_html + "\u003C\u002Ftable\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 };
-pug_mixins["row"] = pug_interp = function(cve,con){
+pug_mixins["row"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
+con = cve.containers.cna;
 pug_html = pug_html + "\u003Ctr" + (pug_attr("id", 'i'+con.cveId, true, false)) + "\u003E\u003Ctd\u003E\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)) + "\u003E";
 if (cna[con.shortName] && cna[con.shortName].i) {
-pug_html = pug_html + "\u003Cimg" + (" width=\"20\" height=\"20\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E";
+pug_html = pug_html + "\u003Cimg" + (" width=\"28\" height=\"28\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E";
 }
 else {
-pug_html = pug_html + "\u003Cdiv class=\"vgi-bug\" width=\"20\" height=\"20\"\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cimg width=\"28\" height=\"28\" src=\"https:\u002F\u002Fvulnogram.org\u002Fvg-icons\u002Fsrc\u002Fbug.svg\"\u002F\u003E";
 }
-pug_html = pug_html + (pug_escape(null == (pug_interp = con.cveId) ? "" : pug_interp));
+pug_html = pug_html + ("\u003Cb" + (pug_attr("class", pug_classes([(con.state == 'REJECTED'?'rej':'')], [true]), false, false)+pug_attr("style", pug_style((con.maxCVSS ? "background-color:"+getGradientColor(con.maxCVSS)+';':'')+(con.maxCVSS >= 8 ? 'color:#fff;':'')), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = con.cveId) ? "" : pug_interp)));
+if (con.maxCVSS) {
+pug_html = pug_html + (" · " + (pug_escape(null == (pug_interp = con.maxCVSS) ? "" : pug_interp)));
+}
+pug_html = pug_html + "\u003C\u002Fb\u003E";
 if (cve.KEV) {
-pug_html = pug_html + " \u003Cb class=\"vgi-bomb\"\u003EKEV\u003C\u002Fb\u003E";
+pug_html = pug_html + "\u003Cb class=\"vgi-bomb\"\u003E\u003C\u002Fb\u003E";
 }
-pug_html = pug_html + "\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003Ctd" + (pug_attr("data-val", con.maxCVSS, true, false)) + "\u003E";
-if (con.state == 'REJECTED') {
-pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E";
-}
-pug_mixins["cvssList"](con.cvssList);
-pug_html = pug_html + "\u003C\u002Ftd\u003E\u003Ctd\u003E\u003Ca" + (pug_attr("href", "#"+con.cveId, true, false)) + "\u003E\u003Cdiv\u003E";
 if (con.title) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = con.title) ? "" : pug_interp));
 }
@@ -1453,7 +1319,7 @@ else {
 pug_mixins["lpara"](con.descriptions);
 pug_mixins["lpara"](con.rejectedReasons);
 }
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
+pug_html = pug_html + "\u003C\u002Fa\u003E\u003C\u002Ftd\u003E\u003C\u002Ftr\u003E";
 };
 pug_mixins["cve4"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -1496,11 +1362,10 @@ var con = cve.containers ? cve.containers.cna : {};
 var cve4doc = con.x_legacyV4Record;
 delete con.x_legacyV4Record;
 
-pug_html = pug_html + "\u003Cdiv" + (" class=\"bor rnd wht shd page\""+pug_attr("id", d.cveMetadata.cveId, true, false)) + "\u003E";
-var oDoc = structuredClone(d);
+pug_html = pug_html + "\u003Cdiv" + (" class=\"wht\""+pug_attr("id", d.cveMetadata.cveId, true, false)) + "\u003E";
 pug_mixins["cve5"](d,{cvssDesc: cvssDesc});
-pug_html = pug_html + "\u003Cdiv class=\"pad fade borTop\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"vgi-versions\""+pug_attr("href", gitURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
-pug_mixins["JSON"](oDoc);
+pug_html = pug_html + "\u003Cdiv class=\"pad fade borTop\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"vgi-versions\""+pug_attr("href", d.jsonURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
+pug_mixins["JSON"](d.oldJSON);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 if (con.x_ValidationErrors) {
 pug_html = pug_html + "\u003Cdiv class=\"bor rnd wht shd page\"\u003E";
@@ -1515,7 +1380,7 @@ if (cve4doc) {
 pug_html = pug_html + "\u003Cdetails class=\"pad fade borTop\"\u003E\u003Csummary\u003E\u003Cb\u003ELegacy CVE-JSON 4 Record \u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv\u003E";
 var oDoc = structuredClone(cve4doc)
 pug_mixins["cve4"](cve4doc);
-pug_html = pug_html + "\u003Cdiv class=\"pad\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", gitURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"pad\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", d.jsonURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
 pug_mixins["JSON"](oDoc);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 if (d.containers.cna.x_ConverterErrors) {
@@ -1527,6 +1392,10 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 };
+if (renderTemplate == 'row') {
+pug_mixins["row"](d);
+}
+else
 if (renderTemplate == 'entry') {
 pug_mixins["entry"](d);
 }
@@ -1562,7 +1431,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.URL :
         typeof URL !== 'undefined' ? URL : undefined, "cna" in locals_for_with ?
         locals_for_with.cna :
-        typeof cna !== 'undefined' ? cna : undefined, "cve" in locals_for_with ?
+        typeof cna !== 'undefined' ? cna : undefined, "con" in locals_for_with ?
+        locals_for_with.con :
+        typeof con !== 'undefined' ? con : undefined, "cve" in locals_for_with ?
         locals_for_with.cve :
         typeof cve !== 'undefined' ? cve : undefined, "cvssDesc" in locals_for_with ?
         locals_for_with.cvssDesc :
@@ -1572,9 +1443,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.d :
         typeof d !== 'undefined' ? d : undefined, "encodeURIComponent" in locals_for_with ?
         locals_for_with.encodeURIComponent :
-        typeof encodeURIComponent !== 'undefined' ? encodeURIComponent : undefined, "gitURL" in locals_for_with ?
-        locals_for_with.gitURL :
-        typeof gitURL !== 'undefined' ? gitURL : undefined, "isNaN" in locals_for_with ?
+        typeof encodeURIComponent !== 'undefined' ? encodeURIComponent : undefined, "getGradientColor" in locals_for_with ?
+        locals_for_with.getGradientColor :
+        typeof getGradientColor !== 'undefined' ? getGradientColor : undefined, "isNaN" in locals_for_with ?
         locals_for_with.isNaN :
         typeof isNaN !== 'undefined' ? isNaN : undefined, "nonSpec" in locals_for_with ?
         locals_for_with.nonSpec :
@@ -1584,9 +1455,7 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.shownURLs :
         typeof shownURLs !== 'undefined' ? shownURLs : undefined, "statusFunctionv4" in locals_for_with ?
         locals_for_with.statusFunctionv4 :
-        typeof statusFunctionv4 !== 'undefined' ? statusFunctionv4 : undefined, "statusFunctionv5" in locals_for_with ?
-        locals_for_with.statusFunctionv5 :
-        typeof statusFunctionv5 !== 'undefined' ? statusFunctionv5 : undefined, "structuredClone" in locals_for_with ?
+        typeof statusFunctionv4 !== 'undefined' ? statusFunctionv4 : undefined, "structuredClone" in locals_for_with ?
         locals_for_with.structuredClone :
         typeof structuredClone !== 'undefined' ? structuredClone : undefined));
     ;;return pug_html;}
