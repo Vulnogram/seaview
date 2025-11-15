@@ -229,19 +229,32 @@ mixin container(con)
                         if d.cweId
                             if d.cweId != d.description
                                 =d.description
+                            if num = d.cweId.match(/\d+/)[0]
                                 |  
-                            a(href="https://cwe.mitre.org/data/definitions/"+d.cweId)
-                                small=d.cweId
-                            |  
+                                a(href="https://cwe.mitre.org/data/definitions/"+num)
+                                    small=d.cweId
+                                |  
                         else
                             =d.description
 
     if con.impacts
         .impact.pad
             b.vgi-impact Impact:  
-            |  Code-execution (link) 
-            a(href="https://capec.mitre.org/data/definitions/")
-                small CPAEC-123 
+            |  
+            for t in con.impacts
+                if t.description
+                    for d in t.description
+                        =d.value
+                        |  
+                if t.descriptions
+                    for d in t.descriptions
+                        =d.value
+                if t.capecId
+                    if num = t.capecId.match(/\d+/)[0]
+                        |  
+                        a(href="https://capec.mitre.org/data/definitions/"+num)
+                            small=t.capecId
+                        |  
     if con.exploits
         .exploits.pad
             b.vgi-bomb Exploits
@@ -398,12 +411,17 @@ mixin row(cve)
             if con.maxCVSS
                 |  · 
                 = con.maxCVSS
-        span(class=cve.KEV?'vgi-bomb':false)
-            if con.title
-                = con.title
-            else
-                +text(con.descriptions)
-                +text(con.rejectedReasons)
+        if(cve.KEV)
+            i.vgi-bomb
+        if(con.tags && con.tags.includes('exclusively-hosted-service'))
+            i.vgi-cloud
+        if(con.tags && con.tags.includes('unsupported-when-assigned'))
+            |👻 
+        if con.title
+            = con.title
+        else
+            +text(con.descriptions)
+            +text(con.rejectedReasons)
         b.dt=formatFriendlyDate(con.date)
 
 mixin cve4(cve)

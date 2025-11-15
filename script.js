@@ -51,7 +51,47 @@ function extractUniqueCVEs(input) {
 ;
 }
 
-var searchResults;
+const SEARCH_PAGE_SIZE = 30;
+
+var searchState = {
+    query: '',
+    items: [],
+    nextCursor: null,
+    loading: false
+};
+
+function resetSearchState(query = '') {
+    searchState.query = query;
+    searchState.items = [];
+    searchState.nextCursor = null;
+    searchState.loading = false;
+}
+
+function updateLoadMoreButton() {
+    var button = document.getElementById('loadMoreBtn');
+    if (!button) {
+        return;
+    }
+    var shouldShow = Boolean(searchState.query) &&
+        searchState.items.length > 0 &&
+        searchState.nextCursor !== null;
+    button.classList.toggle('hid', !shouldShow);
+    button.disabled = searchState.loading;
+    if (shouldShow) {
+        button.textContent = searchState.loading ? 'Loading...' : 'Load more';
+    }
+}
+
+function updateStatusTextMessage(cveList, textSearch) {
+    var statusText = document.getElementById('statusText');
+    if (!statusText || !Array.isArray(cveList)) {
+        return;
+    }
+    var count = cveList.length;
+    var plus = textSearch && searchState.nextCursor !== null ? '+' : '';
+    var plural = count === 1 ? '' : 's';
+    statusText.innerText = `Found ${count}${plus} CVE${plural}: ${cveList.join(', ')}`;
+}
 function clearURL() {
   history.replaceState && history.replaceState(
   null, '', location.pathname
@@ -239,39 +279,54 @@ async function getCVEs(text) {
     const results = document.getElementById('results');
     const list =  document.getElementById('idxTble');
     const statusText = document.getElementById('statusText');
-    searchResults = null;
+    resetSearchState();
+    updateLoadMoreButton();
     //resetSort(list.parentElement);
     var cves = extractUniqueCVEs(text);
     var textSearch = false;
-    if(cves.length == 0 && (text.length > 0 && text.length <= 100)) {
-        textSearch = true;
-        searchResults = await searchCve(text);
-        //console.log(searchResults);
-        if(searchResults && searchResults.items && searchResults.items.length > 0) {
-            cves = searchResults.items
+    if (cves.length === 0) {
+        if(text.length > 0 && text.length <= 100) {
+            textSearch = true;
+            searchState.query = text;
+            searchState.loading = true;
+            updateLoadMoreButton();
+            const initialResults = await searchCve(text, { cursor: 0, pageSize: SEARCH_PAGE_SIZE });
+            searchState.loading = false;
+            if(initialResults && initialResults.items && initialResults.items.length > 0) {
+                searchState.items = initialResults.items.slice();
+                searchState.nextCursor = initialResults.nextCursor ?? null;
+                cves = searchState.items.slice();
+            } else {
+                resetSearchState();
+                clearURL();
+                results.classList.add('visible');
+                document.getElementById('entry').innerHTML = '';
+                statusText.innerText = `No matching CVEs found. Please enter CVE IDs CVE-year-nnnn or fewer keywords.`;
+            }
+            updateLoadMoreButton();
         } else {
             clearURL();
             results.classList.add('visible');
             document.getElementById('entry').innerHTML = '';
-            statusText.innerText = `No matching CVEs found. Please enter CVE IDs CVE-year-nnnn or fewer keywords.`;
+            statusText.innerText = `Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords.`;
         }
-    } else {
-        clearURL();
-        results.classList.add('visible');
-        document.getElementById('entry').innerHTML = '';
-        statusText.innerText = `Please enter one or more valid CVE IDs CVE-year-nnnn format or fewer keywords.`;
     }
-    entryView = (cves.length == 1);
+    entryView = !textSearch && (cves.length == 1);
     resetListPanelSizing();
-    setSplitMode(cves.length > 1);
+    var shouldSplit = textSearch ? cves.length >= 1 : cves.length > 1;
+    setSplitMode(shouldSplit);
     if (cves.length >= 1) {
+        if (!textSearch) {
+            clearURL();
+        }
         container.classList.add('moved-up');
         results.classList.add('visible');
         list.innerHTML = '';
         highlightRow(null);
-        if (cves.length > 1)
+        if (cves.length > 1 || textSearch)
             list.parentElement.classList.remove('hid');
-        statusText.innerText = `Found ${searchResults? searchResults.totalSoFar + (searchResults.totalSoFar == maxSearch? '+':''): cves.length} CVE${cves.length > 1 ? 's':''}: ${cves}`;
+        var statusValues = textSearch ? searchState.items : cves;
+        updateStatusTextMessage(statusValues, textSearch);
         document.getElementById('entry').innerHTML = '';
         cves.forEach(cve => {
             loadCVE(cve);
@@ -284,10 +339,12 @@ async function getCVEs(text) {
             history.pushState({cves:cves}, null, "?"+cves);
         }
     }
-    if (cves.length <= 1) {
+    if (textSearch && cves.length >= 1) {
+        list.parentElement.classList.remove('hid');
+    } else if (cves.length <= 1) {
         list.parentElement.classList.add('hid');
     }
-    if (entryView && cves.length === 1) {
+    if (entryView) {
         showDetailPanel();
     } else {
         showListPanel();
@@ -340,6 +397,35 @@ function loadCVE(value) {
         //console.log("CVE ID required");
     }
     return false;
+}
+
+async function loadMoreResults() {
+    if (!searchState.query || searchState.nextCursor === null || searchState.loading) {
+        return;
+    }
+    searchState.loading = true;
+    updateLoadMoreButton();
+    try {
+        const nextPage = await searchCve(searchState.query, {
+            cursor: searchState.items.length,
+            pageSize: SEARCH_PAGE_SIZE
+        });
+        if (nextPage && Array.isArray(nextPage.items) && nextPage.items.length > 0) {
+            nextPage.items.forEach(cveId => {
+                searchState.items.push(cveId);
+                loadCVE(cveId);
+            });
+        }
+        searchState.nextCursor = nextPage && nextPage.nextCursor !== null ? nextPage.nextCursor : null;
+        if (searchState.items.length > 0) {
+            updateStatusTextMessage(searchState.items, true);
+        }
+    } catch (err) {
+        console.error('Failed to load more results', err);
+    } finally {
+        searchState.loading = false;
+        updateLoadMoreButton();
+    }
 }
 
 // adds an element to the array if it does not already exist using a comparer 
@@ -654,7 +740,7 @@ function preProcess(cve, statusFn) {
 
     var PMD = con.providerMetadata || {};
     con.dateUpdated = PMD.dateUpdated;
-    con.date = CDM.datePublic || con.dateUpdated;
+    con.date = CDM.datePublished || con.dateUpdated;
     con.shortName = PMD.shortName;
 
     con.cvssList = [];
@@ -736,8 +822,6 @@ function loadEntry(id) {
     }
 }
 
-var maxSearch = 30;
-
 /**
  * Search JSON files in CVEProject/cvelistV5 whose **contents** contain `searchText`,
  * then return CVE IDs extracted from the **file names**. Results are paged (100 by default).
@@ -752,13 +836,14 @@ var maxSearch = 30;
  */
 async function searchCve(searchText, {
   cursor = 0,
-  pageSize = maxSearch,
+  pageSize = SEARCH_PAGE_SIZE,
   timeoutMs = 30000
 } = {}) {
   const SOURCEGRAPH_BASE = 'https://sourcegraph.com';
   const REPO = 'github.com/CVEProject/cvelistV5';
   const CVE_RE = /CVE-\d{4}-\d{4,7}/;              // CVE-ID pattern in filenames
   const needed = cursor + pageSize;
+  const limit = Math.max(pageSize, needed || pageSize);
 
   // Build a Sourcegraph query:
   // - repo: restricts to the CVE repo
@@ -776,7 +861,7 @@ async function searchCve(searchText, {
     `file:\\.json$`,
     `content:${searchText}`,
     `select:file`,
-    `count:${maxSearch}`
+    `count:${limit}`
   ].join(' ');
 
   const params = new URLSearchParams({
@@ -1050,4 +1135,3 @@ function initThemeToggle() {
         console.log(toggle.checked);
     });
 }
-

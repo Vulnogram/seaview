@@ -8,7 +8,7 @@ var pug_match_html=/["&<>]/;
 function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, isNaN, nonSpec, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -802,9 +802,11 @@ if (t.descriptions) {
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+if (num = d.cweId.match(/\d+/)[0]) {
+pug_html = pug_html + " \u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+num, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
 }
 else {
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
@@ -818,9 +820,11 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pu
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+if (num = d.cweId.match(/\d+/)[0]) {
+pug_html = pug_html + " \u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+num, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
 }
 else {
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
@@ -866,9 +870,11 @@ if (t.descriptions) {
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+if (num = d.cweId.match(/\d+/)[0]) {
+pug_html = pug_html + " \u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+num, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
 }
 else {
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
@@ -882,9 +888,11 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pu
 pug_html = pug_html + "  ";
 if (d.cweId) {
 if (d.cweId != d.description) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp)) + " ";
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
 }
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+d.cweId, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+if (num = d.cweId.match(/\d+/)[0]) {
+pug_html = pug_html + " \u003Ca" + (pug_attr("href", "https://cwe.mitre.org/data/definitions/"+num, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = d.cweId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
 }
 else {
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pug_interp));
@@ -901,7 +909,114 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.description) ? "" : pu
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 if (con.impacts) {
-pug_html = pug_html + "\u003Cdiv class=\"impact pad\"\u003E\u003Cb class=\"vgi-impact\"\u003EImpact:  \u003C\u002Fb\u003E Code-execution (link) \u003Ca href=\"https:\u002F\u002Fcapec.mitre.org\u002Fdata\u002Fdefinitions\u002F\"\u003E\u003Csmall\u003ECPAEC-123 \u003C\u002Fsmall\u003E\u003C\u002Fa\u003E\u003C\u002Fdiv\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"impact pad\"\u003E\u003Cb class=\"vgi-impact\"\u003EImpact:  \u003C\u002Fb\u003E ";
+// iterate con.impacts
+;(function(){
+  var $$obj = con.impacts;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index29 = 0, $$l = $$obj.length; pug_index29 < $$l; pug_index29++) {
+        var t = $$obj[pug_index29];
+if (t.description) {
+// iterate t.description
+;(function(){
+  var $$obj = t.description;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index30 = 0, $$l = $$obj.length; pug_index30 < $$l; pug_index30++) {
+        var d = $$obj[pug_index30];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index30 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index30];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
+    }
+  }
+}).call(this);
+
+}
+if (t.descriptions) {
+// iterate t.descriptions
+;(function(){
+  var $$obj = t.descriptions;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index31 = 0, $$l = $$obj.length; pug_index31 < $$l; pug_index31++) {
+        var d = $$obj[pug_index31];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index31 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index31];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+    }
+  }
+}).call(this);
+
+}
+if (t.capecId) {
+if (num = t.capecId.match(/\d+/)[0]) {
+pug_html = pug_html + " \u003Ca" + (pug_attr("href", "https://capec.mitre.org/data/definitions/"+num, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = t.capecId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index29 in $$obj) {
+      $$l++;
+      var t = $$obj[pug_index29];
+if (t.description) {
+// iterate t.description
+;(function(){
+  var $$obj = t.description;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index32 = 0, $$l = $$obj.length; pug_index32 < $$l; pug_index32++) {
+        var d = $$obj[pug_index32];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index32 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index32];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp)) + " ";
+    }
+  }
+}).call(this);
+
+}
+if (t.descriptions) {
+// iterate t.descriptions
+;(function(){
+  var $$obj = t.descriptions;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index33 = 0, $$l = $$obj.length; pug_index33 < $$l; pug_index33++) {
+        var d = $$obj[pug_index33];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index33 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index33];
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+    }
+  }
+}).call(this);
+
+}
+if (t.capecId) {
+if (num = t.capecId.match(/\d+/)[0]) {
+pug_html = pug_html + " \u003Ca" + (pug_attr("href", "https://capec.mitre.org/data/definitions/"+num, true, false)) + "\u003E\u003Csmall\u003E" + (pug_escape(null == (pug_interp = t.capecId) ? "" : pug_interp)) + "\u003C\u002Fsmall\u003E\u003C\u002Fa\u003E ";
+}
+}
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 if (con.exploits) {
 pug_html = pug_html + "\u003Cdiv class=\"exploits pad\"\u003E\u003Cb class=\"vgi-bomb\"\u003EExploits\u003C\u002Fb\u003E";
@@ -956,8 +1071,8 @@ else {
 ;(function(){
   var $$obj = t.split(/\n/);
   if ('number' == typeof $$obj.length) {
-      for (var pug_index29 = 0, $$l = $$obj.length; pug_index29 < $$l; pug_index29++) {
-        var line = $$obj[pug_index29];
+      for (var pug_index34 = 0, $$l = $$obj.length; pug_index34 < $$l; pug_index34++) {
+        var line = $$obj[pug_index34];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
@@ -969,9 +1084,9 @@ pug_html = pug_html + "\u003Cp" + (pug_attr("lang", lang, true, false)) + "\u003
       }
   } else {
     var $$l = 0;
-    for (var pug_index29 in $$obj) {
+    for (var pug_index34 in $$obj) {
       $$l++;
-      var line = $$obj[pug_index29];
+      var line = $$obj[pug_index34];
 if (line) {
 if (line.startsWith('  ')) {
 pug_html = pug_html + "\u003Ccode\u003E" + (pug_escape(null == (pug_interp = line) ? "" : pug_interp)) + "\u003C\u002Fcode\u003E\u003Cbr\u002F\u003E";
@@ -994,17 +1109,17 @@ if (l) {
 ;(function(){
   var $$obj = l;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index30 = 0, $$l = $$obj.length; pug_index30 < $$l; pug_index30++) {
-        var d = $$obj[pug_index30];
+      for (var pug_index35 = 0, $$l = $$obj.length; pug_index35 < $$l; pug_index35++) {
+        var d = $$obj[pug_index35];
 if (d.value) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
 }
       }
   } else {
     var $$l = 0;
-    for (var pug_index30 in $$obj) {
+    for (var pug_index35 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index30];
+      var d = $$obj[pug_index35];
 if (d.value) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
 }
@@ -1021,8 +1136,8 @@ if (l) {
 ;(function(){
   var $$obj = l;
   if ('number' == typeof $$obj.length) {
-      for (var pug_index31 = 0, $$l = $$obj.length; pug_index31 < $$l; pug_index31++) {
-        var d = $$obj[pug_index31];
+      for (var pug_index36 = 0, $$l = $$obj.length; pug_index36 < $$l; pug_index36++) {
+        var d = $$obj[pug_index36];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
 pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
@@ -1033,9 +1148,9 @@ pug_mixins["para"](d.value,null,d.lang);
       }
   } else {
     var $$l = 0;
-    for (var pug_index31 in $$obj) {
+    for (var pug_index36 in $$obj) {
       $$l++;
-      var d = $$obj[pug_index31];
+      var d = $$obj[pug_index36];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
 pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
@@ -1205,7 +1320,16 @@ pug_html = pug_html + ("\u003Cb" + (pug_attr("class", pug_classes([(con.state ==
 if (con.maxCVSS) {
 pug_html = pug_html + (" · " + (pug_escape(null == (pug_interp = con.maxCVSS) ? "" : pug_interp)));
 }
-pug_html = pug_html + "\u003C\u002Fb\u003E\u003Cspan" + (pug_attr("class", pug_classes([cve.KEV?'vgi-bomb':false], [true]), false, false)) + "\u003E";
+pug_html = pug_html + "\u003C\u002Fb\u003E";
+if ((cve.KEV)) {
+pug_html = pug_html + "\u003Ci class=\"vgi-bomb\"\u003E\u003C\u002Fi\u003E";
+}
+if ((con.tags && con.tags.includes('exclusively-hosted-service'))) {
+pug_html = pug_html + "\u003Ci class=\"vgi-cloud\"\u003E\u003C\u002Fi\u003E";
+}
+if ((con.tags && con.tags.includes('unsupported-when-assigned'))) {
+pug_html = pug_html + "👻 ";
+}
 if (con.title) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = con.title) ? "" : pug_interp));
 }
@@ -1213,7 +1337,7 @@ else {
 pug_mixins["text"](con.descriptions);
 pug_mixins["text"](con.rejectedReasons);
 }
-pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cb class=\"dt\"\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(con.date)) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cb class=\"dt\"\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(con.date)) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fa\u003E";
 };
 pug_mixins["cve4"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -1339,7 +1463,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.isNaN :
         typeof isNaN !== 'undefined' ? isNaN : undefined, "nonSpec" in locals_for_with ?
         locals_for_with.nonSpec :
-        typeof nonSpec !== 'undefined' ? nonSpec : undefined, "renderTemplate" in locals_for_with ?
+        typeof nonSpec !== 'undefined' ? nonSpec : undefined, "num" in locals_for_with ?
+        locals_for_with.num :
+        typeof num !== 'undefined' ? num : undefined, "renderTemplate" in locals_for_with ?
         locals_for_with.renderTemplate :
         typeof renderTemplate !== 'undefined' ? renderTemplate : undefined, "shownURLs" in locals_for_with ?
         locals_for_with.shownURLs :
