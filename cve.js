@@ -8,7 +8,7 @@ var pug_match_html=/["&<>]/;
 function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, con, cve, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, isNaN, nonSpec, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -987,24 +987,34 @@ pug_html = pug_html + "\u003Cp" + (pug_attr("lang", lang, true, false)) + "\u003
 }
 }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 pug_mixins["text"] = pug_interp = function(l){
+var block = (this && this.block), attributes = (this && this.attributes) || {};
+if (l) {
+// iterate l
+;(function(){
+  var $$obj = l;
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index30 = 0, $$l = $$obj.length; pug_index30 < $$l; pug_index30++) {
+        var d = $$obj[pug_index30];
+if (d.value) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+}
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index30 in $$obj) {
+      $$l++;
+      var d = $$obj[pug_index30];
+if (d.value) {
+pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+}
+    }
+  }
+}).call(this);
+
+}
+};
+pug_mixins["spara"] = pug_interp = function(l, hypertext){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (l) {
 // iterate l
@@ -1013,8 +1023,12 @@ if (l) {
   if ('number' == typeof $$obj.length) {
       for (var pug_index31 = 0, $$l = $$obj.length; pug_index31 < $$l; pug_index31++) {
         var d = $$obj[pug_index31];
+if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
+pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
+}
+else
 if (d.value) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
+pug_mixins["para"](d.value,null,d.lang);
 }
       }
   } else {
@@ -1022,56 +1036,6 @@ pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_inte
     for (var pug_index31 in $$obj) {
       $$l++;
       var d = $$obj[pug_index31];
-if (d.value) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = d.value) ? "" : pug_interp));
-}
-    }
-  }
-}).call(this);
-
-}
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-pug_mixins["spara"] = pug_interp = function(l, hypertext){
-var block = (this && this.block), attributes = (this && this.attributes) || {};
-if (l) {
-// iterate l
-;(function(){
-  var $$obj = l;
-  if ('number' == typeof $$obj.length) {
-      for (var pug_index33 = 0, $$l = $$obj.length; pug_index33 < $$l; pug_index33++) {
-        var d = $$obj[pug_index33];
-if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
-pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
-}
-else
-if (d.value) {
-pug_mixins["para"](d.value,null,d.lang);
-}
-      }
-  } else {
-    var $$l = 0;
-    for (var pug_index33 in $$obj) {
-      $$l++;
-      var d = $$obj[pug_index33];
 if (d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html') {
 pug_html = pug_html + "\u003Cp" + (pug_attr("lang", d.lang, true, false)) + "\u003E" + (null == (pug_interp = d.supportingMedia[0].value) ? "" : pug_interp) + "\u003C\u002Fp\u003E";
 }
@@ -1085,90 +1049,6 @@ pug_mixins["para"](d.value,null,d.lang);
 
 }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 pug_mixins["renderDate"] = pug_interp = function(value){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 var v = false;
@@ -1314,7 +1194,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 pug_mixins["row"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 con = cve.containers.cna;
-pug_html = pug_html + "\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)) + "\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)+pug_attr("data-id", con.cveId, true, false)+pug_attr("data-score", (con.state == 'REJECTED'?-1:con.maxCVSS||0), true, false)+pug_attr("data-date", con.date, true, false)) + "\u003E";
 if (cna[con.shortName] && cna[con.shortName].i) {
 pug_html = pug_html + "\u003Cimg" + (" width=\"28\" height=\"28\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E";
 }
@@ -1366,13 +1246,9 @@ con.references = con.references? con.references.reference_data : null;
 pug_mixins["container"](con);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 };
-
-
-
-
 pug_mixins["entry"] = pug_interp = function(d){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
-var con = cve.containers ? cve.containers.cna : {};
+var con = d.containers ? d.containers.cna : {};
 var cve4doc = con.x_legacyV4Record;
 delete con.x_legacyV4Record;
 
@@ -1447,9 +1323,7 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.cna :
         typeof cna !== 'undefined' ? cna : undefined, "con" in locals_for_with ?
         locals_for_with.con :
-        typeof con !== 'undefined' ? con : undefined, "cve" in locals_for_with ?
-        locals_for_with.cve :
-        typeof cve !== 'undefined' ? cve : undefined, "cvssDesc" in locals_for_with ?
+        typeof con !== 'undefined' ? con : undefined, "cvssDesc" in locals_for_with ?
         locals_for_with.cvssDesc :
         typeof cvssDesc !== 'undefined' ? cvssDesc : undefined, "cvssSeverity" in locals_for_with ?
         locals_for_with.cvssSeverity :

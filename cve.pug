@@ -297,26 +297,11 @@ mixin para(t, hypertext, lang)
                     else
                         p(lang=lang)=line
 
-mixin mpara(l, hypertext)
-    if l
-        each d in l
-            if d.value
-                +para(d.value, hypertext, d.lang)
-
 mixin text(l)
     if l
         each d in l
             if d.value
                 =d.value
-
-mixin aggpara(l)
-    if l
-        ul
-            each k, v in l
-                li
-                    b=k.join(', ')
-                    p
-                        +para(v)
 
 mixin spara(l, hypertext)
     if l
@@ -325,41 +310,6 @@ mixin spara(l, hypertext)
                 p(lang=d.lang) !{d.supportingMedia[0].value}
             else if d.value
                 +para(d.value,null,d.lang)
-
-mixin lpara(l)
-    if l
-        each d in l
-            if d.supportingMedia && d.supportingMedia.length > 0 && d.supportingMedia[0].type == 'text/html'
-                | !{d.supportingMedia[0].value} 
-            else if d.value
-                = d.value
-                | 
-
-mixin linklist(l, url)
-    each v, i in l
-        if(i < l.length-2)
-            if(url)
-                a(href=url+v)=v
-            else
-                = v
-            | , 
-        else
-            if(i == l.length - 1 && i > 0)
-                |  and 
-            if(url)
-                a(href=url+v)=v
-            else
-                =v
-
-mixin CVSS(value)
-    = value && value.baseScore >= 0 ? value.baseScore.toFixed(1) : 'n/a'
-    |  
-    if value.version >= "3"
-        | (
-        a(href="https://cvssjs.github.io/#" + value.vectorString)=value.vectorString
-        | )
-    else
-        a(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+value.vectorString)=value.vectorString
 
 mixin renderDate(value)
     - var v = false;
@@ -438,7 +388,7 @@ mixin cve5(cve)
 
 mixin row(cve)
     - con = cve.containers.cna;
-    a.flx.nowrap(href="#"+con.cveId)
+    a.flx.nowrap(href="#"+con.cveId, data-id=con.cveId, data-score=(con.state == 'REJECTED'?-1:con.maxCVSS||0), data-date=con.date)
         if cna[con.shortName] && cna[con.shortName].i
             img(width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
         else
@@ -486,16 +436,9 @@ mixin cve4(cve)
         con.references = con.references? con.references.reference_data : null;
     +container(con)
 
-mixin missing(id)
-    tr(id=id)
-        td
-            .flx.nowrap
-                .vig-what=id
-            | CVE record not found
-
 mixin entry(d)
     -
-        var con = cve.containers ? cve.containers.cna : {};
+        var con = d.containers ? d.containers.cna : {};
         var cve4doc = con.x_legacyV4Record;
         delete con.x_legacyV4Record;
 
