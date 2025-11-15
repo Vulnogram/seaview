@@ -2,6 +2,7 @@ body {
     /*font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;*/
     font-family: apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --wht: #fff;
+    --oft:rgb(255 250 243);
     --bck: #f6f6f7;
     --hig: #f0f0f0;
     --bor: #dadce0;
@@ -14,10 +15,38 @@ body {
     --sfb: #177c28;
     --red: #f2c3b2;
     --grn: #b2f2bc;
+    --key: #666699;
     margin: 0px;
     background-color: var(--bck);
     color: var(--txt);
     line-height: 1.5;
+}
+body[data-theme="dark"] {
+    --wht: #1c1f25;
+    --oft:#2b271f;
+    --bck: #111217;
+    --hig: #1f222b;
+    --bor: #2b2f3a;
+    --bor2: #424959;
+    --txt: #f4f6fb;
+    --lnk: #8bc5ff;
+    --pri: #4f3b05;
+    --sec: #1d212c;
+    --sfe: #1b8a2c;
+    --sfb: #0f5a1b;
+    --red: #5c2a1e;
+    --grn: #1c4a20;
+    --key: #9393dd;
+
+    background-color: var(--bck);
+    color: var(--txt);
+}
+
+body[data-theme="dark"] [class^="vgi-"],
+body[data-theme="dark"] [class*=" vgi-"] {
+    filter: invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.05);;
+    color:var(--wht);
+    
 }
 
 
@@ -107,7 +136,9 @@ select.btn {
     background-color:var(--wht);
     box-sizing:border-box;
 }
-
+.txt {
+    background-color:var(--wht);
+}
 .sbn, .btn, .txt, .lbl, .tag {
     display: inline-block;
     zoom:1;
@@ -175,7 +206,6 @@ form:invalid {
 {
 border-width: 1px;
 box-shadow: 0 0 0 0.2em rgba(147, 147, 147, 0.3);
-    
 }
 .btn, .lbl {
     margin-right: .2em;
@@ -323,3 +353,32 @@ color: var(--txt);
     margin-top: 0.25em; /* Add space between the rows */
   }
 }
+.fade {
+    background-color: var(--oft);
+}
+
+label[for="theme-toggle"] {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+label[for="theme-toggle"]:hover {
+  transform: scale(1.1);
+}
+
+/* Hide the checkbox input */
+#theme-toggle {
+  display: none;
+}
+
+/* Show/hide icons based on toggle state */
+.sun { display: inline; }
+.moon { display: none; }
+
+#theme-toggle:checked ~ label .sun { display: none; }
+#theme-toggle:checked ~ label .moon { display: inline; }

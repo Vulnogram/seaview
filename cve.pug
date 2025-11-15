@@ -393,7 +393,7 @@ mixin row(cve)
             img(width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
         else
             img(width=28 height=28 src="https://vulnogram.org/vg-icons/src/bug.svg")
-        b(class=(con.state == 'REJECTED'?'rej':''),style=(con.maxCVSS ? "background-color:"+getGradientColor(con.maxCVSS)+';':'')+(con.maxCVSS >= 8 ? 'color:#fff;':''))
+        b(class=(con.state == 'REJECTED'?'rej':''),style=con.maxCVSS ? ("background-color:"+getGradientColor(con.maxCVSS)+';'+(con.maxCVSS >= 8 ? 'color:#fff;':'color:#000;')):false)
             =con.cveId
             if con.maxCVSS
                 |  · 

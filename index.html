@@ -73,10 +73,6 @@
       background-color: orangered;
     }
 
-    .fade {
-      background-color: rgb(255 250 243);
-    }
-
     .right {
       margin-left: auto;
       text-align: right;
@@ -225,7 +221,7 @@
 
     .jsonBox b {
       font-weight: normal;
-      color: #666699;
+      color: var(--key);
     }
 
     .tbl td {
@@ -233,7 +229,7 @@
     }
 
     .borTop {
-      border-top: 1px dotted #c5c7ca;
+      border-top: 1px dotted var(--bor);
     }
 
     body,
@@ -471,7 +467,13 @@
       <img class="rnd" width="50px" height="50px" src="apple-touch-icon.png" alt="CVEs" />
       <input type="search" class="rnd txt" id="q" placeholder="Search, lookup CVEs... ">
       <input class="btn rnd" type="submit" value="Go" />
-    </form>
+    <input type="checkbox" id="theme-toggle">
+<label for="theme-toggle">
+  <span class="sun">☀️</span>
+  <span class="moon">🌙</span>
+</label>
+</input>
+</form>
     <div class="results" id="results">
       <p id="statusText" class="truncate-text" onclick="this.classList.toggle('expanded');">
       </p>

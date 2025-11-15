@@ -1038,3 +1038,16 @@ addEventListener("popstate", (event) => {
         }
     }
 })
+
+window.addEventListener('DOMContentLoaded', initThemeToggle);
+function initThemeToggle() {
+    const toggle = document.getElementById('theme-toggle');
+    toggle.checked = localStorage.getItem('dark-mode') === 'true';
+    document.body.setAttribute('data-theme', toggle.checked ? 'dark' : 'light');
+    toggle.addEventListener('change', () => {
+        localStorage.setItem('dark-mode', toggle.checked);
+        document.body.setAttribute('data-theme', (toggle.checked ? 'dark' : 'light'));
+        console.log(toggle.checked);
+    });
+}
+

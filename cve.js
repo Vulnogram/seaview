@@ -1201,7 +1201,7 @@ pug_html = pug_html + "\u003Cimg" + (" width=\"28\" height=\"28\""+pug_attr("src
 else {
 pug_html = pug_html + "\u003Cimg width=\"28\" height=\"28\" src=\"https:\u002F\u002Fvulnogram.org\u002Fvg-icons\u002Fsrc\u002Fbug.svg\"\u002F\u003E";
 }
-pug_html = pug_html + ("\u003Cb" + (pug_attr("class", pug_classes([(con.state == 'REJECTED'?'rej':'')], [true]), false, false)+pug_attr("style", pug_style((con.maxCVSS ? "background-color:"+getGradientColor(con.maxCVSS)+';':'')+(con.maxCVSS >= 8 ? 'color:#fff;':'')), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = con.cveId) ? "" : pug_interp)));
+pug_html = pug_html + ("\u003Cb" + (pug_attr("class", pug_classes([(con.state == 'REJECTED'?'rej':'')], [true]), false, false)+pug_attr("style", pug_style(con.maxCVSS ? ("background-color:"+getGradientColor(con.maxCVSS)+';'+(con.maxCVSS >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = con.cveId) ? "" : pug_interp)));
 if (con.maxCVSS) {
 pug_html = pug_html + (" · " + (pug_escape(null == (pug_interp = con.maxCVSS) ? "" : pug_interp)));
 }
