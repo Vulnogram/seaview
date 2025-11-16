@@ -166,14 +166,18 @@ mixin warnings(con)
                 | 
                 span=x.message
 
-mixin container(con)
+mixin container(con, cve)
     .cna.pad
-        if cna[con.shortName] && cna[con.shortName].i
-            a(href=cna[con.shortName].i)
+        - var cList = con.providerMetadata? con.providerMetadata.orgId : (cve? cve.cveMetadata.assignerOrgId : false)
+        - var cUrl = cna[con.shortName] && cna[con.shortName].i ? cna[con.shortName].i : false
+        if cUrl
+            a(href='?'+cList+' NOT REJECTED')
                 img.logo(src="https://www.google.com/s2/favicons?sz=128&domain_url="+cna[con.shortName].i)
         span
             |  
-            b=cna[con.shortName]? cna[con.shortName].n : con.shortName
+            a.bld(href='?'+cList+' NOT REJECTED')=cna[con.shortName]? cna[con.shortName].n : con.shortName
+            if cUrl
+                a.vgi-globe(href=cUrl)
             br
             +renderDate(con.datePublic)
             if con.dateUpdated && con.dateUpdated != con.datePublic
@@ -393,7 +397,7 @@ mixin cve5(cve)
         shownURLs = {};
         con.jsonURL = cve.jsonURL;
     div.pad
-        +container(con)
+        +container(con,cve)
         if adpContainers && adpContainers.length > 0
             each x, i in adpContainers
                 hr.line
@@ -403,9 +407,9 @@ mixin row(cve)
     - con = cve.containers.cna;
     a.flx.nowrap(href="#"+con.cveId, data-id=con.cveId, data-score=(con.state == 'REJECTED'?-1:con.maxCVSS||0), data-date=con.date)
         if cna[con.shortName] && cna[con.shortName].i
-            img(width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
+            img(title=con.shortName width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
         else
-            img(width=28 height=28 src="https://vulnogram.org/vg-icons/src/bug.svg")
+            img(title=con.shortName width=28 height=28 src="https://vulnogram.org/vg-icons/src/bug.svg")
         b(class=(con.state == 'REJECTED'?'rej':''),style=con.maxCVSS ? ("background-color:"+getGradientColor(con.maxCVSS)+';'+(con.maxCVSS >= 8 ? 'color:#fff;':'color:#000;')):false)
             =con.cveId
             if con.maxCVSS

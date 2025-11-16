@@ -74,7 +74,9 @@ body[data-theme="dark"] [class*=" vgi-"] {
 .pad2 {
     padding: 1em 2em 1em 2em;
 }
-
+.bld {
+    font-weight: bold;
+}
 .tbl th {
     background-color: var(--hig);
     font-size: x-small;
@@ -337,8 +339,9 @@ color: var(--txt);
     display: inline-block;
     width:0px;
     min-width: 0px;
-    height: 20px;
-    padding-left: 20px;
+    height: 24px;
+    padding-left: 24px;
+    background-size: 24px;
     background-position: 0%;
 }
 
