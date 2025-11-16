@@ -8,7 +8,7 @@ var pug_match_html=/["&<>]/;
 function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, isNaN, nonSpec, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, nonSpec, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -467,14 +467,14 @@ if (tags) {
   if ('number' == typeof $$obj.length) {
       for (var pug_index12 = 0, $$l = $$obj.length; pug_index12 < $$l; pug_index12++) {
         var t = $$obj[pug_index12];
-pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
+pug_html = pug_html + "\u003Cb" + (pug_attr("class", pug_classes(["tag","rnd",icon[t]], [false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
       }
   } else {
     var $$l = 0;
     for (var pug_index12 in $$obj) {
       $$l++;
       var t = $$obj[pug_index12];
-pug_html = pug_html + "\u003Cb class=\"tag rnd CRITICAL\"\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
+pug_html = pug_html + "\u003Cb" + (pug_attr("class", pug_classes(["tag","rnd",icon[t]], [false,false,true]), false, false)) + "\u003E" + (pug_escape(null == (pug_interp = t) ? "" : pug_interp)) + "\u003C\u002Fb\u003E  ";
     }
   }
 }).call(this);
@@ -1321,15 +1321,19 @@ if (con.maxCVSS) {
 pug_html = pug_html + (" · " + (pug_escape(null == (pug_interp = con.maxCVSS) ? "" : pug_interp)));
 }
 pug_html = pug_html + "\u003C\u002Fb\u003E";
+if ((con.tags && con.tags.includes('disputed'))) {
+pug_html = pug_html + "\u003Ci class=\"vgi-what\" title=\"Disputed\"\u003E\u003C\u002Fi\u003E";
+}
 if ((cve.KEV)) {
-pug_html = pug_html + "\u003Ci class=\"vgi-bomb\"\u003E\u003C\u002Fi\u003E";
+pug_html = pug_html + "\u003Ci class=\"vgi-bomb\" title=\"Known exploited!\"\u003E\u003C\u002Fi\u003E";
 }
 if ((con.tags && con.tags.includes('exclusively-hosted-service'))) {
-pug_html = pug_html + "\u003Ci class=\"vgi-cloud\"\u003E\u003C\u002Fi\u003E";
+pug_html = pug_html + "\u003Ci class=\"vgi-cloud\" title=\"Cloud vulnerability\"\u003E\u003C\u002Fi\u003E";
 }
 if ((con.tags && con.tags.includes('unsupported-when-assigned'))) {
-pug_html = pug_html + "👻 ";
+pug_html = pug_html + "\u003Ci class=\"vgi-no\" title=\"Unsupported product\"\u003E\u003C\u002Fi\u003E";
 }
+pug_html = pug_html + "\u003Cspan\u003E";
 if (con.title) {
 pug_html = pug_html + (pug_escape(null == (pug_interp = con.title) ? "" : pug_interp));
 }
@@ -1337,7 +1341,7 @@ else {
 pug_mixins["text"](con.descriptions);
 pug_mixins["text"](con.rejectedReasons);
 }
-pug_html = pug_html + "\u003Cb class=\"dt\"\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(con.date)) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cb class=\"dt\"\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(con.date)) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fa\u003E";
 };
 pug_mixins["cve4"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -1459,7 +1463,9 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.formatFriendlyDate :
         typeof formatFriendlyDate !== 'undefined' ? formatFriendlyDate : undefined, "getGradientColor" in locals_for_with ?
         locals_for_with.getGradientColor :
-        typeof getGradientColor !== 'undefined' ? getGradientColor : undefined, "isNaN" in locals_for_with ?
+        typeof getGradientColor !== 'undefined' ? getGradientColor : undefined, "icon" in locals_for_with ?
+        locals_for_with.icon :
+        typeof icon !== 'undefined' ? icon : undefined, "isNaN" in locals_for_with ?
         locals_for_with.isNaN :
         typeof isNaN !== 'undefined' ? isNaN : undefined, "nonSpec" in locals_for_with ?
         locals_for_with.nonSpec :

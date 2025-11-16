@@ -20,8 +20,8 @@
 
   <link rel="icon" href="/seaview/apple-touch-icon.png">
   <link rel="apple-touch-icon" href="/seaview/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://vulnogram.org/vg-icons/dist/vg-icons.css">
   <link rel="stylesheet" href="min.css">
-  <link rel="stylesheet" href="https://vulnogram.org/css/vg-icons.css">
   <style>
     #errMsg {
       color: brown;
@@ -321,9 +321,13 @@
     }
 
     .splitter {
-      flex: 0 0 4px;
+      flex: 0 0 5px;
       background-color: var(--bor);
       cursor: col-resize;
+  background-image: linear-gradient(to right, rgb(114, 114, 114) 100%, transparent 100%);
+  background-position: center;
+  background-size: 2px 100px;
+  background-repeat: no-repeat;
     }
 
     .panel-detail {
@@ -339,13 +343,20 @@
 
 
     .back-button {
-      display: none;
+      position:sticky;
+      top: 1rem;
+      float: right;
+      display: inline-block;
       margin-bottom: 0.5em;
-      margin-left: 1em;
+      margin-right: 1em;
       gap: 0.3em;
+      height: 26px;
+      border-radius: 16px;
       align-items: center;
     }
-
+    .back-button::before {
+      content: "✕";
+    }
     body.resizing {
       user-select: none;
       cursor: col-resize;
@@ -383,7 +394,16 @@
       }
 
       .master-detail.split[data-state="detail"] .back-button {
-        display: inline-flex;
+        position:relative;
+        top: 0em;
+        float: initial;
+        display: block;
+        height: auto;
+        margin-bottom: 0.5em;
+        margin-left: 1em;
+      }
+      .master-detail.split[data-state="detail"] .back-button::before {
+        content: "◀ Back to list";
       }
     }
 
@@ -454,6 +474,11 @@
     th[data-sort="desc"]::after {
       content: " ▼";
     }
+
+    #loadMoreBtn {
+      margin: 0.5em 2em 2em 3em;
+
+    }
   </style>
 </head>
 
@@ -469,8 +494,8 @@
       <input class="btn rnd" type="submit" value="Go" />
     <input type="checkbox" id="theme-toggle">
 <label for="theme-toggle">
-  <span class="sun">☀️</span>
-  <span class="moon">🌙</span>
+  <span class="sun">☼</span>
+  <span class="moon">⏾</span>
 </label>
 </input>
 </form>
@@ -487,7 +512,7 @@
     </section>
     <div class="splitter" aria-hidden="true"></div>
     <section class="panel-detail" aria-label="CVE entry details">
-      <button type="button" class="btn rnd back-button" id="backButton">&#8592; Back to list</button>
+      <button type="button" class="btn rnd back-button" id="backButton"></button>
       <div id="entry"></div>
     </section>
   </div>

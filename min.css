@@ -20,6 +20,7 @@ body {
     background-color: var(--bck);
     color: var(--txt);
     line-height: 1.5;
+    transition-duration: 500ms;
 }
 body[data-theme="dark"] {
     --wht: #1c1f25;
@@ -222,7 +223,6 @@ box-shadow: 0 0 0 0.2em rgba(147, 147, 147, 0.3);
 .btn {
    /* border: 1px solid var(--bor);*/
     user-select: none;
-    box-shadow: inset 0px 1px 1px rgba(255,255,255, .95), 0px 1px 1px rgba(0, 0, 0, 0.2);
     background-color: var(--hig);
     font-family: sans-serif;
     cursor: pointer;
@@ -392,3 +392,8 @@ label[for="theme-toggle"]:hover {
 
 #theme-toggle:checked ~ label .sun { display: none; }
 #theme-toggle:checked ~ label .moon { display: inline; }
+
+[class^="vgi-"], [class*=" vgi-"] {
+    background-position-x:8px;
+    padding-left: 1.8em;
+}

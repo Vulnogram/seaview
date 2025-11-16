@@ -176,6 +176,7 @@ function setLayoutState(state) {
         setInlineListWidth(listPanelWidth);
     }
     if (state === 'list') {
+        window.scrollTo(0,listPosition);
         layout.classList.remove('resized');
         if (userResizedList) {
             clearInlineListWidth();
@@ -191,6 +192,7 @@ function showListPanel() {
 }
 
 function showDetailPanel() {
+    window.scrollTo(0,0);
     setLayoutState('detail');
 }
 
@@ -208,6 +210,7 @@ function highlightRow(id) {
     var currentRow = document.getElementById('i' + selectedEntryId);
     if (currentRow) {
         currentRow.classList.add('selected');
+        listPosition = window.scrollY;
     }
 }
 
@@ -979,7 +982,7 @@ async function searchCve(searchText, {
 function resetSort(table){
   Array.from(table.tHead.rows[0].children).forEach(t=>t.removeAttribute('data-sort'));
 }
-
+var listPosition = 0;
 document.addEventListener('DOMContentLoaded', () => {
  /* var tables = document.getElementsByClassName('sortable');
   for (let i = 0; i < tables.length; i++) {
@@ -1132,6 +1135,12 @@ function initThemeToggle() {
     toggle.addEventListener('change', () => {
         localStorage.setItem('dark-mode', toggle.checked);
         document.body.setAttribute('data-theme', (toggle.checked ? 'dark' : 'light'));
-        console.log(toggle.checked);
     });
+}
+
+icon = {
+    'unsupported-when-assigned': 'vgi-no gray',
+    'exclusively-hosted-service': 'vgi-cloud NONE',
+    'x_known-exploited-vulnerability': 'vgi-bomb CRITICAL',
+    'disputed': 'vgi-what gray'
 }
