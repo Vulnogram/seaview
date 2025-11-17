@@ -10,7 +10,7 @@
     content="Quick CVE search and lookups - Tool to extract and list CVE IDs from text or searches by keywords and phrases, providing a more complete, detailed view of each vulnerability record.">
   <meta name="author" content="Chandan BN">
 
-  <meta property="og:title" content="Quick CVE search and viewing for power users">
+  <meta property="og:title" content="Quick CVE search and viewing for humans">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://vulnogram.org/seaview">
   <meta property="og:description"
@@ -405,6 +405,12 @@
       .master-detail.split[data-state="detail"] .back-button::before {
         content: "← Back to list";
       }
+      .pad, .pad2 {
+          padding: 3px 6px;
+      }
+      .gap {
+        margin: 6px;
+      }
     }
 
     .master-detail.split[data-state="list"] .panel-detail,
@@ -479,6 +485,24 @@
       margin: 0.5em 2em 2em 3em;
 
     }
+#logo {
+  min-width: 50px;
+  width:50px;
+  min-height: 50px;
+  height: 50px;
+  background: url('./wave.svg') repeat-x center/cover;
+  border-radius: 25px;
+  border: 1px solid #1c4c84;
+  overflow: hidden;
+  display: block;
+}
+.busy #logo {
+  animation: scroll-bkg 3s ease-in-out infinite;
+}
+@keyframes scroll-bkg {
+  0%   { background-position-x: 0; }
+  100% { background-position-x: 50px; }
+}
   </style>
 </head>
 
@@ -489,7 +513,7 @@
   <div class="container" id="container">
     <form class="search-box flx nowrap" id="searchForm"
       onsubmit="event.preventDefault();getCVEs(this.q.value);return false;">
-      <img class="rnd" width="50px" height="50px" src="apple-touch-icon.png" alt="CVEs" />
+      <span id="logo"></span>
       <input type="search" class="rnd txt" id="q" placeholder="Search, lookup CVEs... ">
       <input class="btn rnd" type="submit" value="Go" />
     <input type="checkbox" id="theme-toggle">
@@ -512,10 +536,15 @@
     </section>
     <div class="splitter" aria-hidden="true"></div>
     <section class="panel-detail" aria-label="CVE entry details">
-      <button type="button" class="btn rnd back-button" id="backButton"></button>
+      <button type="button" class="btn hid rnd back-button" id="backButton"></button>
       <div id="entry"></div>
     </section>
   </div>
+  <center class="pad">
+    <div class="pad2 center tgrey"><small> Copyright © Chandan B.N, 2017-2025. Usage of CVE IDs is subject to CVE terms of
+        use. This site does not track you and is safe for working with confidential vulnerability information. </small><br><small> <br><a class="logo" href="https://github.com/Vulnogram/SeaView">Vulnogram
+          SeaView Project : The Human-Centric Interface for Critical Vulnerability Data. </a></small></div>
+  </center>
 </body>
 
 </html>

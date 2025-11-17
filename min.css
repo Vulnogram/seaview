@@ -366,13 +366,14 @@ color: var(--txt);
     margin-top: 0.25em; /* Add space between the rows */
   }
 }
+
 .fade {
     background-color: var(--oft);
 }
 
 label[for="theme-toggle"] {
   position: fixed;
-  top: 1rem;
+  top: 24px;
   right: 1rem;
   z-index: 1000;
   cursor: pointer;

@@ -279,6 +279,9 @@ function setupSplitterResize() {
 }
 async function getCVEs(text) {
     const container = document.getElementById('container');
+    const backButton = document.getElementById('backButton');
+    container.classList.add('busy');
+    backButton.classList.add('hid');
     const results = document.getElementById('results');
     const list =  document.getElementById('idxTble');
     const statusText = document.getElementById('statusText');
@@ -344,6 +347,7 @@ async function getCVEs(text) {
     }
     if (textSearch && cves.length >= 1) {
         list.parentElement.classList.remove('hid');
+        backButton.classList.remove('hid');
     } else if (cves.length <= 1) {
         list.parentElement.classList.add('hid');
     }
@@ -352,6 +356,7 @@ async function getCVEs(text) {
     } else {
         showListPanel();
     }
+    setTimeout(function(){container.classList.remove('busy')},1000);
 }
 
 var cveCache = {};
