@@ -22,7 +22,7 @@ if (cvssList) {
 pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
 // iterate cvss.scenarios
@@ -88,7 +88,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
 pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (pug_attr("class", pug_classes(["lbl","rnd","tag","CVSS",sev ? sev : 'gray'], [false,false,false,false,true]), false, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
 // iterate cvss.scenarios

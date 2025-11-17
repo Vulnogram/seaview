@@ -5,7 +5,7 @@ mixin cvssList(cvssList)
             details.popup
                 - var score = cvss.threatScore || cvss.baseScore;
                 - var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-                summary.lbl.rnd.tag.CVSS(class= sev ? sev : 'gray', title=score + ' out of 10')
+                summary.lbl.rnd.tag(style=score ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false, title=score + ' out of 10')
                     = sev
                     |  · 
                     b=score
