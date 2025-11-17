@@ -345,9 +345,11 @@ async function getCVEs(text) {
             history.pushState({cves:cves}, null, "?"+cves);
         }
     }
+    if (cves.length>1) {
+        backButton.classList.remove('hid');
+    }
     if (textSearch && cves.length >= 1) {
         list.parentElement.classList.remove('hid');
-        backButton.classList.remove('hid');
     } else if (cves.length <= 1) {
         list.parentElement.classList.add('hid');
     }
