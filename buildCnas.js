@@ -90,11 +90,11 @@ for (c of cnas) {
         var em = c.contact[0].email[0].emailAddr;
         var host= em.substr(em.indexOf('@')+1);
         u = new URL('https://www.'+host);
-        console.log(u + 'got' + (await getFavicon(u)));
+        console.log(u + ' got ' + (await getFavicon(u)));
     } catch(er) {
         try{
             u = new URL(c.securityAdvisories.advisories[0].url);
-            console.log(u + 'got' + (await getFavicon(u.protocol + '//'+ u.hostname)));
+            console.log(u + ' got ' + (await getFavicon(u.protocol + '//'+ u.hostname)));
         } catch(e) {
             try{
                 u = new URL(c.disclosurePolicy[0].url);
@@ -112,9 +112,15 @@ for (c of cnas) {
         i: i
     }
 }
-ch['CISA-ADP'] = {n: 'CISA ADP', i: 'https://www.cisa.gov/'};
-ch['CVE'] = {n: 'CVE', i: 'https://www.cve.org/'};
-ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org/'};
+ch['CISA-ADP'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
+ch['CVE'] = {n: 'CVE', i: 'https://www.cve.org'};
+ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
+ch['ENISA']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
+ch["Mautic"]={"n":"Mautic","i":"https://mautic.org"};
+ch["TianoCore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
+ch["Zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
+ch["Caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
+ch["OB"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
 return cnaList;
 }
 
