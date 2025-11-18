@@ -1,10 +1,10 @@
-![SeaView Logo](https://vulnogram.org/seaview/apple-touch-icon.png)
+![SeaView Logo](https://vulnogram.org/seaview/seaview.jpg)
 #  [SeaView](https://vulnogram.org/seaview) -  an online tool to Extract and View CVE Records
 
 
 [Go to the tool online](https://vulnogram.org/seaview)
 
-SeaView (named because CVE-View is a tongue twister) identifies CVE ids in a given text and shows them, else searches for given keywords CVE records, loads the records from [github.com/CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5/) and presents a more complete rendering of most of the information in the record, like the fix and workaround information that are hidden on cve.org
+SeaView (named because CVE-View is a tongue twister) identifies CVE ids in a given text and shows them, else searches for given keywords CVE records, loads the records from [github.com/CVEProject/cvelistV5](https://github.com/CVEProject/cvelistV5/) and presents a more complete rendering of most of the information in the record, like the fix and workaround information that may not be shown on cve.org
 
 ## CVE rendering code
 
