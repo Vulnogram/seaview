@@ -364,6 +364,23 @@ async function getCVEs(text) {
 var cveCache = {};
 var entryCache = {};
 
+function fetchCveJson(url, id) {
+    return fetch(url, {
+            method: 'GET',
+            credentials: 'omit',
+            headers: {
+                'Accept': 'application/json, text/plain, */*'
+            },
+            redirect: 'error'
+        })
+        .then(function (response) {
+            if (!response.ok) {
+                throw Error('Failed to load ' + id + ' ' + response.statusText);
+            }
+            return response.json();
+        });
+}
+
 function loadCVE(value) {
     var realId = value.match(/(CVE-(\d{4})-(\d{1,12})(\d{3}))/);
     if (realId) {
@@ -371,24 +388,16 @@ function loadCVE(value) {
         var year = realId[2];
         var bucket = realId[3];
         var jsonURL = 'https://github.com/CVEProject/cvelistV5/blob/main/cves/' + year + '/' + bucket + 'xxx/' + id + '.json'
-        fetch('https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/' + year + '/' + bucket + 'xxx/' + id + '.json', {
-                method: 'GET',
-                credentials: 'omit',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*'
-                },
-                redirect: 'error'
-            })
-            .then(function (response) {
-                if (!response.ok) {
-                    throw Error('Failed to load ' + id + ' ' + response.statusText);
-                }
-                return response.json();
+        var rawUrl = 'https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/' + year + '/' + bucket + 'xxx/' + id + '.json';
+        var cveAwgUrl = 'https://cveawg.mitre.org/api/cve/' + id;
+        fetchCveJson(rawUrl, id)
+            .catch(function (primaryError) {
+                //console.warn('Primary CVE source failed for ' + id, primaryError);
+                return fetchCveJson(cveAwgUrl, id);
             })
             .then(function (res) {
                 if (res.containers) {
                     preProcess(res);
-                    res.jsonURL = jsonURL;
                     cveCache[id] = res;
                     delete entryCache[id];
                     if (entryView) {
@@ -401,7 +410,7 @@ function loadCVE(value) {
                 }
             })
             .catch(function (error) {
-                statusText.textContent = statusText.textContent + ' ' +error.message ;
+                statusText.textContent = statusText.textContent + ' ' + error.message;
             })
     } else {
         //console.log("CVE ID required");
