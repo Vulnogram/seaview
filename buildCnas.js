@@ -5,6 +5,15 @@ const REMOTE_URL = 'https://raw.githubusercontent.com/CVEProject/cve-website/mai
 const LOCAL_PATH = './CNAsList.json'; // Ensure you have this file
 var cnas = null;
 var ch = {};
+ch['CISA-ADP'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
+ch['CVE'] = {n: 'CVE', i: 'https://www.cve.org'};
+ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
+ch['ENISA']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
+ch["Mautic"]={"n":"Mautic","i":"https://mautic.org"};
+ch["TianoCore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
+ch["Zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
+ch["Caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
+ch["OB"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
 async function fetchCNAs() {
     try {
         const response = await fetch(REMOTE_URL);
@@ -49,7 +58,6 @@ async function getFavicon(u) {
 
 async function generateCnaList() {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
     var cnaList = `<html><head><title>CNA Favicons</title>
 <style>
 body {
@@ -105,29 +113,22 @@ for (c of cnas) {
         }
     }
     var i = u.protocol + '//'+ u.hostname;
-
-    cnaList+= `<div><img src="https://www.google.com/s2/favicons?sz=64&domain_url=${encodeURIComponent(i)}"/><b>${c.organizationName}</b></div>`
-    ch[c.shortName] = {
-        n: c.organizationName,
-        i: i
+    if(!ch[c.shortName]) {
+        ch[c.shortName] = {
+            n: c.organizationName,
+            i: i
+        }
     }
+    cnaList+= `<div><img src="https://www.google.com/s2/favicons?sz=64&domain_url=${ch[c.shortName].i}"/><b>${c.organizationName}</b></div>\n`
 }
-ch['CISA-ADP'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
-ch['CVE'] = {n: 'CVE', i: 'https://www.cve.org'};
-ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
-ch['ENISA']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
-ch["Mautic"]={"n":"Mautic","i":"https://mautic.org"};
-ch["TianoCore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
-ch["Zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
-ch["Caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
-ch["OB"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
 return cnaList;
 }
 
 async function main(){
     await fetchCNAs();
+
     fs.writeFileSync('cna.html', await generateCnaList() + "</div></body></html>");
-    fs.writeFileSync('cna.js', 'var cna = ' + JSON.stringify(ch));
+    fs.writeFileSync('cna.js', 'var cna = ' + JSON.stringify(ch,0,0));
 }
 
 main();
