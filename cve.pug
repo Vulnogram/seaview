@@ -491,9 +491,9 @@ mixin entry(d)
                             a.sbn.vgi-versions(href=d.jsonURL,target="_blank" title="View in GitHub")
                         .jsonBox
                             +JSON(oDoc)
-                    if d.containers.cna.x_ConverterErrors
+                    if con.x_ConverterErrors
                         div.bor.rnd.wht.shd.page
-                            +warnings(cve4doc.containers.cna)
+                            +warnings(con)
 
 block page
     if renderTemplate == 'row'

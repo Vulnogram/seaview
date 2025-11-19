@@ -1407,9 +1407,9 @@ pug_mixins["cve4"](cve4doc);
 pug_html = pug_html + "\u003Cdiv class=\"pad\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", d.jsonURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
 pug_mixins["JSON"](oDoc);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
-if (d.containers.cna.x_ConverterErrors) {
+if (con.x_ConverterErrors) {
 pug_html = pug_html + "\u003Cdiv class=\"bor rnd wht shd page\"\u003E";
-pug_mixins["warnings"](cve4doc.containers.cna);
+pug_mixins["warnings"](con);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
