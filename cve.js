@@ -606,13 +606,15 @@ if (cUrl) {
 pug_html = pug_html + "\u003Ca" + (" class=\"vgi-globe\""+pug_attr("href", cUrl, true, false)) + "\u003E\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003Cbr\u002F\u003E";
-pug_mixins["renderDate"](con.datePublic);
-if (con.dateUpdated && con.dateUpdated != con.datePublic) {
+var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
+var publishDate = (cve ? cve.cveMetadata.datePublished : false) || con.datePublic;
+pug_mixins["renderDate"](publicDate);
+if ((con.dateUpdated || publishDate) && con.dateUpdated != publishDate) {
 pug_html = pug_html + " (updated ";
 pug_mixins["renderDate"](con.dateUpdated);
 pug_html = pug_html + ")";
 }
-pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cspan class=\"row pad2\"\u003E";
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cspan class=\"flx\"\u003E ";
 pug_mixins["cvssList"](con.cvssList);
 if (con.KEV) {
 pug_html = pug_html + "\u003Csummary class=\"lbl rnd tag CVSS CRITICAL vgi-bomb\"\u003EKnown Exploited Since " + (pug_escape(null == (pug_interp = con.KEV.dateAdded) ? "" : pug_interp)) + "\u003C\u002Fsummary\u003E";
@@ -1178,7 +1180,7 @@ var timestamp = Date.parse(value);
 v = isNaN(timestamp) ? false : new Date(timestamp)
 }
 if (v) {
-pug_html = pug_html + (pug_escape(null == (pug_interp = v.toJSON().substr(0,10)) ? "" : pug_interp));
+pug_html = pug_html + "\u003Cspan" + (pug_attr("title", v.toString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(v)) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
 }
 };
 pug_mixins["JSON"] = pug_interp = function(d, par, comma){

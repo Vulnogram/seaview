@@ -82,7 +82,8 @@
 
     .cna {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      gap: 1em;
     }
 
     .CVSS sup {
@@ -158,7 +159,6 @@
       padding: 5px;
       width: 32px;
       height: 32px;
-      margin-right: 1em;
     }
 
     .jsonBox summary::marker {
@@ -347,20 +347,27 @@
 
 
     .back-button {
-      position:sticky;
-      top: 1rem;
       float: right;
       display: inline-block;
-      margin-bottom: 0.5em;
+      margin-bottom: 0em;
+      margin-top: 1em;
       margin-right: 1em;
-      gap: 0.3em;
-      height: 26px;
-      border-radius: 16px;
-      align-items: center;
+      border-radius: 16px !important;
+       padding: 0px;
+
     }
     .back-button::before {
-      content: "✕";
-    }
+      display: block;
+      content: " ";
+      background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3IiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyMCAyMCIgd2lkdGg9IjE2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNyAyLjFhLjg5Mi44OTIgMCAwMC0uNjM1LjI2M0wxMCA4Ljc1IDMuNjM4IDIuMzYzYS44OTguODk4IDAgMDAtMS4yNzIuMDA1Ljg5OC44OTggMCAwMC4wMDIgMS4yNzJMOC43NSAxMGwtNi4zODIgNi4zNjVhLjg5OC44OTggMCAwMDAgMS4yNzJjLjM1LjM1NC45Mi4zNTUgMS4yNzIuMDAyTDEwIDExLjI1bDYuMzYyIDYuMzg3YS44OTUuODk1IDAgMDAxLjI3Mi0uMDAzLjg5OC44OTggMCAwMC0uMDAyLTEuMjcyTDExLjI1IDEwbDYuMzgyLTYuMzYyQS44OTguODk4IDAgMDAxNyAyLjF6Ii8+PC9zdmc+);      
+      min-width: 32px;
+      width: 32px;
+      height: 32px;
+      min-height: 32px;
+       padding: 0px;
+       background-position: 50% 50%;
+       background-repeat: no-repeat;
+   }
     body.resizing {
       user-select: none;
       cursor: col-resize;
@@ -398,16 +405,17 @@
       }
 
       .master-detail.split[data-state="detail"] .back-button {
-        position:sticky;
         top: 0em;
-        float: initial;
+        float: left;
         display: block;
         height: auto;
-        margin-bottom: 0.5em;
-        margin-left: 1em;
+        margin-bottom: 6px;
+        margin-left: 12px;
+        margin-right: 3px;
+        margin-top: 12px;
       }
       .master-detail.split[data-state="detail"] .back-button::before {
-        content: "← Back to list";
+background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3IiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyMCAyMCIgd2lkdGg9IjE2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xNy41IDkuMUg0LjY3OWw1LjQ4Ny01LjQ2MmEuODk4Ljg5OCAwIDAwLjAwMy0xLjI3Mi44OTguODk4IDAgMDAtMS4yNzItLjAwM2wtNy4wMzIgN2EuODk4Ljg5OCAwIDAwMCAxLjI3NWw3LjAzIDdhLjg5Ni44OTYgMCAwMDEuMjczLS4wMDMuODk4Ljg5OCAwIDAwLS4wMDItMS4yNzJsLTUuNDg3LTUuNDYyaDEyLjgyYS45LjkgMCAwMDAtMS44eiIvPjwvc3ZnPg==);
       }
       .pad, .pad2 {
           padding: 3px 6px;
@@ -544,7 +552,7 @@
     </section>
     <div class="splitter" aria-hidden="true"></div>
     <section class="panel-detail" aria-label="CVE entry details">
-      <button type="button" class="btn hid rnd back-button" id="backButton"></button>
+      <button type="button" class="btn back-button" id="backButton"></button>
       <div id="entry"></div>
     </section>
   </div>

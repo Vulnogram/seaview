@@ -372,7 +372,8 @@ color: var(--txt);
 }
 
 label[for="theme-toggle"] {
-  position: fixed;
+    position: absolute;
+  float: right;
   top: 24px;
   right: 1rem;
   z-index: 1000;

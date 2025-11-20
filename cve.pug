@@ -179,12 +179,15 @@ mixin container(con, cve)
             if cUrl
                 a.vgi-globe(href=cUrl)
             br
-            +renderDate(con.datePublic)
-            if con.dateUpdated && con.dateUpdated != con.datePublic
+            - var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
+            - var publishDate = (cve ? cve.cveMetadata.datePublished : false) || con.datePublic;
+            +renderDate(publicDate)
+            if (con.dateUpdated || publishDate) && con.dateUpdated != publishDate
                 |  (updated 
                 +renderDate(con.dateUpdated)
                 |)
-        span.row.pad2
+        span.flx
+            |  
             +cvssList(con.cvssList)
             if con.KEV
                 summary.lbl.rnd.tag.CVSS.CRITICAL.vgi-bomb Known Exploited Since 
@@ -335,7 +338,7 @@ mixin renderDate(value)
     -   v = isNaN(timestamp) ? false : new Date(timestamp)
     - }
     if v
-        = v.toJSON().substr(0,10)
+        span(title=v.toString())= formatFriendlyDate(v)
 
 mixin JSON(d, par, comma)
     - var k;
