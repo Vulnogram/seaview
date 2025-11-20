@@ -43,6 +43,7 @@ body[data-theme="dark"] {
     color: var(--txt);
 }
 
+body[data-theme="dark"] .back-button::before,
 body[data-theme="dark"] [class^="vgi-"],
 body[data-theme="dark"] [class*=" vgi-"] {
     filter: invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.05);;

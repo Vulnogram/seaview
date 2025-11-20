@@ -18,7 +18,6 @@
     content="Quick CVE search and lookups - Tool to extract and list CVE IDs from text or searches by keywords and phrases, providing a more complete, detailed view of each vulnerability record.">
   <meta property="og:image" content="/seaview/seaview.jpg">
   <meta property="og:logo" content="/seaview/apple-touch-icon.png" />
-
   <link rel="icon" href="/seaview/apple-touch-icon.png" type="image/png">
   <link rel="icon" href="/seaview/wave.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/seaview/apple-touch-icon.png" type="image/png">
@@ -347,6 +346,7 @@
 
 
     .back-button {
+      position: relative;
       float: right;
       display: inline-block;
       margin-bottom: 0em;
@@ -405,7 +405,8 @@
       }
 
       .master-detail.split[data-state="detail"] .back-button {
-        top: 0em;
+        top: 16px;
+        position: absolute;
         float: left;
         display: block;
         height: auto;
@@ -507,6 +508,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3Ii
   border: 1px solid #1c4c84;
   overflow: hidden;
   display: block;
+  margin-left: 0.5em;
   animation: scroll-rst 1s ease-in 1;
 }
 .busy #logo {
@@ -552,7 +554,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3Ii
     </section>
     <div class="splitter" aria-hidden="true"></div>
     <section class="panel-detail" aria-label="CVE entry details">
-      <button type="button" class="btn back-button" id="backButton"></button>
+      <button type="button" class="btn hid back-button" id="backButton"></button>
       <div id="entry"></div>
     </section>
   </div>
