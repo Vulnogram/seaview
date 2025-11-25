@@ -51,6 +51,61 @@ function extractUniqueCVEs(input) {
 ;
 }
 
+const CNA_UUID_REGEX = /CNA:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
+
+async function fetchCnaCveList(uuid) {
+    var url = 'https://raw.githubusercontent.com/Vulnogram/cve-index/refs/heads/main/latest/' + uuid + '.json';
+    var response = await fetch(url, {
+        method: 'GET',
+        credentials: 'omit',
+        headers: {
+            'Accept': 'application/json, text/plain, */*'
+        },
+        redirect: 'error'
+    });
+    if (!response.ok) {
+        throw Error('Failed to load CNA list ' + uuid + ' ' + response.statusText);
+    }
+    var data = await response.json();
+    if (!Array.isArray(data)) {
+        return [];
+    }
+    var seen = new Set();
+    var normalized = [];
+    data.forEach(function (id) {
+        var rawId = ('' + id).trim();
+        if (!rawId) {
+            return;
+        }
+        var formatted = rawId.toUpperCase();
+        if (!formatted.startsWith('CVE-')) {
+            formatted = 'CVE-' + formatted;
+        }
+        if (!seen.has(formatted)) {
+            seen.add(formatted);
+            normalized.push(formatted);
+        }
+    });
+    return normalized;
+}
+var cnaSearchID = '';
+async function resolveCnaCves(text) {
+    if (!text) {
+        return [];
+    }
+    var match = text.match(CNA_UUID_REGEX);
+    if (!match) {
+        return [];
+    }
+    try {
+        cnaSearchID = match[1];
+        return await fetchCnaCveList(match[1]);
+    } catch (err) {
+        console.warn('Unable to fetch CNA CVE list', err);
+        return [];
+    }
+}
+
 const SEARCH_PAGE_SIZE = 30;
 
 var searchState = {
@@ -59,6 +114,18 @@ var searchState = {
     nextCursor: null,
     loading: false
 };
+
+var manualListState = {
+    active: false,
+    allItems: [],
+    nextIndex: 0
+};
+
+function resetManualListState() {
+    manualListState.active = false;
+    manualListState.allItems = [];
+    manualListState.nextIndex = 0;
+}
 
 function resetSearchState(query = '') {
     searchState.query = query;
@@ -72,9 +139,11 @@ function updateLoadMoreButton() {
     if (!button) {
         return;
     }
-    var shouldShow = Boolean(searchState.query) &&
+    var manualHasMore = manualListState.active && manualListState.nextIndex < manualListState.allItems.length;
+    var searchHasMore = Boolean(searchState.query) &&
         searchState.items.length > 0 &&
         searchState.nextCursor !== null;
+    var shouldShow = manualHasMore || searchHasMore;
     button.classList.toggle('hid', !shouldShow);
     button.disabled = searchState.loading;
     if (shouldShow) {
@@ -88,7 +157,13 @@ function updateStatusTextMessage(cveList, textSearch) {
         return;
     }
     var count = cveList.length;
-    var plus = textSearch && searchState.nextCursor !== null ? '+' : '';
+    var hasMore = false;
+    if (textSearch) {
+        hasMore = searchState.nextCursor !== null;
+    } else if (manualListState.active) {
+        hasMore = manualListState.nextIndex < manualListState.allItems.length;
+    }
+    var plus = hasMore ? '+' : '';
     var plural = count === 1 ? '' : 's';
     statusText.innerText = `Found ${count}${plus} CVE${plural}: ${cveList.join(', ')}`;
 }
@@ -286,10 +361,17 @@ async function getCVEs(text) {
     const list =  document.getElementById('idxTble');
     const statusText = document.getElementById('statusText');
     resetSearchState();
+    resetManualListState();
     updateLoadMoreButton();
     //resetSort(list.parentElement);
-    var cves = extractUniqueCVEs(text);
     var textSearch = false;
+    var cnaSearch = false;
+    var cves = await resolveCnaCves(text);
+    if (cves.length === 0) {
+        cves = extractUniqueCVEs(text);
+    } else {
+        cnaSearch = true;
+    }
     if (cves.length === 0) {
         if(text.length > 0 && text.length <= 100) {
             textSearch = true;
@@ -331,19 +413,33 @@ async function getCVEs(text) {
         highlightRow(null);
         if (cves.length > 1 || textSearch)
             list.parentElement.classList.remove('hid');
-        var statusValues = textSearch ? searchState.items : cves;
+        var displayList = cves;
+        if (!textSearch && cves.length > SEARCH_PAGE_SIZE) {
+            manualListState.active = true;
+            manualListState.allItems = cves.slice();
+            manualListState.nextIndex = SEARCH_PAGE_SIZE;
+            displayList = manualListState.allItems.slice(0, SEARCH_PAGE_SIZE);
+        }
+        var statusValues = textSearch ? searchState.items : displayList;
         updateStatusTextMessage(statusValues, textSearch);
         document.getElementById('entry').innerHTML = '';
-        cves.forEach(cve => {
+        displayList.forEach(cve => {
+            addContainer(cve);
+        });
+        displayList.forEach(cve => {
             loadCVE(cve);
         });
         if(textSearch) {
             document.title = text;
             history.pushState({text:text}, null, "?"+encodeURIComponent(text));
+        } else if (cnaSearch) {
+            //document.title = 'Recent ' + cves[0].cveMetadata.assignerShortName;
+            history.pushState({cves:cves}, null, "?CNA:" + cnaSearchID);
         } else {
             document.title = cves.join(' ');
             history.pushState({cves:cves}, null, "?"+cves);
         }
+        updateLoadMoreButton();
     }
     if (cves.length>1) {
         backButton.classList.remove('hid');
@@ -419,6 +515,20 @@ function loadCVE(value) {
 }
 
 async function loadMoreResults() {
+    var manualHasMore = manualListState.active && manualListState.nextIndex < manualListState.allItems.length;
+    if (manualHasMore) {
+        var nextManualItems = manualListState.allItems.slice(manualListState.nextIndex, manualListState.nextIndex + SEARCH_PAGE_SIZE);
+        manualListState.nextIndex += nextManualItems.length;
+        nextManualItems.forEach(function (cveId) {
+            addContainer(cveId);
+        });
+        nextManualItems.forEach(function (cveId) {
+            loadCVE(cveId);
+        });
+        updateStatusTextMessage(manualListState.allItems.slice(0, manualListState.nextIndex), false);
+        updateLoadMoreButton();
+        return;
+    }
     if (!searchState.query || searchState.nextCursor === null || searchState.loading) {
         return;
     }
@@ -429,6 +539,11 @@ async function loadMoreResults() {
             cursor: searchState.items.length,
             pageSize: SEARCH_PAGE_SIZE
         });
+        if (nextPage && Array.isArray(nextPage.items) && nextPage.items.length > 0) {
+            nextPage.items.forEach(cveId => {
+                addContainer(cveId);
+            });
+        }
         if (nextPage && Array.isArray(nextPage.items) && nextPage.items.length > 0) {
             nextPage.items.forEach(cveId => {
                 searchState.items.push(cveId);
@@ -818,14 +933,19 @@ function preProcess(cve, statusFn) {
     return cve;
 }
 
-function loadItem(d) {
-    var row = cve({renderTemplate:'row', d: d});
+function addContainer(cveId) {
     var list = document.getElementById("idxTble");
     var rowElem = document.createElement('div');
-    rowElem.id = 'i' + d.containers.cna.cveId;
-    rowElem.innerHTML = row;
+    rowElem.id = 'i' + cveId;
     list.appendChild(rowElem);
 }
+
+function loadItem(d) {
+    var row = cve({renderTemplate:'row', d: d});
+    var container = document.getElementById('i' + d.containers.cna.cveId);
+    container.innerHTML = row;
+}
+
 
 function loadEntry(id) {
     if (cveCache[id]) {
