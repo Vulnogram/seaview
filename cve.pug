@@ -170,15 +170,14 @@ mixin container(con, cve)
     .cna.pad
         - var cList = (cve? cve.cveMetadata.assignerShortName : false)
         - var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
-        - var cUrl = cna[con.shortName] && cna[con.shortName].i ? cna[con.shortName].i : false
-        if cUrl
+        if con.url
             a(href=cList ?  '?CNA:'+quote+cList+quote : false)
-                img.logo(src="https://www.google.com/s2/favicons?sz=128&domain_url="+cna[con.shortName].i)
+                img.logo(src="https://www.google.com/s2/favicons?sz=128&domain_url="+con.url)
         span
             |  
             a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=cna[con.shortName]? cna[con.shortName].n : con.shortName
-            if cUrl
-                a.vgi-globe(href=cUrl)
+            if con.url
+                a.vgi-globe(href=con.url)
             br
             - var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
             - var publishDate = (cve ? cve.cveMetadata.datePublished : false) || con.datePublic;
@@ -410,8 +409,8 @@ mixin cve5(cve)
 mixin row(cve)
     - con = cve.containers.cna;
     a.flx.nowrap(href="#"+con.cveId, data-id=con.cveId, data-score=(con.state == 'REJECTED'?-1:con.maxCVSS||0), data-date=con.date)
-        if cna[con.shortName] && cna[con.shortName].i
-            img(title=con.shortName width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i)
+        if con.url
+            img(title=con.shortName width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+con.url)
         else
             img(title=con.shortName width=28 height=28 src="https://vulnogram.org/vg-icons/src/bug.svg")
         b(class=(con.state == 'REJECTED'?'rej':''),style=con.maxCVSS ? ("background-color:"+getGradientColor(con.maxCVSS)+';'+(con.maxCVSS >= 8 ? 'color:#fff;':'color:#000;')):false)

@@ -98,8 +98,8 @@ async function resolveCnaCves(text) {
         return [];
     }
     try {
-        cnaSearchID = match[1];
-        return await fetchCnaCveList(match[1]);
+        cnaSearchID = match[2] || match[1];
+        return await fetchCnaCveList(cnaSearchID);
     } catch (err) {
         console.warn('Unable to fetch CNA CVE list', err);
         return [];
@@ -875,8 +875,12 @@ function preProcess(cve, statusFn) {
     var PMD = con.providerMetadata || {};
     con.dateUpdated = PMD.dateUpdated;
     con.date = CDM.datePublished || con.dateUpdated;
-    con.shortName = PMD.shortName;
-
+    con.shortName = CDM.assignerShortName || PMD.shortName;
+    con.url = cna[con.shortName] ? cna[con.shortName].i : false;
+    if(!con.url) {
+        var nsn = con.shortName.replaceAll(' ', '_');
+        con.url = cna[nsn] ? cna[nsn].i : false;
+    }
     con.cvssList = [];
     con.maxCVSS = 0;
 

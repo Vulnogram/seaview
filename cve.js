@@ -598,13 +598,12 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"cna pad\"\u003E";
 var cList = (cve? cve.cveMetadata.assignerShortName : false)
 var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
-var cUrl = cna[con.shortName] && cna[con.shortName].i ? cna[con.shortName].i : false
-if (cUrl) {
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=128&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E\u003C\u002Fa\u003E";
+if (con.url) {
+pug_html = pug_html + "\u003Ca" + (pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=128&domain_url="+con.url, true, false)) + "\u002F\u003E\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003Cspan\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
-if (cUrl) {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-globe\""+pug_attr("href", cUrl, true, false)) + "\u003E\u003C\u002Fa\u003E";
+if (con.url) {
+pug_html = pug_html + "\u003Ca" + (" class=\"vgi-globe\""+pug_attr("href", con.url, true, false)) + "\u003E\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003Cbr\u002F\u003E";
 var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
@@ -1319,8 +1318,8 @@ pug_mixins["row"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 con = cve.containers.cna;
 pug_html = pug_html + "\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)+pug_attr("data-id", con.cveId, true, false)+pug_attr("data-score", (con.state == 'REJECTED'?-1:con.maxCVSS||0), true, false)+pug_attr("data-date", con.date, true, false)) + "\u003E";
-if (cna[con.shortName] && cna[con.shortName].i) {
-pug_html = pug_html + "\u003Cimg" + (pug_attr("title", con.shortName, true, false)+" width=\"28\" height=\"28\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E";
+if (con.url) {
+pug_html = pug_html + "\u003Cimg" + (pug_attr("title", con.shortName, true, false)+" width=\"28\" height=\"28\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+con.url, true, false)) + "\u002F\u003E";
 }
 else {
 pug_html = pug_html + "\u003Cimg" + (pug_attr("title", con.shortName, true, false)+" width=\"28\" height=\"28\" src=\"https:\u002F\u002Fvulnogram.org\u002Fvg-icons\u002Fsrc\u002Fbug.svg\"") + "\u002F\u003E";
