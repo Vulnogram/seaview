@@ -377,6 +377,9 @@
       .master-detail {
         flex-direction: column;
         width: 100%;
+        min-height: calc(100vh - 111px);
+        height: initial;
+        max-height: initial;
       }
 
       .panel-list {
@@ -503,7 +506,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3Ii
   width:50px;
   min-height: 50px;
   height: 50px;
-  background: url('./wave.svg') repeat-x center/cover;
+ background: url('./wave.svg') repeat-x center/cover;
   border-radius: 25px;
   border: 1px solid #1c4c84;
   overflow: hidden;
@@ -511,7 +514,7 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3Ii
   margin-left: 0.5em;
   animation: scroll-rst 1s ease-in 1;
 }
-.busy #logo {
+.busy #logo, #logo:hover, #logo:focus {
   animation: scroll-bkg 3s ease-in-out infinite;
 }
 @keyframes scroll-bkg {
@@ -558,11 +561,12 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3Ii
       <div id="entry"></div>
     </section>
   </div>
-  <center class="pad">
-    <div class="pad2 center tgrey"><small> Copyright © Chandan B.N, 2017-2025. Usage of CVE IDs is subject to CVE terms of
-        use. This site does not track you and is safe for working with confidential vulnerability information. </small><br><small> <br><a class="logo" href="https://github.com/Vulnogram/SeaView">Vulnogram
-          SeaView Project : The human-centric portal for important vulnerability information. </a></small></div>
-  </center>
+    <div class="pad center tgrey">
+      <small>© Chandan B.N, 2025 <a href="https://github.com/Vulnogram/SeaView">Vulnogram
+          SeaView Project - Important vulnerability info for humans. 
+        </a>
+      </small>
+    </div>
 </body>
 
 </html>

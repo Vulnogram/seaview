@@ -51,7 +51,7 @@ function extractUniqueCVEs(input) {
 ;
 }
 
-const CNA_UUID_REGEX = /CNA:([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i;
+const CNA_REGEX = /CNA:(\"([^\"]+)\"|([^\s]+))/i;
 
 async function fetchCnaCveList(uuid) {
     var url = 'https://raw.githubusercontent.com/Vulnogram/cve-index/refs/heads/main/latest/' + uuid + '.json';
@@ -93,7 +93,7 @@ async function resolveCnaCves(text) {
     if (!text) {
         return [];
     }
-    var match = text.match(CNA_UUID_REGEX);
+    var match = text.match(CNA_REGEX);
     if (!match) {
         return [];
     }

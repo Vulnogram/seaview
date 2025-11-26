@@ -168,14 +168,15 @@ mixin warnings(con)
 
 mixin container(con, cve)
     .cna.pad
-        - var cList = con.providerMetadata? con.providerMetadata.orgId : (cve? cve.cveMetadata.assignerOrgId : false)
+        - var cList = (cve? cve.cveMetadata.assignerShortName : false)
+        - var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
         - var cUrl = cna[con.shortName] && cna[con.shortName].i ? cna[con.shortName].i : false
         if cUrl
-            a(href='?CNA:'+cList)
+            a(href=cList ?  '?CNA:'+quote+cList+quote : false)
                 img.logo(src="https://www.google.com/s2/favicons?sz=128&domain_url="+cna[con.shortName].i)
         span
             |  
-            a.bld(href='?CNA:'+cList)=cna[con.shortName]? cna[con.shortName].n : con.shortName
+            a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=cna[con.shortName]? cna[con.shortName].n : con.shortName
             if cUrl
                 a.vgi-globe(href=cUrl)
             br

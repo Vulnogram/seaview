@@ -596,12 +596,13 @@ pug_html = pug_html + "\u003Cp class=\"sec rnd pad\"\u003E\u003Cb class=\"vgi-al
 pug_mixins["container"] = pug_interp = function(con, cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"cna pad\"\u003E";
-var cList = con.providerMetadata? con.providerMetadata.orgId : (cve? cve.cveMetadata.assignerOrgId : false)
+var cList = (cve? cve.cveMetadata.assignerShortName : false)
+var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
 var cUrl = cna[con.shortName] && cna[con.shortName].i ? cna[con.shortName].i : false
 if (cUrl) {
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", '?CNA:'+cList, true, false)) + "\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=128&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=128&domain_url="+cna[con.shortName].i, true, false)) + "\u002F\u003E\u003C\u002Fa\u003E";
 }
-pug_html = pug_html + "\u003Cspan\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", '?CNA:'+cList, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cspan\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (cUrl) {
 pug_html = pug_html + "\u003Ca" + (" class=\"vgi-globe\""+pug_attr("href", cUrl, true, false)) + "\u003E\u003C\u002Fa\u003E";
 }
