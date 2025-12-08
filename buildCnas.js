@@ -5,15 +5,15 @@ const REMOTE_URL = 'https://raw.githubusercontent.com/CVEProject/cve-website/mai
 const LOCAL_PATH = './CNAsList.json'; // Ensure you have this file
 var cnas = null;
 var ch = {};
-ch['CISA-ADP'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
-ch['CVE'] = {n: 'CVE', i: 'https://www.cve.org'};
+ch['cisa-adp'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
+ch['cve'] = {n: 'CVE', i: 'https://www.cve.org'};
 ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
-ch['ENISA']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
-ch["Mautic"]={"n":"Mautic","i":"https://mautic.org"};
-ch["TianoCore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
-ch["Zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
-ch["Caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
-ch["OB"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
+ch['enisa']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
+ch["mautic"]={"n":"Mautic","i":"https://mautic.org"};
+ch["tianocore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
+ch["zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
+ch["caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
+ch["ob"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
 
 function normalizeShortName(shortName) {
     if (!shortName) return null;

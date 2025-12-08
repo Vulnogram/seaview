@@ -942,7 +942,6 @@ function preProcess(cve, statusFn) {
             adp.url = cna[nsn] ? cna[nsn].i : false;
         }
     });
-
     return cve;
 }
 
