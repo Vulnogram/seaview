@@ -14,6 +14,12 @@ ch["TianoCore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
 ch["Zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
 ch["Caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
 ch["OB"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
+
+function normalizeShortName(shortName) {
+    if (!shortName) return null;
+    return String(shortName).trim().toLowerCase().replace(/\s+/g, '_');
+}
+
 async function fetchCNAs() {
     try {
         const response = await fetch(REMOTE_URL);
@@ -93,6 +99,7 @@ body {
 }</style>
 </head><body><div id="iconlist">`;
 for (c of cnas) {
+    c.shortName = normalizeShortName(c.shortName);
     var u = new URL('https://www.cve.org/');
     try {
         var em = c.contact[0].email[0].emailAddr;
@@ -119,7 +126,7 @@ for (c of cnas) {
             i: i
         }
     }
-    cnaList+= `<div><img src="https://www.google.com/s2/favicons?sz=64&domain_url=${ch[c.shortName].i}"/><b>${c.organizationName}</b></div>\n`
+    cnaList+= `<div><img src="https://www.google.com/s2/favicons?sz=64&domain_url=${ch[c.shortName].i}"/><a href="/seaview?CNA:${c.shortName}">${c.organizationName}</a></div>\n`
 }
 return cnaList;
 }

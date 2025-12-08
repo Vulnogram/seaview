@@ -99,7 +99,7 @@ async function resolveCnaCves(text) {
     }
     try {
         cnaSearchID = match[2] || match[1];
-        return await fetchCnaCveList(cnaSearchID);
+        return await fetchCnaCveList(normalizeShortName(cnaSearchID));
     } catch (err) {
         console.warn('Unable to fetch CNA CVE list', err);
         return [];
@@ -861,6 +861,11 @@ function formatFriendlyDate(isoString) {
     day: 'numeric',
   });
 }
+function normalizeShortName(shortName) {
+    if (!shortName) return null;
+    return String(shortName).trim().toLowerCase().replace(/\s+/g, '_');
+}
+
 function preProcess(cve, statusFn) {
     if (!cve || !cve.containers) {
         return {}
@@ -878,7 +883,7 @@ function preProcess(cve, statusFn) {
     con.shortName = CDM.assignerShortName || PMD.shortName;
     con.url = cna[con.shortName] ? cna[con.shortName].i : false;
     if(!con.url) {
-        var nsn = con.shortName.replaceAll(' ', '_');
+        var nsn = normalizeShortName(con.shortName);
         con.url = cna[nsn] ? cna[nsn].i : false;
     }
     con.cvssList = [];
@@ -932,6 +937,10 @@ function preProcess(cve, statusFn) {
         adp.dateUpdated = provider.dateUpdated;
         adp.shortName = provider.shortName;
         adp.cveId = con.cveId;
+        if(!adp.url) {
+            var nsn = normalizeShortName(adp.shortName);
+            adp.url = cna[nsn] ? cna[nsn].i : false;
+        }
     });
 
     return cve;
