@@ -2,32 +2,33 @@
 mixin cvssList(cvssList)
     if cvssList
         each cvss, i in cvssList
-            details.popup
+            details.popup.cvssItem
                 - var score = cvss.threatScore || cvss.baseScore;
                 - var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-                summary.lbl.rnd.tag(style=score ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false, title=score + ' out of 10')
+                summary.lbl.rnd.tag(style= score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false, title=score + ' out of 10')
                     = sev
                     |  · 
                     b=score
                 div.pop.wht.rnd.shd.pad.bor
+                    button.btn.close-button(onclick="this.closest('details').removeAttribute('open')")
                     if cvss.scenarios && cvss.scenarios.length > 0
                         b Scenarios:
-                        ul
-                            each s in cvss.scenarios
-                                li=s.value
-                    each x, i in cvss
-                        if !nonSpec.includes(i)
-                            div
-                                =i
+                        each s in cvss.scenarios
+                            div=s.value
+                    each x, m in cvssDesc
+                        - var v = cvss[m]
+                        if v && v != 'NOT_DEFINED'
+                            div.m(class=v && x[v] && x[v].class)
+                                span(title = x ? x.infoText : false)= x ? x.title : i
                                 | :  
-                                b=x
+                                b(class= v && x[v] ? ('vgi-' + x[v].icon) : false, title = v && x[v] ? x[v].infoText : false)= v && x[v] ? x[v].title : v
                     div
                         if cvss.version >= "4"
-                            a.vgi-ext(href="https://vulnogram.org/cvss4?" + cvss.vectorString) Open CVSS Calc
+                            a.btn.vgi-ext(href="https://vulnogram.org/cvss4?" + cvss.vectorString) Open CVSS Calc
                         else if cvss.version >= "3"
-                            a.vgi-ext(href="https://cvssjs.github.io/#" + cvss.vectorString) Open CVSS Calc
+                            a.btn.vgi-ext(href="https://cvssjs.github.io/#" + cvss.vectorString) Open CVSS Calc
                         else
-                            a.vgi-ext(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString) Open CVSS Calc
+                            a.btn.vgi-ext(href='https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString) Open CVSS Calc
 
 mixin statusTablev4(st)
     table.tbl.gap
@@ -174,11 +175,10 @@ mixin container(con, cve)
             a(href=cList ?  '?CNA:'+quote+cList+quote : false)
                 img.logo(src="https://www.google.com/s2/favicons?sz=128&domain_url="+con.url)
         span
-            |  
-            a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=cna[con.shortName]? cna[con.shortName].n : con.shortName
-            if con.url
-                a.vgi-globe(href=con.url)
-            br
+            span.flx  
+                a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=cna[con.shortName]? cna[con.shortName].n : con.shortName
+                if con.url
+                    a.vgi-globe(href=con.url)
             - var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
             - var publishDate = (cve ? cve.cveMetadata.datePublished : false) || con.datePublic;
             +renderDate(publicDate)
@@ -194,8 +194,6 @@ mixin container(con, cve)
                     = con.KEV.dateAdded
             a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId)
             a.sbn.vgi-link(href="https://vulnogram.org/seaview/?"+con.cveId,target="_blank")
-            if con.jsonURL
-                a.sbn.vgi-versions(href=con.jsonURL,target="_blank" title="View in GitHub")
     .desc.pad
         if con.state == 'REJECTED'
             - con.maxCVSS = -1;
@@ -474,7 +472,7 @@ mixin entry(d)
     div(id=d.cveMetadata.cveId).wht
         +cve5(d,{cvssDesc: cvssDesc})
         .pad.fade.borTop
-            b CVE-JSON Record
+            b.flx CVE-JSON Record  
                 a.vgi-versions(href=d.jsonURL,target="_blank" title="View in GitHub")
             .jsonBox
                 +JSON(d.oldJSON)

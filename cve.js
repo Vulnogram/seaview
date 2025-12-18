@@ -8,7 +8,7 @@ var pug_match_html=/["&<>]/;
 function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, nonSpec, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
+    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 pug_mixins["cvssList"] = pug_interp = function(cvssList){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
@@ -19,49 +19,50 @@ if (cvssList) {
   if ('number' == typeof $$obj.length) {
       for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
         var cvss = $$obj[i];
-pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
+pug_html = pug_html + "\u003Cdetails class=\"popup cvssItem\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E\u003Cbutton class=\"btn close-button\" onclick=\"this.closest('details').removeAttribute('open')\"\u003E\u003C\u002Fbutton\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
-pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
+pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E";
 // iterate cvss.scenarios
 ;(function(){
   var $$obj = cvss.scenarios;
   if ('number' == typeof $$obj.length) {
       for (var pug_index1 = 0, $$l = $$obj.length; pug_index1 < $$l; pug_index1++) {
         var s = $$obj[pug_index1];
-pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
       }
   } else {
     var $$l = 0;
     for (var pug_index1 in $$obj) {
       $$l++;
       var s = $$obj[pug_index1];
-pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
     }
   }
 }).call(this);
 
-pug_html = pug_html + "\u003C\u002Ful\u003E";
 }
-// iterate cvss
+// iterate cvssDesc
 ;(function(){
-  var $$obj = cvss;
+  var $$obj = cvssDesc;
   if ('number' == typeof $$obj.length) {
-      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
-        var x = $$obj[i];
-if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
+      for (var m = 0, $$l = $$obj.length; m < $$l; m++) {
+        var x = $$obj[m];
+var v = cvss[m]
+if (v && v != 'NOT_DEFINED') {
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["m",v && x[v] && x[v].class], [false,true]), false, false)) + "\u003E\u003Cspan" + (pug_attr("title", x ? x.infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = x ? x.title : i) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E:  \u003Cb" + (pug_attr("class", pug_classes([v && x[v] ? ('vgi-' + x[v].icon) : false], [true]), false, false)+pug_attr("title", v && x[v] ? x[v].infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = v && x[v] ? x[v].title : v) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
       }
   } else {
     var $$l = 0;
-    for (var i in $$obj) {
+    for (var m in $$obj) {
       $$l++;
-      var x = $$obj[i];
-if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
+      var x = $$obj[m];
+var v = cvss[m]
+if (v && v != 'NOT_DEFINED') {
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["m",v && x[v] && x[v].class], [false,true]), false, false)) + "\u003E\u003Cspan" + (pug_attr("title", x ? x.infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = x ? x.title : i) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E:  \u003Cb" + (pug_attr("class", pug_classes([v && x[v] ? ('vgi-' + x[v].icon) : false], [true]), false, false)+pug_attr("title", v && x[v] ? x[v].infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = v && x[v] ? x[v].title : v) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
     }
   }
@@ -69,14 +70,14 @@ pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ?
 
 pug_html = pug_html + "\u003Cdiv\u003E";
 if (cvss.version >= "4") {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://vulnogram.org/cvss4?" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"btn vgi-ext\""+pug_attr("href", "https://vulnogram.org/cvss4?" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 else
 if (cvss.version >= "3") {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://cvssjs.github.io/#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"btn vgi-ext\""+pug_attr("href", "https://cvssjs.github.io/#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 else {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", 'https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"btn vgi-ext\""+pug_attr("href", 'https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
       }
@@ -85,49 +86,50 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
     for (var i in $$obj) {
       $$l++;
       var cvss = $$obj[i];
-pug_html = pug_html + "\u003Cdetails class=\"popup\"\u003E";
+pug_html = pug_html + "\u003Cdetails class=\"popup cvssItem\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E";
+pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E\u003Cbutton class=\"btn close-button\" onclick=\"this.closest('details').removeAttribute('open')\"\u003E\u003C\u002Fbutton\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
-pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E\u003Cul\u003E";
+pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E";
 // iterate cvss.scenarios
 ;(function(){
   var $$obj = cvss.scenarios;
   if ('number' == typeof $$obj.length) {
       for (var pug_index3 = 0, $$l = $$obj.length; pug_index3 < $$l; pug_index3++) {
         var s = $$obj[pug_index3];
-pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
       }
   } else {
     var $$l = 0;
     for (var pug_index3 in $$obj) {
       $$l++;
       var s = $$obj[pug_index3];
-pug_html = pug_html + "\u003Cli\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fli\u003E";
+pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = s.value) ? "" : pug_interp)) + "\u003C\u002Fdiv\u003E";
     }
   }
 }).call(this);
 
-pug_html = pug_html + "\u003C\u002Ful\u003E";
 }
-// iterate cvss
+// iterate cvssDesc
 ;(function(){
-  var $$obj = cvss;
+  var $$obj = cvssDesc;
   if ('number' == typeof $$obj.length) {
-      for (var i = 0, $$l = $$obj.length; i < $$l; i++) {
-        var x = $$obj[i];
-if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
+      for (var m = 0, $$l = $$obj.length; m < $$l; m++) {
+        var x = $$obj[m];
+var v = cvss[m]
+if (v && v != 'NOT_DEFINED') {
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["m",v && x[v] && x[v].class], [false,true]), false, false)) + "\u003E\u003Cspan" + (pug_attr("title", x ? x.infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = x ? x.title : i) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E:  \u003Cb" + (pug_attr("class", pug_classes([v && x[v] ? ('vgi-' + x[v].icon) : false], [true]), false, false)+pug_attr("title", v && x[v] ? x[v].infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = v && x[v] ? x[v].title : v) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
       }
   } else {
     var $$l = 0;
-    for (var i in $$obj) {
+    for (var m in $$obj) {
       $$l++;
-      var x = $$obj[i];
-if (!nonSpec.includes(i)) {
-pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ? "" : pug_interp)) + ":  \u003Cb\u003E" + (pug_escape(null == (pug_interp = x) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
+      var x = $$obj[m];
+var v = cvss[m]
+if (v && v != 'NOT_DEFINED') {
+pug_html = pug_html + "\u003Cdiv" + (pug_attr("class", pug_classes(["m",v && x[v] && x[v].class], [false,true]), false, false)) + "\u003E\u003Cspan" + (pug_attr("title", x ? x.infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = x ? x.title : i) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E:  \u003Cb" + (pug_attr("class", pug_classes([v && x[v] ? ('vgi-' + x[v].icon) : false], [true]), false, false)+pug_attr("title", v && x[v] ? x[v].infoText : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = v && x[v] ? x[v].title : v) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fdiv\u003E";
 }
     }
   }
@@ -135,14 +137,14 @@ pug_html = pug_html + "\u003Cdiv\u003E" + (pug_escape(null == (pug_interp = i) ?
 
 pug_html = pug_html + "\u003Cdiv\u003E";
 if (cvss.version >= "4") {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://vulnogram.org/cvss4?" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"btn vgi-ext\""+pug_attr("href", "https://vulnogram.org/cvss4?" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 else
 if (cvss.version >= "3") {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", "https://cvssjs.github.io/#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"btn vgi-ext\""+pug_attr("href", "https://cvssjs.github.io/#" + cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 else {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-ext\""+pug_attr("href", 'https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"btn vgi-ext\""+pug_attr("href", 'https://nvd.nist.gov/vuln-metrics/cvss/v2-calculator?vector='+cvss.vectorString, true, false)) + "\u003EOpen CVSS Calc\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdetails\u003E";
     }
@@ -601,11 +603,11 @@ var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
 if (con.url) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=128&domain_url="+con.url, true, false)) + "\u002F\u003E\u003C\u002Fa\u003E";
 }
-pug_html = pug_html + "\u003Cspan\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cspan\u003E\u003Cspan class=\"flx\"\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (con.url) {
 pug_html = pug_html + "\u003Ca" + (" class=\"vgi-globe\""+pug_attr("href", con.url, true, false)) + "\u003E\u003C\u002Fa\u003E";
 }
-pug_html = pug_html + "\u003Cbr\u002F\u003E";
+pug_html = pug_html + "\u003C\u002Fspan\u003E";
 var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
 var publishDate = (cve ? cve.cveMetadata.datePublished : false) || con.datePublic;
 pug_mixins["renderDate"](publicDate);
@@ -619,11 +621,7 @@ pug_mixins["cvssList"](con.cvssList);
 if (con.KEV) {
 pug_html = pug_html + "\u003Csummary class=\"lbl rnd tag CVSS CRITICAL vgi-bomb\"\u003EKnown Exploited Since " + (pug_escape(null == (pug_interp = con.KEV.dateAdded) ? "" : pug_interp)) + "\u003C\u002Fsummary\u003E";
 }
-pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E";
-if (con.jsonURL) {
-pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-versions\""+pug_attr("href", con.jsonURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E";
-}
-pug_html = pug_html + "\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
 if (con.state == 'REJECTED') {
 con.maxCVSS = -1;
 pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E ·  ";
@@ -1390,7 +1388,7 @@ delete con.x_legacyV4Record;
 
 pug_html = pug_html + "\u003Cdiv" + (" class=\"wht\""+pug_attr("id", d.cveMetadata.cveId, true, false)) + "\u003E";
 pug_mixins["cve5"](d,{cvssDesc: cvssDesc});
-pug_html = pug_html + "\u003Cdiv class=\"pad fade borTop\"\u003E\u003Cb\u003ECVE-JSON Record\u003Ca" + (" class=\"vgi-versions\""+pug_attr("href", d.jsonURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"pad fade borTop\"\u003E\u003Cb class=\"flx\"\u003ECVE-JSON Record  \u003Ca" + (" class=\"vgi-versions\""+pug_attr("href", d.jsonURL, true, false)+" target=\"_blank\" title=\"View in GitHub\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fb\u003E\u003Cdiv class=\"jsonBox\"\u003E";
 pug_mixins["JSON"](d.oldJSON);
 pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";
 if (con.x_ValidationErrors) {
@@ -1475,9 +1473,7 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.icon :
         typeof icon !== 'undefined' ? icon : undefined, "isNaN" in locals_for_with ?
         locals_for_with.isNaN :
-        typeof isNaN !== 'undefined' ? isNaN : undefined, "nonSpec" in locals_for_with ?
-        locals_for_with.nonSpec :
-        typeof nonSpec !== 'undefined' ? nonSpec : undefined, "num" in locals_for_with ?
+        typeof isNaN !== 'undefined' ? isNaN : undefined, "num" in locals_for_with ?
         locals_for_with.num :
         typeof num !== 'undefined' ? num : undefined, "renderTemplate" in locals_for_with ?
         locals_for_with.renderTemplate :

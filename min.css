@@ -82,14 +82,14 @@ body[data-theme="dark"] [class*=" vgi-"] {
     background-color: var(--hig);
     font-size: x-small;
 }
-.tbl {
+#entry table, .tbl {
    border-collapse:collapse;
     border: 1px solid var(--bor);
     table-layout: auto;
     background-color: var(--wht);
 }
 
-.tbl td, .tbl th {
+#entry th, #entry td, .tbl td, .tbl th {
     padding: 0.2em 0.3em;
     border-left: solid var(--bor) 1px;
     border-top: solid var(--bor) 1px;
@@ -400,6 +400,17 @@ label[for="theme-toggle"]:hover {
 #theme-toggle:checked ~ label .moon { display: inline; }
 
 [class^="vgi-"], [class*=" vgi-"] {
-    background-position-x:8px;
-    padding-left: 1.8em;
+    background-position: 3px 50%;
+    padding-left: 28px;
+    min-width: 28px;
+    min-height: 24px;
+    background-size: 24px;
+}
+.cvssItem .m {
+    margin: 1.5px;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+.cvssItem .bad {
+    background-color: var(--sec);
 }
