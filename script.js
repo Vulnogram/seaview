@@ -53,8 +53,8 @@ function extractUniqueCVEs(input) {
 
 const CNA_REGEX = /CNA:(\"([^\"]+)\"|([^\s]+))/i;
 
-async function fetchCnaCveList(uuid) {
-    var url = 'https://raw.githubusercontent.com/Vulnogram/cve-index/refs/heads/main/latest/' + uuid + '.json';
+async function fetchCnaCveList(sName) {
+    var url = 'https://raw.githubusercontent.com/Vulnogram/cve-index/refs/heads/main/data/latest/' + sName + '.json';
     var response = await fetch(url, {
         method: 'GET',
         credentials: 'omit',
@@ -64,7 +64,7 @@ async function fetchCnaCveList(uuid) {
         redirect: 'error'
     });
     if (!response.ok) {
-        throw Error('Failed to load CNA list ' + uuid + ' ' + response.statusText);
+        throw Error('Failed to load CNA list ' + sName + ' ' + response.statusText);
     }
     var data = await response.json();
     if (!Array.isArray(data)) {
