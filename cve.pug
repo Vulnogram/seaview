@@ -1,5 +1,5 @@
 - var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
-mixin cvssList(cvssList)
+mixin cvssList(cvssList, cnaShortName)
     if cvssList
         each cvss, i in cvssList
             details.popup.cvssItem
@@ -7,8 +7,11 @@ mixin cvssList(cvssList)
                 - var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
                 summary.lbl.rnd.tag(style= score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false, title=score + ' out of 10')
                     = sev
-                    |  · 
+                    |  ·
                     b=score
+                    if cvss.shortName && cvss.shortName !== cnaShortName
+                        |  ·
+                        = cvss.shortName
                 div.pop.wht.rnd.shd.pad.bor
                     button.btn.close-button(onclick="this.closest('details').removeAttribute('open')")
                     if cvss.scenarios && cvss.scenarios.length > 0
@@ -143,7 +146,7 @@ mixin refList(references)
             if(shownURLs && !shownURLs[r.url])
                 - var u = (new URL(r.url));
                 - shownURLs[r.url] = true;
-                img(width=16,height=16,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
+                img(width=24,height=24,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
                 a(href=r.url)=(r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
                 if r.tags && r.tags.length > 0
                     |  
@@ -188,12 +191,13 @@ mixin container(con, cve)
                 |)
         span.flx
             |  
-            +cvssList(con.cvssList)
+            +cvssList(con.cvssList, con.shortName)
             if con.KEV
                 summary.lbl.rnd.tag.CVSS.CRITICAL.vgi-bomb Known Exploited Since 
                     = con.KEV.dateAdded
             a.sbn.vgi-mail(title="Share this CVE in email",href="mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId)
             a.sbn.vgi-link(href="https://vulnogram.org/seaview/?"+con.cveId,target="_blank")
+            a.sbn.vgi-logo(href="https://vulnogram.org/?doc="+con.cveId,target="_blank")
     .desc.pad
         if con.state == 'REJECTED'
             - con.maxCVSS = -1;

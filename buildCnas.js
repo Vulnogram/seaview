@@ -5,6 +5,7 @@ const REMOTE_URL = 'https://raw.githubusercontent.com/CVEProject/cve-website/mai
 const LOCAL_PATH = './CNAsList.json'; // Ensure you have this file
 var cnas = null;
 var ch = {};
+ch['nist'] = {n: 'NIST', i: 'https://nvd.nist.gov/'};
 ch['cisa-adp'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
 ch['cve'] = {n: 'CVE', i: 'https://www.cve.org'};
 ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
@@ -72,7 +73,7 @@ body {
 }
 #iconlist {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(6em, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
     grid-gap: 0.5em;
 }
 #iconlist div {
@@ -81,6 +82,7 @@ body {
     text-align: center;
     min-height: 4em;
     vertical-align:middle;
+    box-shadow:2px 2px 5px #9996;
 }
 #iconlist img {
     margin: 0 auto;
@@ -89,8 +91,8 @@ body {
     border: 1px solid #aaa;
     border-radius: 3px;
     padding:5px;
-    width:32px;
-    height:32px;
+    width:48px;
+    height:48px;
 }
 #iconlist b {
     font-weight:normal;

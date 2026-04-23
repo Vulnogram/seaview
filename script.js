@@ -477,6 +477,72 @@ function fetchCveJson(url, id) {
         });
 }
 
+function nvdToAdp(nvdJson) {
+    if (!nvdJson) return null;
+    var cveMetrics = [];
+
+    // NVD 2.0 format: metrics.cvssMetricV40 / cvssMetricV31 / cvssMetricV30 / cvssMetricV2
+    // Each entry: { source, type, cvssData }  — only take NIST-scored entries
+    var nvdMetrics = nvdJson.metrics || {};
+    var mapping = [
+        [nvdMetrics.cvssMetricV40, 'cvssV4_0'],
+        [nvdMetrics.cvssMetricV31, 'cvssV3_1'],
+        [nvdMetrics.cvssMetricV30, 'cvssV3_0'],
+        [nvdMetrics.cvssMetricV2,  'cvssV2_0']
+    ];
+    mapping.forEach(function (pair) {
+        (pair[0] || []).filter(function (entry) {
+            return entry.source === 'nvd@nist.gov';
+        }).forEach(function (entry) {
+            if (entry.cvssData) {
+                // cvssData field names match CVE JSON 5.0 container format directly
+                var m = {};
+                m[pair[1]] = entry.cvssData;
+                cveMetrics.push(m);
+            }
+        });
+    });
+
+    // NVD 1.x format: impact.baseMetricV3 / baseMetricV2
+    var impact = nvdJson.impact || {};
+    if (impact.baseMetricV3 && impact.baseMetricV3.cvssV3) {
+        var v3 = impact.baseMetricV3.cvssV3;
+        var m3 = {};
+        m3[v3.version === '3.0' ? 'cvssV3_0' : 'cvssV3_1'] = {
+            version: v3.version,
+            vectorString: v3.vectorString,
+            baseScore: v3.baseScore,
+            baseSeverity: v3.baseSeverity
+        };
+        cveMetrics.push(m3);
+    }
+    if (impact.baseMetricV2 && impact.baseMetricV2.cvssV2) {
+        var v2 = impact.baseMetricV2.cvssV2;
+        cveMetrics.push({
+            cvssV2_0: {
+                version: '2.0',
+                vectorString: v2.vectorString,
+                baseScore: v2.baseScore,
+                baseSeverity: impact.baseMetricV2.severity
+            }
+        });
+    }
+
+    var hasMetrics = cveMetrics.length > 0;
+    var hasDescriptions = nvdJson.descriptions && nvdJson.descriptions.length > 0;
+    if (!hasMetrics && !hasDescriptions) return null;
+
+    var adp = {
+        providerMetadata: {
+            dateUpdated: nvdJson.lastModified || nvdJson.lastModifiedDate,
+            shortName: 'NIST'
+        }
+    };
+    if (hasMetrics) adp.metrics = cveMetrics;
+    if (hasDescriptions) adp.descriptions = nvdJson.descriptions;
+    return adp;
+}
+
 function loadCVE(value) {
     var realId = value.match(/(CVE-(\d{4})-(\d{1,12})(\d{3}))/);
     if (realId) {
@@ -493,15 +559,39 @@ function loadCVE(value) {
             })
             .then(function (res) {
                 if (res.containers) {
-                    preProcess(res);
-                    cveCache[id] = res;
-                    delete entryCache[id];
-                    res.jsonURL = jsonURL;
-                    if (entryView) {
-                        loadEntry(id);
-                    } else {
-                        loadItem(res);
-                    }
+                    var nvdUrl = 'https://raw.githubusercontent.com/olbat/nvdcve/refs/heads/master/nvdcve/' + id + '.json';
+                    fetch(nvdUrl)
+                        .then(function (r) { return r.ok ? r.json() : null; })
+                        .catch(function () { return null; })
+                        .then(function (nvdJson) {
+                            var nistAdp = nvdToAdp(nvdJson);
+                            if (nistAdp) {
+                                if (nistAdp.descriptions) {
+                                    var cnaDescs = new Set(
+                                        ((res.containers.cna || {}).descriptions || []).map(function (d) { return d.value; })
+                                    );
+                                    nistAdp.descriptions = nistAdp.descriptions.filter(function (d) {
+                                        return !cnaDescs.has(d.value);
+                                    });
+                                    if (nistAdp.descriptions.length === 0) delete nistAdp.descriptions;
+                                }
+                                if (nistAdp.metrics || nistAdp.descriptions) {
+                                    if (!Array.isArray(res.containers.adp)) {
+                                        res.containers.adp = res.containers.adp ? Object.values(res.containers.adp) : [];
+                                    }
+                                    res.containers.adp.push(nistAdp);
+                                }
+                            }
+                            preProcess(res);
+                            cveCache[id] = res;
+                            delete entryCache[id];
+                            res.jsonURL = jsonURL;
+                            if (entryView) {
+                                loadEntry(id);
+                            } else {
+                                loadItem(res);
+                            }
+                        });
                 } else {
                     statusText.textContent = statusText.textContent + " Failed to load " + id;
                 }
@@ -1309,18 +1399,25 @@ function preProcess(cve, statusFn) {
         var cvss = metric.cvssV4_0 || metric.cvssV3_1 || metric.cvssV3_0 || metric.cvssV2_0 || null;
         if (cvss) {
             cvss.scenarios = metric.scenarios;
+            cvss.shortName = con.shortName;
             con.cvssList.push(cvss);
             updateMaxScore(cvss);
         }
     });
 
+    if (normalizeList(con.tags).includes('x_known-exploited-vulnerability')) {
+        cve.KEV = true;
+    }
+
     var adpContainers = normalizeList(cve.containers.adp);
     adpContainers.forEach(function (adp) {
         adp.cvssList = [];
+        var adpShortName = (adp.providerMetadata || {}).shortName;
         normalizeList(adp.metrics).forEach(function (metric) {
             var cvss = metric.cvssV4_0 || metric.cvssV3_1 || metric.cvssV3_0 || metric.cvssV2_0 || null;
             if (cvss) {
                 cvss.scenarios = metric.scenarios;
+                cvss.shortName = adpShortName;
                 adp.cvssList.push(cvss);
                 con.cvssList.push(cvss);
                 updateMaxScore(cvss);

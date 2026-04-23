@@ -10,7 +10,7 @@ function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e i
     
     (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
-pug_mixins["cvssList"] = pug_interp = function(cvssList){
+pug_mixins["cvssList"] = pug_interp = function(cvssList, cnaShortName){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (cvssList) {
 // iterate cvssList
@@ -22,7 +22,11 @@ if (cvssList) {
 pug_html = pug_html + "\u003Cdetails class=\"popup cvssItem\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E\u003Cbutton class=\"btn close-button\" onclick=\"this.closest('details').removeAttribute('open')\"\u003E\u003C\u002Fbutton\u003E";
+pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " ·\u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E";
+if (cvss.shortName && cvss.shortName !== cnaShortName) {
+pug_html = pug_html + (" ·" + (pug_escape(null == (pug_interp = cvss.shortName) ? "" : pug_interp)));
+}
+pug_html = pug_html + "\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E\u003Cbutton class=\"btn close-button\" onclick=\"this.closest('details').removeAttribute('open')\"\u003E\u003C\u002Fbutton\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E";
 // iterate cvss.scenarios
@@ -89,7 +93,11 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdet
 pug_html = pug_html + "\u003Cdetails class=\"popup cvssItem\"\u003E";
 var score = cvss.threatScore || cvss.baseScore;
 var sev = cvss.threatSeverity || cvss.baseSeverity || cvssSeverity(score);
-pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " · \u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E\u003Cbutton class=\"btn close-button\" onclick=\"this.closest('details').removeAttribute('open')\"\u003E\u003C\u002Fbutton\u003E";
+pug_html = pug_html + "\u003Csummary" + (" class=\"lbl rnd tag\""+pug_attr("style", pug_style(score != null ? ("background-color:"+getGradientColor(score)+';'+(score >= 8 ? 'color:#fff;':'color:#000;')):false), true, false)+pug_attr("title", score + ' out of 10', true, false)) + "\u003E" + (pug_escape(null == (pug_interp = sev) ? "" : pug_interp)) + " ·\u003Cb\u003E" + (pug_escape(null == (pug_interp = score) ? "" : pug_interp)) + "\u003C\u002Fb\u003E";
+if (cvss.shortName && cvss.shortName !== cnaShortName) {
+pug_html = pug_html + (" ·" + (pug_escape(null == (pug_interp = cvss.shortName) ? "" : pug_interp)));
+}
+pug_html = pug_html + "\u003C\u002Fsummary\u003E\u003Cdiv class=\"pop wht rnd shd pad bor\"\u003E\u003Cbutton class=\"btn close-button\" onclick=\"this.closest('details').removeAttribute('open')\"\u003E\u003C\u002Fbutton\u003E";
 if (cvss.scenarios && cvss.scenarios.length > 0) {
 pug_html = pug_html + "\u003Cb\u003EScenarios:\u003C\u002Fb\u003E";
 // iterate cvss.scenarios
@@ -522,7 +530,7 @@ pug_html = pug_html + "\u003Cdiv\u003E";
 if ((shownURLs && !shownURLs[r.url])) {
 var u = (new URL(r.url));
 shownURLs[r.url] = true;
-pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"24\" height=\"24\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (r.tags && r.tags.length > 0) {
 pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")) ? "" : pug_interp)));
 }
@@ -538,7 +546,7 @@ pug_html = pug_html + "\u003Cdiv\u003E";
 if ((shownURLs && !shownURLs[r.url])) {
 var u = (new URL(r.url));
 shownURLs[r.url] = true;
-pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"16\" height=\"16\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cimg" + (" class=\"lbl\""+" width=\"24\" height=\"24\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (r.tags && r.tags.length > 0) {
 pug_html = pug_html + (" " + (pug_escape(null == (pug_interp = r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")) ? "" : pug_interp)));
 }
@@ -617,11 +625,11 @@ pug_mixins["renderDate"](con.dateUpdated);
 pug_html = pug_html + ")";
 }
 pug_html = pug_html + "\u003C\u002Fspan\u003E\u003Cspan class=\"flx\"\u003E ";
-pug_mixins["cvssList"](con.cvssList);
+pug_mixins["cvssList"](con.cvssList, con.shortName);
 if (con.KEV) {
 pug_html = pug_html + "\u003Csummary class=\"lbl rnd tag CVSS CRITICAL vgi-bomb\"\u003EKnown Exploited Since " + (pug_escape(null == (pug_interp = con.KEV.dateAdded) ? "" : pug_interp)) + "\u003C\u002Fsummary\u003E";
 }
-pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"sbn vgi-mail\""+" title=\"Share this CVE in email\""+pug_attr("href", "mailto:?subject="+con.cveId+ ' ' + (con.title?con.title:'')+"&body="+con.cveId + (con.title ? ' ' + con.title:'')+"%0A%0Ahttps://vulnogram.org/seaview/?"+con.cveId, true, false)) + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-link\""+pug_attr("href", "https://vulnogram.org/seaview/?"+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003Ca" + (" class=\"sbn vgi-logo\""+pug_attr("href", "https://vulnogram.org/?doc="+con.cveId, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"desc pad\"\u003E";
 if (con.state == 'REJECTED') {
 con.maxCVSS = -1;
 pug_html = pug_html + "\u003Cb class=\"tag CRITICAL\"\u003EREJECTED\u003C\u002Fb\u003E ·  ";

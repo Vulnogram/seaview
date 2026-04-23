@@ -48,7 +48,6 @@ body[data-theme="dark"] [class^="vgi-"],
 body[data-theme="dark"] [class*=" vgi-"] {
     filter: invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.05);;
     color:var(--wht);
-    
 }
 
 
@@ -103,6 +102,9 @@ body[data-theme="dark"] [class*=" vgi-"] {
 
 .hid {
     display: none !important;
+}
+details.popup {
+    position: relative;
 }
 .pop {
     position: absolute;
@@ -172,6 +174,7 @@ select.btn {
     line-height: normal;
     text-align: center;
     border-radius: .5em;
+    background-color: #669;
 }
 .btn, .txt {
     border: 1px solid var(--bor);
@@ -341,8 +344,7 @@ color: var(--txt);
     width:0px;
     min-width: 0px;
     height: 24px;
-    padding-left: 24px;
-    background-size: 24px;
+    width: 24px;
     background-position: 0%;
 }
 
@@ -401,7 +403,6 @@ label[for="theme-toggle"]:hover {
 
 [class^="vgi-"], [class*=" vgi-"] {
     background-position: 3px 50%;
-    padding-left: 28px;
     min-width: 28px;
     min-height: 24px;
     background-size: 24px;
