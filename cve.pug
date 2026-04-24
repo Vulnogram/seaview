@@ -1,4 +1,5 @@
 - var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
+- var urlTagIcon = {'vendor-advisory':'alert','issue-tracking':'bug','mitigation':'bandage','patch':'safe','third-party-advisory':'multialert','vdb-entry':'data','mailing-list':'mail','release-notes':'text','exploit':'bomb','not-applicable':'no','media-coverage':'info','product':'package','related':'ext','signature':'key','technical-description':'text','government-resource':'org','broken-link':'unlink','permissions-required':'lock','customer-entitlement':'user'}
 mixin cvssList(cvssList, cnaShortName)
     if cvssList
         each cvss, i in cvssList
@@ -142,15 +143,17 @@ mixin timeList(c)
 
 mixin refList(references)
     each r in references
-        div
+        div.flx
             if(shownURLs && !shownURLs[r.url])
                 - var u = (new URL(r.url));
                 - shownURLs[r.url] = true;
-                img(width=24,height=24,class="lbl",src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
-                a(href=r.url)=(r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
+                img(width=24,height=24,src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
                 if r.tags && r.tags.length > 0
-                    |  
-                    =r.tags.map(x=>x.replace(/^x_refsource_/,"")).join(" ")
+                    each t in r.tags
+                        - var ic = urlTagIcon[t.replace(/^x_refsource_/,"")]
+                        if ic
+                            i(class="vgi-"+ic, title=t.replace(/^x_refsource_/,""))
+                a(href=r.url)=(r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
 
 mixin errors(con)
     if con.x_ValidationErrors
@@ -424,6 +427,8 @@ mixin row(cve)
             i.vgi-what(title='Disputed')
         if(cve.KEV)
             i.vgi-bomb(title='Known exploited!')
+        if(cve.networkVector)
+            i.vgi-cvss-net(title='Network exploitable')
         if(con.tags && con.tags.includes('exclusively-hosted-service'))
             i.vgi-cloud(title='Cloud vulnerability')
         if(con.tags && con.tags.includes('unsupported-when-assigned'))

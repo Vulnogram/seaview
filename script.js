@@ -1395,6 +1395,14 @@ function preProcess(cve, statusFn) {
         }
     }
 
+    function checkNetworkVector(cvss) {
+        var isNetwork = cvss.attackVector === 'NETWORK' || cvss.accessVector === 'NETWORK';
+        var noPriv = cvss.privilegesRequired === 'NONE' || cvss.authentication === 'NONE';
+        if (isNetwork && noPriv) {
+            cve.networkVector = true;
+        }
+    }
+
     normalizeList(con.metrics).forEach(function (metric) {
         var cvss = metric.cvssV4_0 || metric.cvssV3_1 || metric.cvssV3_0 || metric.cvssV2_0 || null;
         if (cvss) {
@@ -1402,6 +1410,7 @@ function preProcess(cve, statusFn) {
             cvss.shortName = con.shortName;
             con.cvssList.push(cvss);
             updateMaxScore(cvss);
+            checkNetworkVector(cvss);
         }
     });
 
@@ -1421,6 +1430,7 @@ function preProcess(cve, statusFn) {
                 adp.cvssList.push(cvss);
                 con.cvssList.push(cvss);
                 updateMaxScore(cvss);
+                checkNetworkVector(cvss);
             }
             if (metric.other && metric.other.type === 'kev') {
                 adp.KEV = metric.other.content;
