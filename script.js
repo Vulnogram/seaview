@@ -961,6 +961,17 @@ cvssDesc = {
             "infoText": "There is no loss of confidentiality.",
             "icon": "eye-close"
         },
+        "PARTIAL": {
+            "title": "Partial",
+            "infoText": "There is considerable informational disclosure.",
+            "icon": "eye-half"
+        },
+        "COMPLETE": {
+            "class":"bad",
+            "title": "Complete",
+            "infoText": "There is total information disclosure, resulting in all system files being revealed.",
+            "icon": "eye"
+        },
         "LOW": {
             "title": "Low",
             "infoText": "There is some loss of confidentiality.",
@@ -1303,6 +1314,64 @@ cvssDesc = {
             "title": "Highest",
             "infoText": "Provider has assessed the impact of this vulnerability as having the highest urgency.",
             "icon": "run"
+        }
+    },
+    "accessVector": {
+        "title": "Access Vector",
+        "infoText": "This metric reflects how the vulnerability is exploited.",
+        "LOCAL": {
+            "title": "Local",
+            "infoText": "A vulnerability exploitable with only local access requires the attacker to have either physical access to the vulnerable system or a local (shell) account.",
+            "icon": "cvss-user"
+        },
+        "ADJACENT_NETWORK": {
+            "title": "Adjacent Network",
+            "infoText": "A vulnerability exploitable with adjacent network access requires the attacker to have access to either the broadcast or collision domain of the vulnerable software.",
+            "icon": "cvss-adj"
+        },
+        "NETWORK": {
+            "class": "bad",
+            "title": "Network",
+            "infoText": "A vulnerability exploitable with network access means the vulnerable software is bound to the network stack and the attacker does not require local network access or local access.",
+            "icon": "cvss-net"
+        }
+    },
+    "accessComplexity": {
+        "title": "Access Complexity",
+        "infoText": "This metric measures the complexity of the attack required to exploit the vulnerability once an attacker has gained access to the target system.",
+        "HIGH": {
+            "title": "High",
+            "infoText": "Specialized access conditions exist.",
+            "icon": "rocket"
+        },
+        "MEDIUM": {
+            "title": "Medium",
+            "infoText": "The access conditions are somewhat specialized.",
+            "icon": "paper-plane"
+        },
+        "LOW": {
+            "title": "Low",
+            "infoText": "Specialized access conditions or extenuating circumstances do not exist.",
+            "icon": "paper-plane"
+        }
+    },
+    "authentication": {
+        "title": "Authentication",
+        "infoText": "This metric measures the number of times an attacker must authenticate to a target in order to exploit a vulnerability.",
+        "MULTIPLE": {
+            "title": "Multiple",
+            "infoText": "Exploiting the vulnerability requires that the attacker authenticate two or more times.",
+            "icon": "king"
+        },
+        "SINGLE": {
+            "title": "Single",
+            "infoText": "The vulnerability requires an attacker to be logged into the system.",
+            "icon": "pawn"
+        },
+        "NONE": {
+            "title": "None",
+            "infoText": "Authentication is not required to exploit the vulnerability.",
+            "icon": "thief"
         }
     }
 }
