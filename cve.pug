@@ -214,6 +214,13 @@ mixin container(con, cve)
         | 
         +spara(con.descriptions)
         +spara(con.rejectedReasons)
+        if con.indexWarnings && con.indexWarnings.length > 0
+            each w in con.indexWarnings
+                p.sec.rnd.pad.vgi-alert
+                    span
+                        b=w.code
+                        | : 
+                        =w.message
     if (con.metrics && con.metrics.length > 0)
         each metric, i in con.metrics
             if (con.metrics[i].other && con.metrics[i].other.type == 'ssvc')

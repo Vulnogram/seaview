@@ -560,10 +560,17 @@ function loadCVE(value) {
             .then(function (res) {
                 if (res.containers) {
                     var nvdUrl = 'https://raw.githubusercontent.com/olbat/nvdcve/refs/heads/master/nvdcve/' + id + '.json';
-                    fetch(nvdUrl)
-                        .then(function (r) { return r.ok ? r.json() : null; })
-                        .catch(function () { return null; })
-                        .then(function (nvdJson) {
+                    var warningsUrl = 'https://raw.githubusercontent.com/Vulnogram/cve-index/refs/heads/main/warnings/cves/' + year + '/' + bucket + 'xxx/' + id + '.json';
+                    Promise.all([
+                        fetch(nvdUrl)
+                            .then(function (r) { return r.ok ? r.json() : null; })
+                            .catch(function () { return null; }),
+                        fetch(warningsUrl)
+                            .then(function (r) { return r.ok ? r.json() : null; })
+                            .catch(function () { return null; })
+                    ]).then(function (results) {
+                            var nvdJson = results[0];
+                            var warningsJson = results[1];
                             var nistAdp = nvdToAdp(nvdJson);
                             if (nistAdp) {
                                 if (nistAdp.descriptions) {
@@ -583,6 +590,9 @@ function loadCVE(value) {
                                 }
                             }
                             preProcess(res);
+                            if (warningsJson && warningsJson.warnings && warningsJson.warnings.length > 0) {
+                                res.containers.cna.indexWarnings = warningsJson.warnings;
+                            }
                             cveCache[id] = res;
                             delete entryCache[id];
                             res.jsonURL = jsonURL;
