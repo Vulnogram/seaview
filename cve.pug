@@ -147,12 +147,12 @@ mixin refList(references)
             if(shownURLs && !shownURLs[r.url])
                 - var u = (new URL(r.url));
                 - shownURLs[r.url] = true;
-                img(width=24,height=24,src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
                 if r.tags && r.tags.length > 0
                     each t in r.tags
                         - var ic = urlTagIcon[t.replace(/^x_refsource_/,"")]
                         if ic
                             i(class="vgi-"+ic, title=t.replace(/^x_refsource_/,""))
+                img(width=24,height=24,src="https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname))
                 a(href=r.url)=(r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search
 
 mixin errors(con)

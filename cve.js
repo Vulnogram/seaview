@@ -531,7 +531,6 @@ pug_html = pug_html + "\u003Cdiv class=\"flx\"\u003E";
 if ((shownURLs && !shownURLs[r.url])) {
 var u = (new URL(r.url));
 shownURLs[r.url] = true;
-pug_html = pug_html + "\u003Cimg" + (" width=\"24\" height=\"24\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E";
 if (r.tags && r.tags.length > 0) {
 // iterate r.tags
 ;(function(){
@@ -558,7 +557,7 @@ pug_html = pug_html + "\u003Ci" + (pug_attr("class", pug_classes(["vgi-"+ic], [t
 }).call(this);
 
 }
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cimg" + (" width=\"24\" height=\"24\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
       }
@@ -571,7 +570,6 @@ pug_html = pug_html + "\u003Cdiv class=\"flx\"\u003E";
 if ((shownURLs && !shownURLs[r.url])) {
 var u = (new URL(r.url));
 shownURLs[r.url] = true;
-pug_html = pug_html + "\u003Cimg" + (" width=\"24\" height=\"24\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E";
 if (r.tags && r.tags.length > 0) {
 // iterate r.tags
 ;(function(){
@@ -598,7 +596,7 @@ pug_html = pug_html + "\u003Ci" + (pug_attr("class", pug_classes(["vgi-"+ic], [t
 }).call(this);
 
 }
-pug_html = pug_html + "\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cimg" + (" width=\"24\" height=\"24\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=32&domain_url="+u.protocol + '//'+ encodeURIComponent(u.hostname), true, false)) + "\u002F\u003E\u003Ca" + (pug_attr("href", r.url, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = (r.name && r.name != "" && (r.name != r.url)) ?  u.hostname + " : " + r.name : u.hostname + u.pathname + u.search) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003C\u002Fdiv\u003E";
     }
