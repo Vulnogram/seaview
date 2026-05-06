@@ -13,17 +13,17 @@ function saveFavicon(shortName, buffer, md5) {
     return true;
 }
 var cnas = null;
-var ch = {};
-ch['nist'] = {n: 'NIST', i: 'https://nvd.nist.gov/'};
-ch['cisa-adp'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
-ch['cve'] = {n: 'CVE', i: 'https://www.cve.org'};
-ch['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
-ch['enisa']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
-ch["mautic"]={"n":"Mautic","i":"https://mautic.org"};
-ch["tianocore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
-ch["zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
-ch["caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
-ch["ob"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
+var ch = {}, chi={};
+chi['nist'] = {n: 'NIST', i: 'https://nvd.nist.gov/'};
+chi['cisa-adp'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
+chi['cve'] = {n: 'CVE', i: 'https://www.cve.org'};
+chi['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
+chi['enisa']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
+chi["mautic"]={"n":"Mautic","i":"https://mautic.org"};
+chi["tianocore"]={"n":"TianoCore.org","i":"https://www.tianocore.org"};
+chi["zowe"]={"n":"Zowe","i":"https://www.zowe.org"};
+chi["caliptra"]={"n":"Caliptra Project","i":"https://www.chipsalliance.org"};
+chi["ob"]={"n":"OceanBase","i":"https://en.oceanbase.com"};
 
 function normalizeShortName(shortName) {
     if (!shortName) return null;
@@ -72,6 +72,7 @@ async function getFavicon(u) {
 }
 
 async function processCna(c) {
+    const originalShortName = c.shortName;
     c.shortName = normalizeShortName(c.shortName);
     let u = new URL('https://www.cve.org/');
     let iconSaved = false;
@@ -106,11 +107,16 @@ async function processCna(c) {
     if (!ch[c.shortName]) {
         ch[c.shortName] = {
             n: c.organizationName,
-            i: baseUrl
+            i: baseUrl,
+            s: originalShortName
         };
+        if (!iconSaved) {
+            ch[c.shortName].g = 1;
+        }
     }
-    if (!iconSaved) {
-        ch[c.shortName].g = 1;
+ 
+    if (chi[c.shortName]) {
+        Object.assign(ch[c.shortName], chi[c.shortName]);
     }
 
     const iconSrc = fs.existsSync(`./icons/${c.shortName}.png`)
@@ -179,6 +185,9 @@ async function main(){
     await fetchCNAs();
 
     fs.writeFileSync('cna.html', await generateCnaList() + "</div></body></html>");
+    for (const [k, v] of Object.entries(chi)) {
+        if (!ch[k]) ch[k] = { s: k, ...v };
+    }
     fs.writeFileSync('cna.js', 'var cna = ' + JSON.stringify(ch,0,0));
 }
 
