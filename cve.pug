@@ -313,6 +313,23 @@ mixin container(con, cve)
                 summary
                     b.vgi-ext References
                 +refList(con.references, con)
+    if con.x_generator && con.x_generator.engine
+        .generator.pad.sec
+            b Prepared using:
+            |
+            -
+                var eng = con.x_generator.engine;
+                var genLinks = {
+                    'vulnogram': 'https://vulnogram.org',
+                    'bippy': 'https://git.kernel.org/pub/scm/linux/security/vulns.git/tree/scripts/bippy',
+                    'cvelib': 'https://github.com/RedHatProductSecurity/cvelib'
+                };
+                var genMatch = eng.match(/^(Vulnogram|bippy|cvelib)([\s\S]*)$/i);
+            if genMatch
+                a(href=genLinks[genMatch[1].toLowerCase()], target="_blank")=genMatch[1]
+                =genMatch[2]
+            else
+                =eng
     if con.json
         pre=JSON.stringify(con.json,1,1)
 
