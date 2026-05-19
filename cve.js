@@ -1137,6 +1137,23 @@ pug_html = pug_html + "\u003Cdiv class=\"references pad\"\u003E\u003Cdetails" + 
 pug_mixins["refList"](con.references, con);
 pug_html = pug_html + "\u003C\u002Fdetails\u003E\u003C\u002Fdiv\u003E";
 }
+if (con.x_generator && con.x_generator.engine) {
+pug_html = pug_html + "\u003Cdiv class=\"generator pad sec\"\u003E\u003Cb\u003EPrepared using:\u003C\u002Fb\u003E";
+var eng = con.x_generator.engine;
+var genLinks = {
+    'vulnogram': 'https://vulnogram.org',
+    'bippy': 'https://git.kernel.org/pub/scm/linux/security/vulns.git/tree/scripts/bippy',
+    'cvelib': 'https://github.com/RedHatProductSecurity/cvelib'
+};
+var genMatch = eng.match(/^(Vulnogram|bippy|cvelib)([\s\S]*)$/i);
+if (genMatch) {
+pug_html = pug_html + ("\u003Ca" + (pug_attr("href", genLinks[genMatch[1].toLowerCase()], true, false)+" target=\"_blank\"") + "\u003E" + (pug_escape(null == (pug_interp = genMatch[1]) ? "" : pug_interp)) + "\u003C\u002Fa\u003E" + (pug_escape(null == (pug_interp = genMatch[2]) ? "" : pug_interp)));
+}
+else {
+pug_html = pug_html + (pug_escape(null == (pug_interp = eng) ? "" : pug_interp));
+}
+pug_html = pug_html + "\u003C\u002Fdiv\u003E";
+}
 if (con.json) {
 pug_html = pug_html + "\u003Cpre\u003E" + (pug_escape(null == (pug_interp = JSON.stringify(con.json,1,1)) ? "" : pug_interp)) + "\u003C\u002Fpre\u003E";
 }
