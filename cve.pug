@@ -314,9 +314,9 @@ mixin container(con, cve)
                     b.vgi-ext References
                 +refList(con.references, con)
     if con.x_generator && con.x_generator.engine
-        .generator.pad.sec
-            b Prepared using:
-            |
+        .generator.pad
+            b Prepared using: 
+            | 
             -
                 var eng = con.x_generator.engine;
                 var genLinks = {

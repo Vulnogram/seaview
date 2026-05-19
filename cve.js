@@ -1138,7 +1138,7 @@ pug_mixins["refList"](con.references, con);
 pug_html = pug_html + "\u003C\u002Fdetails\u003E\u003C\u002Fdiv\u003E";
 }
 if (con.x_generator && con.x_generator.engine) {
-pug_html = pug_html + "\u003Cdiv class=\"generator pad sec\"\u003E\u003Cb\u003EPrepared using:\u003C\u002Fb\u003E";
+pug_html = pug_html + "\u003Cdiv class=\"generator pad\"\u003E\u003Cb\u003EPrepared using: \u003C\u002Fb\u003E ";
 var eng = con.x_generator.engine;
 var genLinks = {
     'vulnogram': 'https://vulnogram.org',
