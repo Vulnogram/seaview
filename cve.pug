@@ -221,6 +221,16 @@ mixin container(con, cve)
                         b=w.code
                         | : 
                         =w.message
+                        - var av = w.at ? new Date(w.at) : false;
+                        if con.indexWarningsModel || (av && !isNaN(av.getTime()))
+                            small.gen
+                                |  · Analyzed 
+                                if con.indexWarningsModel
+                                    |  by 
+                                    =con.indexWarningsModel
+                                if av && !isNaN(av.getTime())
+                                    |  on 
+                                    span(title=av.toString())= formatFriendlyDate(av)
     if (con.metrics && con.metrics.length > 0)
         each metric, i in con.metrics
             if (con.metrics[i].other && con.metrics[i].other.type == 'ssvc')
@@ -437,7 +447,7 @@ mixin cve5(cve)
 
 mixin row(cve)
     - con = cve.containers.cna;
-    a.flx.nowrap(href="#"+con.cveId, data-id=con.cveId, data-score=(con.state == 'REJECTED'?-1:con.maxCVSS||0), data-date=con.date)
+    a.flx.nowrap(href="#"+con.cveId, data-id=con.cveId, data-score=(con.state == 'REJECTED'?-1:con.maxCVSS||0), data-date=con.date, data-cna=(con.shortName||''), data-kev=(cve.KEV?1:0), data-net=(cve.networkVector?1:0))
         if con.url
             img(title=con.shortName width=28 height=28 src="https://www.google.com/s2/favicons?sz=64&domain_url="+con.url)
         else

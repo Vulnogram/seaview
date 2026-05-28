@@ -479,6 +479,33 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3Ii
       margin: 0.5em 2em 2em 3em;
 
     }
+
+    #listToolbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      gap: 4px;
+      align-items: center;
+      border-bottom: 1px solid var(--bor);
+    }
+    #listToolbar label.lbl {
+      cursor: pointer;
+      padding: .25em .6em;
+    }
+    #listToolbar label.lbl input {
+      display: none;
+    }
+    #listToolbar select.btn {
+      padding: .25em .5em;
+    }
+    #listCount {
+      margin-left: auto;
+      color: var(--bor2);
+    }
+    #idxTble > div[hidden] {
+      display: none !important;
+    }
+
 #logo {
   min-width: 50px;
   width:50px;
@@ -533,6 +560,20 @@ background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSJjdXJyZW50Q29sb3Ii
   </div>
   <div class="master-detail single" id="masterDetail" data-state="detail">
     <section class="panel-list" aria-label="CVE results list">
+      <div id="listToolbar" class="hid flx wht pad" role="toolbar" aria-label="Filter and sort CVE list">
+        <select id="ltSort" class="btn rnd" aria-label="Sort by">
+          <option value="recent">Sort: Recent</option>
+          <option value="severity">Sort: Severity</option>
+          <option value="cna">Sort: CNA</option>
+        </select>
+        <label class="lbl rnd bor vgi-bomb" title="Show only Known Exploited Vulnerabilities (CISA KEV)">
+          <input type="checkbox" id="ltKev">KEV</label>
+        <label class="lbl rnd bor vgi-cvss-net" title="Show only network-exploitable without privileges">
+          <input type="checkbox" id="ltNet">Network</label>
+        <label class="lbl rnd bor vgi-run" title="Show only Critical and High severity (CVSS &ge; 7)">
+          <input type="checkbox" id="ltHigh">Crit/High</label>
+        <span id="listCount" aria-live="polite"></span>
+      </div>
       <div id="idxTble">
       </div>
       <button type="button" class="btn rnd hid" id="loadMoreBtn" onclick="loadMoreResults()">Load more</button>

@@ -231,10 +231,12 @@ function setSplitMode(isSplit) {
     layout.dataset.state = isSplit ? 'list' : 'detail';
     if (!isSplit) {
         resetListPanelSizing();
+        syncToolbarVisibility();
         return;
     }
     layout.classList.remove('resized');
     clearInlineListWidth();
+    syncToolbarVisibility();
 }
 
 function setLayoutState(state) {
@@ -592,6 +594,7 @@ function loadCVE(value) {
                             preProcess(res);
                             if (warningsJson && warningsJson.warnings && warningsJson.warnings.length > 0) {
                                 res.containers.cna.indexWarnings = warningsJson.warnings;
+                                res.containers.cna.indexWarningsModel = warningsJson.model;
                             }
                             cveCache[id] = res;
                             delete entryCache[id];
@@ -1540,6 +1543,119 @@ function loadItem(d) {
     var row = cve({renderTemplate:'row', d: d});
     var container = document.getElementById('i' + d.containers.cna.cveId);
     container.innerHTML = row;
+    scheduleApplyListView();
+}
+
+var listView = {
+    sort: 'recent',
+    filters: { kev: false, net: false, high: false },
+    pending: false
+};
+
+function scheduleApplyListView() {
+    if (listView.pending) return;
+    listView.pending = true;
+    requestAnimationFrame(function () {
+        listView.pending = false;
+        applyListView();
+    });
+}
+
+function applyListView() {
+    var idx = document.getElementById('idxTble');
+    if (!idx) return;
+    var filters = listView.filters;
+    var hasFilter = filters.kev || filters.net || filters.high;
+    var rows = idx.children;
+    var items = new Array(rows.length);
+    var loaded = 0;
+    var visible = 0;
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        var link = row.firstElementChild;
+        var hasLink = !!(link && link.tagName === 'A');
+        var score = -1, dateMs = -1, cna = '', kev = false, net = false;
+        if (hasLink) {
+            loaded++;
+            score = parseFloat(link.getAttribute('data-score')) || 0;
+            var date = link.getAttribute('data-date');
+            var t = date ? Date.parse(date) : NaN;
+            dateMs = isNaN(t) ? 0 : t;
+            cna = (link.getAttribute('data-cna') || '').toLowerCase();
+            kev = link.getAttribute('data-kev') === '1';
+            net = link.getAttribute('data-net') === '1';
+        }
+        var show = hasLink
+            ? !(filters.kev && !kev) && !(filters.net && !net) && !(filters.high && score < 7)
+            : !hasFilter;
+        if (row.hidden !== !show) row.hidden = !show;
+        if (show && hasLink) visible++;
+        items[i] = { node: row, hasLink: hasLink, score: score, dateMs: dateMs, cna: cna };
+    }
+    var sort = listView.sort;
+    items.sort(function (a, b) {
+        if (a.hasLink !== b.hasLink) return a.hasLink ? -1 : 1;
+        if (sort === 'severity') return (b.score - a.score) || (b.dateMs - a.dateMs);
+        if (sort === 'cna') return a.cna.localeCompare(b.cna) || (b.score - a.score);
+        return (b.dateMs - a.dateMs) || (b.score - a.score);
+    });
+    var orderChanged = false;
+    for (var k = 0; k < items.length; k++) {
+        if (rows[k] !== items[k].node) { orderChanged = true; break; }
+    }
+    if (orderChanged) {
+        var frag = document.createDocumentFragment();
+        for (var m = 0; m < items.length; m++) frag.appendChild(items[m].node);
+        idx.appendChild(frag);
+    }
+    var counter = document.getElementById('listCount');
+    if (counter) {
+        if (loaded === 0) {
+            counter.textContent = '';
+        } else if (hasFilter) {
+            counter.textContent = visible + ' / ' + loaded;
+        } else {
+            counter.textContent = '' + loaded;
+        }
+    }
+}
+
+function syncToolbarVisibility() {
+    var toolbar = document.getElementById('listToolbar');
+    if (!toolbar) return;
+    toolbar.classList.toggle('hid', !multiResultMode);
+}
+
+function setupListToolbar() {
+    var sort = document.getElementById('ltSort');
+    var inputs = {
+        kev: document.getElementById('ltKev'),
+        net: document.getElementById('ltNet'),
+        high: document.getElementById('ltHigh')
+    };
+    function syncChip(input) {
+        if (input && input.parentElement) {
+            input.parentElement.classList.toggle('sec', input.checked);
+        }
+    }
+    if (sort) {
+        sort.value = listView.sort;
+        sort.addEventListener('change', function () {
+            listView.sort = sort.value;
+            scheduleApplyListView();
+        });
+    }
+    Object.keys(inputs).forEach(function (key) {
+        var input = inputs[key];
+        if (!input) return;
+        input.checked = !!listView.filters[key];
+        syncChip(input);
+        input.addEventListener('change', function () {
+            listView.filters[key] = input.checked;
+            syncChip(input);
+            scheduleApplyListView();
+        });
+    });
 }
 
 
@@ -1777,6 +1893,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   setupSplitterResize();
+  setupListToolbar();
 });
 
 const cvssSeverity = score => {

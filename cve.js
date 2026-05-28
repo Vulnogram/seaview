@@ -696,14 +696,38 @@ if (con.indexWarnings && con.indexWarnings.length > 0) {
   if ('number' == typeof $$obj.length) {
       for (var pug_index19 = 0, $$l = $$obj.length; pug_index19 < $$l; pug_index19++) {
         var w = $$obj[pug_index19];
-pug_html = pug_html + "\u003Cp class=\"sec rnd pad vgi-alert\"\u003E\u003Cspan\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = w.code) ? "" : pug_interp)) + "\u003C\u002Fb\u003E: " + (pug_escape(null == (pug_interp = w.message) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
+pug_html = pug_html + ("\u003Cp class=\"sec rnd pad vgi-alert\"\u003E\u003Cspan\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = w.code) ? "" : pug_interp)) + "\u003C\u002Fb\u003E: " + (pug_escape(null == (pug_interp = w.message) ? "" : pug_interp)));
+var av = w.at ? new Date(w.at) : false;
+if (con.indexWarningsModel || (av && !isNaN(av.getTime()))) {
+pug_html = pug_html + "\u003Csmall class=\"gen\"\u003E · Analyzed ";
+if (con.indexWarningsModel) {
+pug_html = pug_html + (" by " + (pug_escape(null == (pug_interp = con.indexWarningsModel) ? "" : pug_interp)));
+}
+if (av && !isNaN(av.getTime())) {
+pug_html = pug_html + " on \u003Cspan" + (pug_attr("title", av.toString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(av)) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fsmall\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
       }
   } else {
     var $$l = 0;
     for (var pug_index19 in $$obj) {
       $$l++;
       var w = $$obj[pug_index19];
-pug_html = pug_html + "\u003Cp class=\"sec rnd pad vgi-alert\"\u003E\u003Cspan\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = w.code) ? "" : pug_interp)) + "\u003C\u002Fb\u003E: " + (pug_escape(null == (pug_interp = w.message) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
+pug_html = pug_html + ("\u003Cp class=\"sec rnd pad vgi-alert\"\u003E\u003Cspan\u003E\u003Cb\u003E" + (pug_escape(null == (pug_interp = w.code) ? "" : pug_interp)) + "\u003C\u002Fb\u003E: " + (pug_escape(null == (pug_interp = w.message) ? "" : pug_interp)));
+var av = w.at ? new Date(w.at) : false;
+if (con.indexWarningsModel || (av && !isNaN(av.getTime()))) {
+pug_html = pug_html + "\u003Csmall class=\"gen\"\u003E · Analyzed ";
+if (con.indexWarningsModel) {
+pug_html = pug_html + (" by " + (pug_escape(null == (pug_interp = con.indexWarningsModel) ? "" : pug_interp)));
+}
+if (av && !isNaN(av.getTime())) {
+pug_html = pug_html + " on \u003Cspan" + (pug_attr("title", av.toString(), true, false)) + "\u003E" + (pug_escape(null == (pug_interp = formatFriendlyDate(av)) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fsmall\u003E";
+}
+pug_html = pug_html + "\u003C\u002Fspan\u003E\u003C\u002Fp\u003E";
     }
   }
 }).call(this);
@@ -1407,7 +1431,7 @@ pug_html = pug_html + "\u003C\u002Fdiv\u003E";
 pug_mixins["row"] = pug_interp = function(cve){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 con = cve.containers.cna;
-pug_html = pug_html + "\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)+pug_attr("data-id", con.cveId, true, false)+pug_attr("data-score", (con.state == 'REJECTED'?-1:con.maxCVSS||0), true, false)+pug_attr("data-date", con.date, true, false)) + "\u003E";
+pug_html = pug_html + "\u003Ca" + (" class=\"flx nowrap\""+pug_attr("href", "#"+con.cveId, true, false)+pug_attr("data-id", con.cveId, true, false)+pug_attr("data-score", (con.state == 'REJECTED'?-1:con.maxCVSS||0), true, false)+pug_attr("data-date", con.date, true, false)+pug_attr("data-cna", (con.shortName||''), true, false)+pug_attr("data-kev", (cve.KEV?1:0), true, false)+pug_attr("data-net", (cve.networkVector?1:0), true, false)) + "\u003E";
 if (con.url) {
 pug_html = pug_html + "\u003Cimg" + (pug_attr("title", con.shortName, true, false)+" width=\"28\" height=\"28\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=64&domain_url="+con.url, true, false)) + "\u002F\u003E";
 }
