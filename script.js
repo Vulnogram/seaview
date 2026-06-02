@@ -1635,7 +1635,7 @@ function setupListToolbar() {
     };
     function syncChip(input) {
         if (input && input.parentElement) {
-            input.parentElement.classList.toggle('sec', input.checked);
+            input.parentElement.classList.toggle('on', input.checked);
         }
     }
     if (sort) {

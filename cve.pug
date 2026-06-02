@@ -185,6 +185,9 @@ mixin container(con, cve)
                 a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=cna[con.shortName]? cna[con.shortName].n : con.shortName
                 if con.url
                     a.vgi-globe(href=con.url)
+                - var rssShortName = (typeof normalizeShortName === 'function') ? normalizeShortName(con.shortName) : (con.shortName ? con.shortName.toLowerCase().replace(/\s+/g, '_') : '')
+                if cve && rssShortName
+                    a.vgi-signal.rss-feed(href="https://vulnogram.org/rss/"+rssShortName, title="RSS feed for "+con.shortName, target="_blank")
             - var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
             - var publishDate = (cve ? cve.cveMetadata.datePublished : false) || con.datePublic;
             +renderDate(publicDate)
