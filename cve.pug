@@ -181,12 +181,16 @@ mixin container(con, cve)
         - var rssShortName = (typeof normalizeShortName === 'function') ? normalizeShortName(con.shortName) : (con.shortName ? con.shortName.toLowerCase().replace(/\s+/g, '_') : '')
         - var provider = cna[con.shortName] || cna[rssShortName]
         - var category = (provider && typeof cnaTypes !== 'undefined' && cnaTypes[provider.t]) || 'Unknown'
+        - var country = provider && /^[A-Z]{2}$/.test(provider.c || '') ? provider.c : null
         if con.url
             a(href=cList ?  '?CNA:'+quote+cList+quote : false)
                 img.logo(src="https://www.google.com/s2/favicons?sz=128&domain_url="+con.url)
         span
             span.flx  
                 a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=provider ? provider.n : con.shortName
+                if country
+                    - var countryName = new Intl.DisplayNames(['en'], {type: 'region'}).of(country)
+                    span.cna-country(role='img', title=countryName, aria-label=countryName)=String.fromCodePoint(127397 + country.charCodeAt(0), 127397 + country.charCodeAt(1))
                 if con.url
                     a(class='vgi-' + (cnaTypeIcons[category] || 'info'), href=con.url, title=category + ' website', aria-label=category + ' website')
                 if cve && rssShortName

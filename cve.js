@@ -8,10 +8,10 @@ var pug_match_html=/["&<>]/;
 function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, cnaTypeIcons, cnaTypes, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, normalizeShortName, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone, urlTagIcon) {
+    (function (Array, Date, Intl, JSON, Object, String, URL, cna, cnaTypeIcons, cnaTypes, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, normalizeShortName, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone, urlTagIcon) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 var urlTagIcon = {'vendor-advisory':'alert','issue-tracking':'bug','mitigation':'bandage','patch':'safe','third-party-advisory':'multialert','vdb-entry':'data','mailing-list':'mail','release-notes':'text','exploit':'bomb','not-applicable':'no','media-coverage':'info','product':'package','related':'ext','signature':'key','technical-description':'text','government-resource':'org','broken-link':'unlink','permissions-required':'lock','customer-entitlement':'user'}
-var cnaTypeIcons = {Unknown:'info', Commercial:'globe', Nonprofit:'info', Government:'org', Academic:'org', Community:'cap', Individual:'user'}
+var cnaTypeIcons = {Unknown:'info', Commercial:'globe', Nonprofit:'flag-white', Government:'org', Academic:'bulb', Community:'cap', Individual:'user'}
 pug_mixins["cvssList"] = pug_interp = function(cvssList, cnaShortName){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (cvssList) {
@@ -659,10 +659,15 @@ var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
 var rssShortName = (typeof normalizeShortName === 'function') ? normalizeShortName(con.shortName) : (con.shortName ? con.shortName.toLowerCase().replace(/\s+/g, '_') : '')
 var provider = cna[con.shortName] || cna[rssShortName]
 var category = (provider && typeof cnaTypes !== 'undefined' && cnaTypes[provider.t]) || 'Unknown'
+var country = provider && /^[A-Z]{2}$/.test(provider.c || '') ? provider.c : null
 if (con.url) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=128&domain_url="+con.url, true, false)) + "\u002F\u003E\u003C\u002Fa\u003E";
 }
 pug_html = pug_html + "\u003Cspan\u003E\u003Cspan class=\"flx\"\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = provider ? provider.n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+if (country) {
+var countryName = new Intl.DisplayNames(['en'], {type: 'region'}).of(country)
+pug_html = pug_html + "\u003Cspan" + (" class=\"cna-country\""+" role=\"img\""+pug_attr("title", countryName, true, false)+pug_attr("aria-label", countryName, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = String.fromCodePoint(127397 + country.charCodeAt(0), 127397 + country.charCodeAt(1))) ? "" : pug_interp)) + "\u003C\u002Fspan\u003E";
+}
 if (con.url) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("class", pug_classes(['vgi-' + (cnaTypeIcons[category] || 'info')], [true]), false, false)+pug_attr("href", con.url, true, false)+pug_attr("title", category + ' website', true, false)+pug_attr("aria-label", category + ' website', true, false)) + "\u003E\u003C\u002Fa\u003E";
 }
@@ -1573,11 +1578,15 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.Array :
         typeof Array !== 'undefined' ? Array : undefined, "Date" in locals_for_with ?
         locals_for_with.Date :
-        typeof Date !== 'undefined' ? Date : undefined, "JSON" in locals_for_with ?
+        typeof Date !== 'undefined' ? Date : undefined, "Intl" in locals_for_with ?
+        locals_for_with.Intl :
+        typeof Intl !== 'undefined' ? Intl : undefined, "JSON" in locals_for_with ?
         locals_for_with.JSON :
         typeof JSON !== 'undefined' ? JSON : undefined, "Object" in locals_for_with ?
         locals_for_with.Object :
-        typeof Object !== 'undefined' ? Object : undefined, "URL" in locals_for_with ?
+        typeof Object !== 'undefined' ? Object : undefined, "String" in locals_for_with ?
+        locals_for_with.String :
+        typeof String !== 'undefined' ? String : undefined, "URL" in locals_for_with ?
         locals_for_with.URL :
         typeof URL !== 'undefined' ? URL : undefined, "cna" in locals_for_with ?
         locals_for_with.cna :

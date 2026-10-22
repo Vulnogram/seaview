@@ -6,6 +6,23 @@ const REMOTE_URL = 'https://raw.githubusercontent.com/CVEProject/cve-website/mai
 const BATCH_SIZE = 5;
 const BATCH_DELAY_MS = 300;
 const GENERIC_FAVICON_MD5 = '81addaa406504038756c8f1613668203';
+// Upstream uses country names (and USA/UK); only send compact codes to clients.
+const COUNTRY_CODES = {
+    Australia: 'AU', Austria: 'AT', Belgium: 'BE', Brazil: 'BR', Canada: 'CA',
+    China: 'CN', Colombia: 'CO', 'Czech Republic': 'CZ', Denmark: 'DK',
+    'Dominican Republic': 'DO', Estonia: 'EE', Finland: 'FI', France: 'FR',
+    Germany: 'DE', Greece: 'GR', Hungary: 'HU', India: 'IN', Ireland: 'IE',
+    Israel: 'IL', Italy: 'IT', Japan: 'JP', Latvia: 'LV', Lithuania: 'LT',
+    Luxembourg: 'LU', Netherlands: 'NL', 'New Zealand': 'NZ', Norway: 'NO',
+    Poland: 'PL', Romania: 'RO', Russia: 'RU', Singapore: 'SG',
+    'Slovak Republic': 'SK', 'South Africa': 'ZA', 'South Korea': 'KR',
+    Spain: 'ES', Sweden: 'SE', Switzerland: 'CH', Taiwan: 'TW', Türkiye: 'TR',
+    UK: 'GB', USA: 'US', Uzbekistan: 'UZ', Vietnam: 'VN'
+};
+
+function countryCode(country) {
+    return Object.hasOwn(COUNTRY_CODES, country) ? COUNTRY_CODES[country] : undefined;
+}
 
 function saveFavicon(shortName, buffer, md5) {
     if (md5 === GENERIC_FAVICON_MD5 && !shortName.includes('github')) return false;
@@ -42,6 +59,11 @@ async function fetchCNAs() {
         throw new Error('Invalid or empty upstream CNA list');
     }
     cnas = incoming;
+    const unknownCountries = [...new Set(cnas.map(c => c.country)
+        .filter(country => country && country !== 'n/a' && !countryCode(country)))];
+    if (unknownCountries.length) {
+        console.warn(`Country names need review: ${unknownCountries.join(', ')}`);
+    }
     console.log(`Total CNAs loaded: ${cnas.length}`);
     const unknown = cnas.filter(c => !previousById.get(c.cnaID)?.t);
     if (unknown.length) {
@@ -109,6 +131,8 @@ async function processCna(c) {
         id: c.cnaID,
         t: previousById.get(c.cnaID)?.t ?? 0
     };
+    const country = c.country == null ? previousById.get(c.cnaID)?.c : countryCode(c.country);
+    if (country) ch[key].c = country;
     if (!iconSaved) {
         ch[key].g = 1;
     }
@@ -197,4 +221,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { main };
+module.exports = { main, countryCode };
