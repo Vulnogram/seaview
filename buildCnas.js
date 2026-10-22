@@ -1,8 +1,8 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
+const { cna: previousCnas, cnaTypes } = require('./cna');
 const REMOTE_URL = 'https://raw.githubusercontent.com/CVEProject/cve-website/main/src/assets/data/CNAsList.json';
-const LOCAL_PATH = './CNAsList.json'; // Ensure you have this file
 const BATCH_SIZE = 5;
 const BATCH_DELAY_MS = 300;
 const GENERIC_FAVICON_MD5 = '81addaa406504038756c8f1613668203';
@@ -13,10 +13,12 @@ function saveFavicon(shortName, buffer, md5) {
     return true;
 }
 var cnas = null;
-var ch = {}, chi={};
-chi['nist'] = {n: 'NIST', i: 'https://nvd.nist.gov/'};
-chi['cisa-adp'] = {n: 'CISA ADP', i: 'https://www.cisa.gov'};
-chi['cve'] = {n: 'CVE', i: 'https://www.cve.org'};
+// Keep historical providers as well as active CNAs for rendering older CVEs.
+var ch = { ...previousCnas }, chi={};
+const previousById = new Map(Object.values(previousCnas).filter(c => c.id).map(c => [c.id, c]));
+chi['nist'] = {n: 'NIST', i: 'https://nvd.nist.gov/', t: cnaTypes.indexOf('Government')};
+chi['cisa-adp'] = {n: 'CISA ADP', i: 'https://www.cisa.gov', t: cnaTypes.indexOf('Government')};
+chi['cve'] = {n: 'CVE', i: 'https://www.cve.org', t: 0};
 chi['mitre'] = {n: 'MITRE Corporation', i: 'https://www.mitre.org'};
 chi['enisa']={n:"EU Agency for Cybersecurity (ENISA)",i:"www.enisa.europa.eu"};
 chi["mautic"]={"n":"Mautic","i":"https://mautic.org"};
@@ -31,29 +33,20 @@ function normalizeShortName(shortName) {
 }
 
 async function fetchCNAs() {
-    try {
-        const response = await fetch(REMOTE_URL);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        cnas = await response.json();
-        console.log('✅ Loaded CNAs from remote URL.');
-
-    } catch (error) {
-        console.warn(`❌ Remote fetch failed. Falling back to local cache: ${error.message}`);
-
-        try {
-            cnas = JSON.parse(fs.readFileSync(LOCAL_PATH, 'utf8'));
-            console.log('✅ Loaded CNAs from local cache.');
-        } catch (localError) {
-            console.error(`💥 Failed to load local file: ${localError.message}`);
-            cnas = {}; // Final fallback
-        }
+    const response = await fetch(REMOTE_URL);
+    if (!response.ok) {
+        throw new Error(`CNA fetch failed: HTTP ${response.status}`);
     }
-
-    console.log(`Total CNAs loaded: ${cnas?.length || 0}`);
+    const incoming = await response.json();
+    if (!Array.isArray(incoming) || !incoming.length || incoming.some(c => !c.cnaID || !c.shortName || !c.organizationName)) {
+        throw new Error('Invalid or empty upstream CNA list');
+    }
+    cnas = incoming;
+    console.log(`Total CNAs loaded: ${cnas.length}`);
+    const unknown = cnas.filter(c => !previousById.get(c.cnaID)?.t);
+    if (unknown.length) {
+        console.warn(`Organization types need review (${unknown.length}): ${unknown.map(c => c.shortName).join(', ')}`);
+    }
 }
 
 async function getFavicon(u) {
@@ -74,6 +67,11 @@ async function getFavicon(u) {
 async function processCna(c) {
     const originalShortName = c.shortName;
     c.shortName = normalizeShortName(c.shortName);
+    // Preserve distinct providers whose names normalize to the same key.
+    // For example, Snow (Snow Software) and SNOW (Snowflake).
+    const key = ch[c.shortName]?.id && ch[c.shortName].id !== c.cnaID
+        ? originalShortName : c.shortName;
+    const iconKey = key === c.shortName ? c.shortName : normalizeShortName(c.cnaID);
     let u = new URL('https://www.cve.org/');
     let iconSaved = false;
     try {
@@ -81,21 +79,21 @@ async function processCna(c) {
         const host = em.substr(em.indexOf('@') + 1);
         u = new URL('https://www.' + host);
         const { md5, buffer } = await getFavicon(u);
-        iconSaved = saveFavicon(c.shortName, buffer, md5);
+        iconSaved = saveFavicon(iconKey, buffer, md5);
         console.log(u + ' got ' + md5);
     } catch(er) {
         try {
             u = new URL(c.securityAdvisories.advisories[0].url);
             const faviconUrl = u.protocol + '//' + u.hostname;
             const { md5, buffer } = await getFavicon(faviconUrl);
-            iconSaved = saveFavicon(c.shortName, buffer, md5);
+            iconSaved = saveFavicon(iconKey, buffer, md5);
             console.log(u + ' got ' + md5);
         } catch(e) {
             try {
                 u = new URL(c.disclosurePolicy[0].url);
                 const faviconUrl = u.protocol + '//' + u.hostname;
                 const { md5, buffer } = await getFavicon(faviconUrl);
-                iconSaved = saveFavicon(c.shortName, buffer, md5);
+                iconSaved = saveFavicon(iconKey, buffer, md5);
                 console.log(u + ' got ' + md5);
             } catch(e) {
                 console.log('Error:' + u);
@@ -104,29 +102,28 @@ async function processCna(c) {
     }
 
     const baseUrl = u.protocol + '//' + u.hostname;
-    if (!ch[c.shortName]) {
-        ch[c.shortName] = {
-            n: c.organizationName,
-            i: baseUrl,
-            s: originalShortName
-        };
-        if (!iconSaved) {
-            ch[c.shortName].g = 1;
-        }
+    ch[key] = {
+        n: c.organizationName,
+        i: baseUrl,
+        s: originalShortName,
+        id: c.cnaID,
+        t: previousById.get(c.cnaID)?.t ?? 0
+    };
+    if (!iconSaved) {
+        ch[key].g = 1;
     }
  
     if (chi[c.shortName]) {
-        Object.assign(ch[c.shortName], chi[c.shortName]);
+        Object.assign(ch[key], chi[c.shortName]);
     }
 
-    const iconSrc = fs.existsSync(`./icons/${c.shortName}.png`)
-        ? `icons/${c.shortName}.png`
-        : `https://www.google.com/s2/favicons?sz=64&domain_url=${ch[c.shortName].i}`;
-    return `<div><img src="${iconSrc}"/><a href="/seaview?CNA:${c.shortName}">${c.organizationName}</a></div>`;
+    const iconSrc = fs.existsSync(`./icons/${iconKey}.png`)
+        ? `icons/${iconKey}.png`
+        : `https://www.google.com/s2/favicons?sz=64&domain_url=${ch[key].i}`;
+    return `<div><img src="${iconSrc}"/><a href="/seaview?CNA:${encodeURIComponent(originalShortName)}">${c.organizationName}</a></div>`;
 }
 
 async function generateCnaList() {
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
     if (!fs.existsSync('./icons')) {
         fs.mkdirSync('./icons');
@@ -186,9 +183,18 @@ async function main(){
 
     fs.writeFileSync('cna.html', await generateCnaList() + "</div></body></html>");
     for (const [k, v] of Object.entries(chi)) {
-        if (!ch[k]) ch[k] = { s: k, ...v };
+        if (!ch[k]) ch[k] = { s: k, t: 0, ...v };
     }
-    fs.writeFileSync('cna.js', 'var cna = ' + JSON.stringify(ch,0,0));
+    fs.writeFileSync('cna.js', 'var cnaTypes=' + JSON.stringify(cnaTypes)
+        + ';var cna=' + JSON.stringify(ch)
+        + ';if(typeof module!=="undefined")module.exports={cna,cnaTypes};\n');
 }
 
-main();
+if (require.main === module) {
+    main().catch(error => {
+        console.error(`CNA build failed: ${error.message}`);
+        process.exitCode = 1;
+    });
+}
+
+module.exports = { main };

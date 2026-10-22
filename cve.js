@@ -8,9 +8,10 @@ var pug_match_html=/["&<>]/;
 function pug_style(r){if(!r)return"";if("object"==typeof r){var t="";for(var e in r)pug_has_own_property.call(r,e)&&(t=t+e+":"+r[e]+";");return t}return r+""}function cve(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;
     var locals_for_with = (locals || {});
     
-    (function (Array, Date, JSON, Object, URL, cna, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, normalizeShortName, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone, urlTagIcon) {
+    (function (Array, Date, JSON, Object, URL, cna, cnaTypeIcons, cnaTypes, con, cvssDesc, cvssSeverity, d, encodeURIComponent, formatFriendlyDate, getGradientColor, icon, isNaN, normalizeShortName, num, renderTemplate, shownURLs, statusFunctionv4, structuredClone, urlTagIcon) {
       var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 var urlTagIcon = {'vendor-advisory':'alert','issue-tracking':'bug','mitigation':'bandage','patch':'safe','third-party-advisory':'multialert','vdb-entry':'data','mailing-list':'mail','release-notes':'text','exploit':'bomb','not-applicable':'no','media-coverage':'info','product':'package','related':'ext','signature':'key','technical-description':'text','government-resource':'org','broken-link':'unlink','permissions-required':'lock','customer-entitlement':'user'}
+var cnaTypeIcons = {Unknown:'info', Commercial:'globe', Nonprofit:'info', Government:'org', Academic:'org', Community:'cap', Individual:'user'}
 pug_mixins["cvssList"] = pug_interp = function(cvssList, cnaShortName){
 var block = (this && this.block), attributes = (this && this.attributes) || {};
 if (cvssList) {
@@ -655,14 +656,16 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
 pug_html = pug_html + "\u003Cdiv class=\"cna pad\"\u003E";
 var cList = (cve? cve.cveMetadata.assignerShortName : false)
 var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
+var rssShortName = (typeof normalizeShortName === 'function') ? normalizeShortName(con.shortName) : (con.shortName ? con.shortName.toLowerCase().replace(/\s+/g, '_') : '')
+var provider = cna[con.shortName] || cna[rssShortName]
+var category = (provider && typeof cnaTypes !== 'undefined' && cnaTypes[provider.t]) || 'Unknown'
 if (con.url) {
 pug_html = pug_html + "\u003Ca" + (pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E\u003Cimg" + (" class=\"logo\""+pug_attr("src", "https://www.google.com/s2/favicons?sz=128&domain_url="+con.url, true, false)) + "\u002F\u003E\u003C\u002Fa\u003E";
 }
-pug_html = pug_html + "\u003Cspan\u003E\u003Cspan class=\"flx\"\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = cna[con.shortName]? cna[con.shortName].n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Cspan\u003E\u003Cspan class=\"flx\"\u003E \u003Ca" + (" class=\"bld\""+pug_attr("href", cList ?  '?CNA:'+quote+cList+quote : false, true, false)) + "\u003E" + (pug_escape(null == (pug_interp = provider ? provider.n : con.shortName) ? "" : pug_interp)) + "\u003C\u002Fa\u003E";
 if (con.url) {
-pug_html = pug_html + "\u003Ca" + (" class=\"vgi-globe\""+pug_attr("href", con.url, true, false)) + "\u003E\u003C\u002Fa\u003E";
+pug_html = pug_html + "\u003Ca" + (pug_attr("class", pug_classes(['vgi-' + (cnaTypeIcons[category] || 'info')], [true]), false, false)+pug_attr("href", con.url, true, false)+pug_attr("title", category + ' website', true, false)+pug_attr("aria-label", category + ' website', true, false)) + "\u003E\u003C\u002Fa\u003E";
 }
-var rssShortName = (typeof normalizeShortName === 'function') ? normalizeShortName(con.shortName) : (con.shortName ? con.shortName.toLowerCase().replace(/\s+/g, '_') : '')
 if (cve && rssShortName) {
 pug_html = pug_html + "\u003Ca" + (" class=\"vgi-signal rss-feed\""+pug_attr("href", "https://vulnogram.org/rss/"+rssShortName, true, false)+pug_attr("title", "RSS feed for "+con.shortName, true, false)+" target=\"_blank\"") + "\u003E\u003C\u002Fa\u003E";
 }
@@ -1578,7 +1581,11 @@ pug_mixins["errors"](d.containers.cna);
         locals_for_with.URL :
         typeof URL !== 'undefined' ? URL : undefined, "cna" in locals_for_with ?
         locals_for_with.cna :
-        typeof cna !== 'undefined' ? cna : undefined, "con" in locals_for_with ?
+        typeof cna !== 'undefined' ? cna : undefined, "cnaTypeIcons" in locals_for_with ?
+        locals_for_with.cnaTypeIcons :
+        typeof cnaTypeIcons !== 'undefined' ? cnaTypeIcons : undefined, "cnaTypes" in locals_for_with ?
+        locals_for_with.cnaTypes :
+        typeof cnaTypes !== 'undefined' ? cnaTypes : undefined, "con" in locals_for_with ?
         locals_for_with.con :
         typeof con !== 'undefined' ? con : undefined, "cvssDesc" in locals_for_with ?
         locals_for_with.cvssDesc :

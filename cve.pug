@@ -1,5 +1,6 @@
 - var nonSpec = ['baseScore', 'version', 'vectorString', 'baseSeverity', 'scenarios']
 - var urlTagIcon = {'vendor-advisory':'alert','issue-tracking':'bug','mitigation':'bandage','patch':'safe','third-party-advisory':'multialert','vdb-entry':'data','mailing-list':'mail','release-notes':'text','exploit':'bomb','not-applicable':'no','media-coverage':'info','product':'package','related':'ext','signature':'key','technical-description':'text','government-resource':'org','broken-link':'unlink','permissions-required':'lock','customer-entitlement':'user'}
+- var cnaTypeIcons = {Unknown:'info', Commercial:'globe', Nonprofit:'flag-white', Government:'org', Academic:'bulb', Community:'cap', Individual:'user'}
 mixin cvssList(cvssList, cnaShortName)
     if cvssList
         each cvss, i in cvssList
@@ -177,15 +178,17 @@ mixin container(con, cve)
     .cna.pad
         - var cList = (cve? cve.cveMetadata.assignerShortName : false)
         - var quote = (cList && cList.indexOf(' ') !== -1) ? '"' : '';
+        - var rssShortName = (typeof normalizeShortName === 'function') ? normalizeShortName(con.shortName) : (con.shortName ? con.shortName.toLowerCase().replace(/\s+/g, '_') : '')
+        - var provider = cna[con.shortName] || cna[rssShortName]
+        - var category = (provider && typeof cnaTypes !== 'undefined' && cnaTypes[provider.t]) || 'Unknown'
         if con.url
             a(href=cList ?  '?CNA:'+quote+cList+quote : false)
                 img.logo(src="https://www.google.com/s2/favicons?sz=128&domain_url="+con.url)
         span
             span.flx  
-                a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=cna[con.shortName]? cna[con.shortName].n : con.shortName
+                a.bld(href=cList ?  '?CNA:'+quote+cList+quote : false)=provider ? provider.n : con.shortName
                 if con.url
-                    a.vgi-globe(href=con.url)
-                - var rssShortName = (typeof normalizeShortName === 'function') ? normalizeShortName(con.shortName) : (con.shortName ? con.shortName.toLowerCase().replace(/\s+/g, '_') : '')
+                    a(class='vgi-' + (cnaTypeIcons[category] || 'info'), href=con.url, title=category + ' website', aria-label=category + ' website')
                 if cve && rssShortName
                     a.vgi-signal.rss-feed(href="https://vulnogram.org/rss/"+rssShortName, title="RSS feed for "+con.shortName, target="_blank")
             - var publicDate = con.datePublic || (cve ? cve.cveMetadata.datePublished : false);
