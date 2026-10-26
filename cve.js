@@ -457,14 +457,22 @@ var block = (this && this.block), attributes = (this && this.attributes) || {};
   if ('number' == typeof $$obj.length) {
       for (var pug_index11 = 0, $$l = $$obj.length; pug_index11 < $$l; pug_index11++) {
         var c = $$obj[pug_index11];
-pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + ("\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)));
+if (c.type) {
+pug_html = pug_html + " (" + (pug_escape(null == (pug_interp = c.type) ? "" : pug_interp)) + ")";
+}
+pug_html = pug_html + "\u003C\u002Fp\u003E";
       }
   } else {
     var $$l = 0;
     for (var pug_index11 in $$obj) {
       $$l++;
       var c = $$obj[pug_index11];
-pug_html = pug_html + "\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)) + "\u003C\u002Fp\u003E";
+pug_html = pug_html + ("\u003Cp\u003E" + (pug_escape(null == (pug_interp = c.value) ? "" : pug_interp)));
+if (c.type) {
+pug_html = pug_html + " (" + (pug_escape(null == (pug_interp = c.type) ? "" : pug_interp)) + ")";
+}
+pug_html = pug_html + "\u003C\u002Fp\u003E";
     }
   }
 }).call(this);

@@ -126,7 +126,10 @@ mixin statusTablev5(st)
 
 mixin creditList(credits)
     for c in credits
-        p=c.value
+        p
+            = c.value
+            if c.type
+                |  (#{c.type})
 
 mixin tagList(tags)
     if tags
